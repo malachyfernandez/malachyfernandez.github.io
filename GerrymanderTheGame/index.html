@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gfirm.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
+
+<title>Gerrymander the puzzle game</title>
+
+<style>
+
+body {
+  margin:0;
+  background:#131224;
+  touch-action: none;
+}
+* {
+  font-family: 'Poppins', Arial, sans-serif;
+  color:white;
+}
+.hstack {
+  display:flex;
+  flex-direction:row;
+  overflow:hidden;
+}
+.vstack {
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.center {
+  justify-content: center;
+}
+.alt-center {
+  align-items: center;
+}
+.spaced {
+  justify-content: space-between;
+}
+.text-btn {
+  background:none;
+  border:none;
+  
+  height:40px;
+  padding:0 20px;
+  
+  color:white;
+  font-weight:600;
+}
+.icon-btn {
+  background:none;
+  border:none;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width:40px;
+  height:40px;
+
+  color:white;
+  font-weight:600;
+}
+.bg.icon-btn:hover {
+  background:#aaf
+}
+.screen {
+  height:100vh;
+  width:100vw;
+  max-width:800px;
+  margin:auto;
+}
+#screen {
+  transition: .1s;
+  background:#202429;
+}
+
+@supports (height: 100svh) {
+  .screen {
+    height: 100svh;
+  }
+}
+.scroll {
+  overflow:scroll;
+}
+.gap {
+  gap:5px;
+}
+.firm {
+  flex-grow:0;
+  flex-shrink:0;
+}
+.flex {
+  flex:1;
+}
+.bg.text-btn, .bg.icon-btn  {
+  background:#88f;
+  color:black;
+  border-radius:5px;
+}
+.bg.text-btn:hover {
+  background:#aaf
+}
+.l {
+  background:red;
+}
+button {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #444;
+    border-radius:5px;
+    border:none;
+    font-size:15px;
+}
+button:hover {
+    background-color: #404040;
+}
+input {
+    cursor: pointer;
+    background-color: #444;
+    border-radius:5px;
+    border:none;
+    
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:30px;
+    height:30px;
+    padding:0;
+    margin:0;
+    text-align:center;
+    font-size:12px;
+    flex-grow:0;
+  flex-shrink:0;
+}
+input:hover {
+    background-color: #404040;
+}
+
+#region-buttons {
+    padding: 0 10px;
+    padding-top: 30px;
+}
+#region-buttons::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+#region-buttons::-webkit-scrollbar-track {
+  background: none; 
+}
+ 
+/* Handle */
+#region-buttons::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+#region-buttons::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.region-button {
+    outline: 2px solid;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: inline-block;
+    border-radius:5px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80px;
+    height:25px;
+    margin:4px;
+    
+    flex-grow:0;
+    flex-shrink:0;
+
+    position:relative;
+}
+.region-button.selected {
+    font-weight: bold;
+    outline: 3px solid;
+    background:#24282d;
+}
+
+#grid-container {
+    display: grid;
+    justify-content: center;
+    user-select: none;
+    margin:0;
+    transition:.3s;
+}
+.grid-scrollbox {
+  width:100%;
+  max-width:800px;
+  height:calc(100vh - 170px);
+  position:absolute;
+  bottom:45px;
+  /* max-height:200px; */
+  overflow:hidden;
+  gap:10px;
+  padding:0;
+}
+.grid-scrollbox.shrunk {
+  height:calc(100vh - 350px);
+}
+@supports (height: 100svh) {
+  .grid-scrollbox {
+    height:calc(100svh - 170px);
+  }
+  .grid-scrollbox.shrunk {
+    height:calc(100svh - 350px);
+  }
+}
+.grid-box {
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    outline-offset:-3px;
+    border: solid 5px #171C27;
+}
+
+.red {
+    background-color: #a00;
+}
+.blue {
+    background-color: #00a;
+}
+.purple {
+    background-color: #a0a;
+}
+#clear-button {
+    visibility:hidden;
+}
+#clear-all-button {
+    visibility:hidden;
+}
+/* Modal Styles */
+
+.modal h2 {
+    margin: 0 0 10px 0;
+    color: #fff;
+}
+.modal button {
+    margin-top: 10px;
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.modal button:hover {
+    background-color: #555;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95); /* Slightly shrink */
+    width: 300px;
+    background-color: #333;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+
+    opacity: 0; /* Initially invisible */
+    visibility: hidden; /* Hide element from screen readers and interaction */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+#modal {
+  top: 100px;
+}
+
+.modal.show {
+    opacity: 1; /* Fully visible */
+    visibility: visible; /* Element is interactable */
+    transform: translate(-50%, -50%) scale(1); /* Normal scale */
+}
+
+.modal.hide {
+    opacity: 0; /* Fade out */
+    /* visibility: hidden;  */
+    transform: translate(-50%, -50%) scale(0.95); /* Slightly shrink */
+}
+
+.washed-out {
+    animation: brightnessPulse 1s ease-out forwards;
+}
+
+@keyframes brightnessPulse {
+    0% {
+        filter: brightness(1); /* Normal brightness */
+    }
+    50% {
+        filter: brightness(2); /* Brightness increased */
+    }
+    100% {
+        filter: brightness(1); /* Back to normal */
+    }
+}
+
+.overlay {
+  filter: brightness(.5);
+}
+
+.otherOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+}
+.more-button {
+  font-weight:400; 
+  text-decoration: underline; 
+  cursor: pointer;
+  white-space: nowrap;
+  
+  background:#202429;
+}
+
+@media (max-width: 370px) {
+  .more-button {
+    position: absolute; 
+    right: 0; 
+    bottom: 0;
+    width:130px;
+    text-align:right;
+    background: linear-gradient(to right, #0000 0%, #202429 20%, #202429 100%);
+    /* background:#202; */
+  }
+}
+
+.goal-p {
+  line-height:20px; 
+  font-weight:300; 
+  height:40px;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical; 
+  text-overflow: ellipsis; 
+  position:relative;
+  max-width: 600px;
+}
+
+.imperfect {
+  position: absolute;
+  height:25px;
+  top:-34px;
+  left:0;
+  line-height:0px;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+  display: none;
+
+  z-index:10;
+}
+.imperfect::first-letter {
+  font-weight:800;
+}
+.settings {
+  overflow:hidden;
+  height:185px;
+  transition:.3s;
+  background:#202429;
+}
+.settings.hidden {
+  height:0; 
+}
+</style>
+</head>
+<body>
+<div class="vstack screen" id="screen">
+  <div class="vstack firm" style="height:320px; overflow: visible;">
+  <div id="settings" class="settings">
+    <div class="vstack firm" style="height:130px; margin:10px;">
+        <h1 style="line-height:0px;">Gerrymander</h1>
+        <p style="line-height:0px; font-weight:800;">the puzzle game</p>
+        <p class="goal-p">
+          Goal: create a majority of red districts from the minority of red precincts. 
+          <a class="more-button" onclick='showBothModal("detailsModal")'>More Details</a>
+        </p>
+    </div>
+    <div id="controls" class="hstack gap frim alt-center" style="margin:10px; min-height:30px;">
+        <label for="width">Width:</label>
+        <input class="firm" type="number" id="width" min="1" value="7">
+        <label for="height">Height:</label>
+        <input type="number" id="height" min="1" value="10">
+        <label for="regions">Districts:</label>
+        <input type="number" id="regions" min="1" value="7">
+        
+    </div>
+  </div>
+  <div class="hstack spaced">
+    <button onclick="loadGenerateGrid()" style="margin:10px; height: 35px; width:100%; max-width:200px;">Generate Grid</button>
+    <button onclick="showSettings()" id="showBtn" class="vstack center alt-center" style="margin:10px; width:35px; height:35px; background:none; display:none;">
+      <svg width="30" height="30" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <!-- Top-left corner -->
+        <path d="M7 3 V7 H3" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Top-right corner -->
+        <path d="M13 3 V7 H17" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Bottom-left corner -->
+        <path d="M3 13 H7 V17" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Bottom-right corner -->
+        <path d="M17 13 H13 V17" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button onclick="hideSettings()" id="hideBtn" class="vstack center alt-center" style="margin:10px; width:35px; height:35px; background:none; display:none;">
+      <svg width="30" height="30" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <!-- Top-left corner -->
+        <path d="M7 3 H3 V7" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Top-right corner -->
+        <path d="M13 3 H17 V7" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Bottom-left corner -->
+        <path d="M3 13 V17 H7" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Bottom-right corner -->
+        <path d="M17 13 V17 H13" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+  </div>
+    
+    <div id="region-buttons" class="hstack scroll firm "></div>
+  </div>
+  <div class="grid-scrollbox firm hstack center alt-center shrunk">
+    <div id="grid-container"></div>
+  </div>
+  <div class="hstack center gap frim" style="padding:0 10px; height:50px; width:calc(100vw - 20px); max-width:780px; position:absolute; bottom:0; left:calc(50vw-800px);">
+    <button id="clear-button" class="hstack flex center" style="height:35px;" onclick="clearSelectedRegion()">Clear Region</button>
+    <button id="clear-all-button" class="hstack flex center" style="height:35px;" onclick="showSureModal()">Clear All</button>  
+  </div>  
+</div>
+
+<div id="modal" class="modal">
+  <h3>You Killed Democracy!</h3>
+  <button onclick="hideModal()">Play Another</button>
+</div>
+<div id="sureModal" class="modal">
+  <p>Are you sure you want to clear everything?</p>
+  <button style="width:140px" onclick="hideSureModal()">Cancel</button>
+  <button style="width:140px" onclick="clearAllRegions()">Clear All</button>
+</div>
+<div id="errorModal" class="modal">
+  <h3>Change Number Of Districts</h3>
+  <p style="font-size:13px;">The number of tiles cannot be divided evenly into the number of districts</p>
+  <button style="width:80px" onclick='hideBothModal("errorModal")'>OK</button>
+</div>
+<div id="detailsModal" class="modal">
+  <h3 style="text-align: left;">More Details</h3>
+  <p style="font-size:13px; text-align: left;">Grids in this game ALWAYS have as <span style="text-decoration: underline;">few red tiles as possible</span>. This means a valid solution MUST:<br>- have one more then half of the districs be red and one less then half be blue<br>- have blue majority districts contain <span style="text-decoration: underline;">only</span> blue tiles<br>- have red majority districts contain <span style="text-decoration: underline;">only</span> one more red tile then blue tiles<br><br>"imperfect" means either a blue majority district contains a red tile, or a red majority district contains more red tiles then  necessary</p>
+  <button style="width:80px" onclick='hideBothModal("detailsModal")'>OK</button>
+</div>
+
+
+<div id="loadingOverlay" class="otherOverlay">refreshing...</div>
+
+<script>
+  let gridArray = [];           // Stores red(0) or blue(1) for each tile
+let regionAssignments = [];   // Parallel 2D array for region assignments: null if no region
+let regionHues = [];          // Stores the hues for each region
+let currentRegion = 0;        // The currently selected region (0-based index)
+let startingRegion = 0;        // The region started by the mouse down event; used when automatically switching districts
+let isMouseDown = false;      // Track mouse down state for dragging
+let maxTilesPerRegion = 0;
+let width, height, numRegions;
+
+let regionArray = [];
+let dummyArray = [];
+
+let completedRegions = 0; // To track the number of completed regions
+let redDistricts = 0; // To count red-majority districts
+
+function hideSettings() {
+  const settingsElement = document.getElementById('settings');
+  if (settingsElement) {
+    settingsElement.classList.add('hidden');
+  }
+
+  const gridScrollbox = document.querySelector('.grid-scrollbox');
+  if (gridScrollbox) {
+    gridScrollbox.classList.remove('shrunk');
+  }
+
+  const showBtn = document.getElementById('showBtn');
+  const hideBtn = document.getElementById('hideBtn');
+ 
+  showBtn.style.display = 'flex';
+  hideBtn.style.display = 'none';
+
+  document.getElementById('screen').style.background = '#171C27';
+
+  scaleToFit();
+}
+
+function showSettings() {
+  
+  const settingsElement = document.getElementById('settings');
+  if (settingsElement) {
+    settingsElement.classList.remove('hidden');
+  }
+
+  const gridScrollbox = document.querySelector('.grid-scrollbox');
+  if (gridScrollbox) {
+    gridScrollbox.classList.add('shrunk');
+  }
+
+  const showBtn = document.getElementById('showBtn');
+  const hideBtn = document.getElementById('hideBtn');
+ 
+  showBtn.style.display = 'none';
+  hideBtn.style.display = 'flex';
+
+  scaleToFit();
+}
+
+function generateRandomRegions(width, height, numberOfRegions) {
+    const totalCells = width * height;
+    if (totalCells % numberOfRegions !== 0) {
+      showBothModal("errorModal");
+      
+      const loadingOverlay = document.getElementById('loadingOverlay');
+
+      loadingOverlay.style.display = 'none';
+
+      throw new Error("Total number of cells is not divisible by the number of regions.");
+    }
+
+    const cellsPerRegion = totalCells / numberOfRegions;
+
+    function createEmptyGrid() {
+      return Array.from({ length: height }, () => new Array(width).fill(null));
+    }
+
+    function getNeighbors(x, y) {
+      const neighbors = [];
+      if (y > 0) neighbors.push([x, y - 1]);
+      if (y < height - 1) neighbors.push([x, y + 1]);
+      if (x > 0) neighbors.push([x - 1, y]);
+      if (x < width - 1) neighbors.push([x + 1, y]);
+      return neighbors;
+    }
+
+    function isRegionContiguous(grid, regionId) {
+      const visited = new Set();
+      let foundStart = false;
+      let stack = [];
+
+      // Find the first cell with regionId
+      for (let y = 0; y < height && !foundStart; y++) {
+        for (let x = 0; x < width; x++) {
+          if (grid[y][x] === regionId) {
+            stack.push([x, y]);
+            foundStart = true;
+            break;
+          }
+        }
+      }
+
+      // Depth-first search to verify connectedness
+      while (stack.length > 0) {
+        const [x, y] = stack.pop();
+        const key = `${x},${y}`;
+        if (visited.has(key)) continue;
+        visited.add(key);
+
+        getNeighbors(x, y).forEach(([nx, ny]) => {
+          if (grid[ny][nx] === regionId && !visited.has(`${nx},${ny}`)) {
+            stack.push([nx, ny]);
+          }
+        });
+      }
+
+      // Count cells of this region and compare to expected count
+      let actualCount = 0;
+      for (let row of grid) {
+        actualCount += row.filter(cell => cell === regionId).length;
+      }
+      return actualCount === visited.size;
+    }
+
+    function generateGrid() {
+      document.getElementById("region-buttons").scrollTop = 0;
+      document.getElementById("region-buttons").scrollLeft = 0;
+
+      completedRegions = 0; // To track the number of completed regions
+      redDistricts = 0; // To count red-majority districts
+      const grid = createEmptyGrid();
+
+      for (let regionId = 1; regionId <= numberOfRegions; regionId++) {
+        let attempts = 0;
+        let success = false;
+
+        while (!success && attempts < 100) {
+          attempts++;
+          const gridCopy = JSON.parse(JSON.stringify(grid)); // Create a working copy
+          const [startX, startY] = findRandomUnassignedCell(gridCopy);
+          gridCopy[startY][startX] = regionId;
+
+          let assignedCount = 1;
+          let frontier = getNeighbors(startX, startY).filter(([nx, ny]) => gridCopy[ny][nx] === null);
+
+          while (assignedCount < cellsPerRegion && frontier.length > 0) {
+            const [fx, fy] = frontier.splice(Math.floor(Math.random() * frontier.length), 1)[0];
+            gridCopy[fy][fx] = regionId;
+            assignedCount++;
+
+            frontier.push(
+              ...getNeighbors(fx, fy).filter(([nx, ny]) => 
+                gridCopy[ny][nx] === null && !frontier.some(([a, b]) => a === nx && b === ny)
+              )
+            );
+          }
+
+          if (assignedCount === cellsPerRegion && isRegionContiguous(gridCopy, regionId)) {
+            success = true;
+            for (let y = 0; y < height; y++) {
+              grid[y] = [...gridCopy[y]];
+            }
+          }
+        }
+
+        if (!success) return null; // Failed to place a valid region
+      }
+      return grid;
+
+      const loadingOverlay = document.getElementById('loadingOverlay');
+
+      loadingOverlay.style.display = 'none';
+
+      hideSettings();
+
+    }
+
+    function findRandomUnassignedCell(grid) {
+      const unassigned = [];
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          if (grid[y][x] === null) unassigned.push([x, y]);
+        }
+      }
+      return unassigned[Math.floor(Math.random() * unassigned.length)];
+    }
+
+    let grid;
+    while ((grid = generateGrid()) === null) {
+      console.log("Retrying grid generation...");
+    }
+    return grid;
+  }
+
+  function loadGenerateGrid() {
+
+      const loadingOverlay = document.getElementById('loadingOverlay');
+
+      loadingOverlay.style.display = 'flex';
+
+      // Allow the browser to render the loading overlay before heavy computations
+      setTimeout(() => {
+        generateGrid();
+      }, 50); // Delay of 50 milliseconds
+    }
+
+function generateRegions(splitRegions, packedRegions, sizeOfRegions) {
+    dummyArray = []; // Reset the global array
+
+    // Helper function to generate a shuffled array with specified counts of 0s and 1s
+    function generateRandomArray(size, zerosCount) {
+        const onesCount = size - zerosCount;
+        let arr = Array(zerosCount).fill(0).concat(Array(onesCount).fill(1));
+        // Shuffle the array using Fisher-Yates algorithm
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Generate the "splitRegions" arrays
+    for (let i = 0; i < splitRegions; i++) {
+        const zerosCount = Math.floor(sizeOfRegions / 2) + 1;
+        dummyArray.push(generateRandomArray(sizeOfRegions, zerosCount));
+    }
+
+    // Generate the "packedRegions" arrays (fully filled with 1s)
+    for (let i = 0; i < packedRegions; i++) {
+        dummyArray.push(Array(sizeOfRegions).fill(1));
+    }
+}
+
+function replace(x,y) {
+  let tempNumber = (regionArray[x][y]-1);
+  regionArray[x][y] = dummyArray[tempNumber][0];
+  dummyArray[tempNumber].splice(0,1)
+}
+
+function iterateAndReplace(regionArray) {
+  for (let x = 0; x < regionArray.length; x++) {
+    for (let y = 0; y < regionArray[x].length; y++) {
+      replace(x, y);
+    }
+  }
+}
+
+
+function initializeArray(width, height, numberOfRegions) {
+    regionArray = generateRandomRegions(width, height, numberOfRegions);
+    let splitRegions = Math.floor((numberOfRegions / 2) + 1);
+    let packedRegions = numberOfRegions - splitRegions;
+    let sizeOfRegions = (width*height / numberOfRegions);
+
+
+    generateRegions(splitRegions, packedRegions, sizeOfRegions);
+
+    iterateAndReplace(regionArray);
+
+
+    return regionArray;
+}
+
+
+// Generate evenly spaced hues from red(0) to purple(280)
+function generateRegionHues(numRegions) {
+    const hues = [];
+    const startHue = 0;    // red
+    const endHue = 280;    // purple
+    const step = (endHue - startHue) / (numRegions - 1);
+    for (let i = 0; i < numRegions; i++) {
+        let hue = startHue + i * step;
+        hues.push(hue);
+    }
+    return hues;
+}
+// Modify `generateGrid` to use the new event listener function
+function generateGrid() {
+    width = parseInt(document.getElementById('width').value);
+    height = parseInt(document.getElementById('height').value);
+    numRegions = parseInt(document.getElementById('regions').value);
+    
+    gridArray = initializeArray(width, height, numRegions);
+    regionAssignments = Array.from({ length: height }, () => Array(width).fill(null));
+
+    maxTilesPerRegion = Math.floor((width * height) / numRegions);
+    regionHues = generateRegionHues(numRegions);
+
+    createRegionButtons();
+
+    const gridContainer = document.getElementById('grid-container');
+    gridContainer.innerHTML = '';
+    gridContainer.style.gridTemplateColumns = `repeat(${width}, 30px)`;
+
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            const box = document.createElement('div');
+            box.classList.add('grid-box', gridArray[i][j] === 0 ? 'red' : gridArray[i][j] === 1 ? 'blue' : 'purple');
+            box.dataset.row = i;
+            box.dataset.col = j;
+
+            // Attach event listeners
+            attachEventListenersToBox(box);
+
+            gridContainer.appendChild(box);
+        }
+    }
+
+    selectRegion(0);
+    document.addEventListener('mouseup', handleBoxEnd);
+    document.addEventListener('touchend', handleBoxEnd);
+
+    document.getElementById("clear-button").style.visibility = "visible";
+    document.getElementById("clear-all-button").style.visibility = "visible";
+
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    loadingOverlay.style.display = 'none';
+
+    hideSettings();
+}
+
+function createRegionButtons() {
+    const regionButtonsContainer = document.getElementById('region-buttons');
+    regionButtonsContainer.innerHTML = '';
+    for (let r = 0; r < numRegions; r++) {
+      const button = document.createElement('div');
+      button.classList.add('region-button');
+      button.style.outlineColor = `hsl(${regionHues[r]}, 100%, 50%)`;
+      button.textContent = `District ${r + 1}`;
+      button.dataset.region = r;
+
+      // Create the inner button
+      const innerButton = document.createElement('button');
+      innerButton.classList.add('imperfect');
+      innerButton.dataset.region = r;
+      innerButton.textContent = 'ⓘ imperfect';
+      innerButton.style.backgroundColor = `hsl(${regionHues[r]}, 100%, 35%)`;
+      innerButton.addEventListener('click', () => showBothModal("detailsModal"));
+
+      // Append the inner button to the outer button
+      button.appendChild(innerButton);
+
+      button.addEventListener('click', () => selectRegion(r));
+      regionButtonsContainer.appendChild(button);
+    }
+}
+
+// Select the active region for editing
+// Select the active region for editing
+function selectRegion(r) {
+    currentRegion = r;
+    const regionButtons = document.querySelectorAll('.region-button');
+    regionButtons.forEach((btn) => {
+        btn.classList.remove('selected');
+    });
+    regionButtons[r].classList.add('selected');
+
+    // Clear "washed-out" class from all tiles
+    // document.querySelectorAll('.grid-box').forEach(tile => {
+    //     tile.classList.remove('washed-out');
+    // });
+
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            if (regionAssignments[i][j] == currentRegion) {
+                const tile = getTileElement(i, j);
+                tile.classList.remove('washed-out');
+                void tile.offsetWidth; // Trigger reflow
+                tile.classList.add('washed-out');
+            }
+        }
+    }
+}
+
+// Clear the currently selected region
+function clearSelectedRegion() {
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            if (regionAssignments[i][j] === currentRegion) {
+                regionAssignments[i][j] = null;
+                const tile = getTileElement(i, j);
+                tile.style.outline = 'none';
+            }
+        }
+    }
+    // Reset the background of the region button if it was completed
+    const regionButton = document.querySelector(`.region-button[data-region='${currentRegion}']`);
+    regionButton.style.backgroundColor = '';
+    const imperfectButton = document.querySelector(`.imperfect[data-region='${currentRegion}']`);
+        imperfectButton.style.display = 'none';  
+}
+
+function clearAllRegions() {
+  hideSureModal();
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          regionAssignments[i][j] = null;
+          const tile = getTileElement(i, j);
+          tile.style.outline = 'none';
+        }
+    }
+    const regionButtons = document.querySelectorAll('.region-button');
+    regionButtons.forEach(button => {
+        button.style.backgroundColor = '';
+    });
+    const imperfects = document.querySelectorAll('.imperfect');
+    imperfects.forEach(button => {
+        button.style.display = 'none';
+    });
+}
+
+let isTouchDragging = false; // Track touch dragging
+
+// Handle mousedown and touchstart
+function handleBoxStart(e) {
+    e.preventDefault(); // Prevent scrolling on touch devices
+    const target = e.targetTouches ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : e.target;
+    clearSelectedRegion();
+    if (target && target.classList.contains('grid-box')) {
+        startingRegion = currentRegion;
+        isMouseDown = true;
+        isTouchDragging = true;
+        addTileToRegion(target);
+    }
+}
+
+// Handle mouseover and touchmove
+function handleBoxMove(e) {
+    e.preventDefault(); // Prevent scrolling
+    if (isMouseDown || isTouchDragging) {
+        const touch = e.touches ? e.touches[0] : null;
+        const target = touch ? document.elementFromPoint(touch.clientX, touch.clientY) : e.target;
+        if (target && target.classList.contains('grid-box')) {
+            if (startingRegion == currentRegion) {
+              addTileToRegion(target);
+            }
+        }
+    }
+}
+
+// Handle mouseup and touchend
+function handleBoxEnd() {
+    isMouseDown = false;
+    isTouchDragging = false;
+}
+
+// Add event listeners for both mouse and touch events
+function attachEventListenersToBox(box) {
+    box.addEventListener('mousedown', handleBoxStart);
+    box.addEventListener('mouseover', handleBoxMove);
+
+    // Touch event listeners
+    box.addEventListener('touchstart', handleBoxStart, { passive: false });
+    box.addEventListener('touchmove', handleBoxMove, { passive: false });
+}
+
+
+// Attempt to add the tile to the current region
+function addTileToRegion(tile) {
+    const row = parseInt(tile.dataset.row);
+    const col = parseInt(tile.dataset.col);
+
+    // Check if tile already belongs to a region
+    if (regionAssignments[row][col] !== null && regionAssignments[row][col] !== currentRegion) {
+        // Already in another region, do nothing
+        return;
+    }
+
+    // Check if current region is full
+    const currentRegionCount = countTilesInRegion(currentRegion);
+    if (currentRegionCount >= maxTilesPerRegion) {
+        // Region is full, do nothing
+        return;
+    }
+
+    // Check connectivity: If the region has no tiles yet, we can select this tile.
+    // Otherwise, the new tile must be orthogonally adjacent to at least one tile in the region.
+    if (!isTileConnected(row, col, currentRegion) && currentRegionCount > 0) {
+        // Not connected and not the first tile -> do nothing
+        return;
+    }
+
+    // Add tile to region
+    regionAssignments[row][col] = currentRegion;
+    tile.style.outline = `2px solid hsl(${regionHues[currentRegion]}, 100%, 50%)`;
+
+    // If region is now full, determine the majority color and set button background
+    if (countTilesInRegion(currentRegion) === maxTilesPerRegion) {
+        setRegionButtonBackgroundColor(currentRegion);
+        selectRegion(currentRegion);
+    }
+}
+
+// Check if the tile at (row,col) is connected to the region
+function isTileConnected(row, col, region) {
+    // If region has no tiles yet, we can place the first tile anywhere
+    if (countTilesInRegion(region) === 0) return true;
+
+    const neighbors = [
+        [row - 1, col],
+        [row + 1, col],
+        [row, col - 1],
+        [row, col + 1]
+    ];
+
+    for (let [nr, nc] of neighbors) {
+        if (nr >= 0 && nr < height && nc >= 0 && nc < width) {
+            if (regionAssignments[nr][nc] === region) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function countTilesInRegion(region) {
+    let count = 0;
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            if (regionAssignments[i][j] === region) count++;
+        }
+    }
+    return count;
+}
+
+// Once region is full, set background color of the region button
+// Majority color = count how many red(0) vs blue(1) tiles
+
+
+function setRegionButtonBackgroundColor(region) {
+    let redCount = 0;
+    let blueCount = 0;
+
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            if (regionAssignments[i][j] === region) {
+                if (gridArray[i][j] === 0) {
+                    redCount++;
+                } else {
+                    blueCount++;
+                }
+            }
+        }
+    }
+
+    let bgColor;
+    if (redCount > blueCount) {
+        bgColor = '#a00'; // Red majority
+        redDistricts++; // Increment red-majority counter
+    } else if (blueCount > redCount) {
+        bgColor = '#00a'; // Blue majority
+    } else {
+        bgColor = '#888'; // Tie - Gray
+        console.log(`District ${region + 1} is tied`);
+    }
+
+    const regionButton = document.querySelector(`.region-button[data-region='${region}']`);
+    regionButton.style.backgroundColor = bgColor;
+
+    if (redCount > blueCount) {
+        if ((redCount - 1) > (blueCount + 1)) {
+            const imperfectButton = document.querySelector(`.imperfect[data-region='${region}']`);
+            imperfectButton.style.display = 'block';
+        }
+    }
+    if (blueCount > redCount) {
+        if (redCount !== 0) {
+            const imperfectButton = document.querySelector(`.imperfect[data-region='${region}']`);
+            imperfectButton.style.display = 'block';
+        }
+    }
+
+    // Mark region as completed
+    completedRegions++;
+    checkWinCondition();
+
+    // Automatically switch to the next uncompleted region
+    switchToNextRegion(region);
+}
+
+function switchToNextRegion(currentRegion) {
+    const regionButtons = document.querySelectorAll('.region-button');
+    for (let i = currentRegion + 1; i < regionButtons.length; i++) {
+        const button = regionButtons[i];
+        const bgColor = window.getComputedStyle(button).backgroundColor;
+
+        if (bgColor === "rgba(0, 0, 0, 0)" || bgColor === "transparent") {
+            // Found the next uncompleted region
+            selectRegion(currentRegion)
+            selectRegion(i);
+
+            // Scroll to make it visible if necessary
+            button.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+            return;
+        }
+    }
+}
+
+function showBothModal(modalId) {
+    document.getElementById("screen").style.filter = 'brightness(.5)';
+    const modal = document.getElementById(modalId);
+    modal.style.visibility = 'visible';
+    modal.classList.remove('hide'); // Remove hide class if present
+    modal.classList.add('show');   // Add show class to fade in
+}
+
+function hideBothModal(modalId) {
+    document.getElementById("screen").style.filter = 'none';
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('show'); // Remove show class
+    modal.classList.add('hide');    // Add hide class to fade out
+
+    // // Optional: Ensure the modal is fully hidden after animation ends
+    setTimeout(() => {
+        modal.style.visibility = 'hidden';
+    }, 300);
+}
+
+
+function checkWinCondition() {
+    let redCount = 0;
+    let allCompleted = true;
+
+    // Loop through all district buttons to check their background color
+    const regionButtons = document.querySelectorAll('.region-button');
+    regionButtons.forEach(button => {
+        const bgColor = window.getComputedStyle(button).backgroundColor;
+
+        // Check if a district is incomplete (no background color set)
+        if (bgColor === "rgba(0, 0, 0, 0)" || bgColor === "transparent") {
+            allCompleted = false;
+        } else if (bgColor === "rgb(170, 0, 0)") { // Check for red-majority district
+            redCount++;
+        }
+    });
+
+    // Check if all districts are completed
+    if (!allCompleted) {
+        return; // Exit early if not all districts are completed
+    }
+
+    // If red-majority districts exceed half the total regions, show the modal
+    if (redCount > Math.floor(regionButtons.length / 2)) {
+        showBothModal('modal');
+        applyMajorityColors(); // Change tile colors based on majority
+    }
+}
+
+// Apply majority colors to tiles based on their region's majority
+function applyMajorityColors() {
+    for (let region = 0; region < numRegions; region++) {
+        let redCount = 0;
+        let blueCount = 0;
+
+        // Count the colors in this region
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                if (regionAssignments[i][j] === region) {
+                    if (gridArray[i][j] === 0) {
+                        redCount++;
+                    } else if (gridArray[i][j] === 1) {
+                        blueCount++;
+                    }
+                }
+            }
+        }
+
+        // Determine majority color
+        const majorityColor = redCount > blueCount ? 'red' : 'blue';
+
+        // Apply the majority color to all tiles in the region
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                if (regionAssignments[i][j] === region) {
+                    const delay = (i * width + j) * 50; // Calculate delay in milliseconds
+                    setTimeout(() => {
+                        const tile = getTileElement(i, j);
+                        tile.style.transition = "2s";
+                        tile.style.backgroundColor = majorityColor === 'red' ? '#a00' : '#00a';
+                        tile.style.border = "0";
+                        tile.style.outline = "0";
+                    }, delay);
+                }
+            }
+        }
+    }
+}
+
+function showSureModal() {
+  showBothModal('sureModal');
+}
+
+function hideSureModal() {
+  hideBothModal('sureModal');
+}
+
+function hideModal() {
+  hideBothModal('modal');
+  loadGenerateGrid();
+}
+
+function getTileElement(row, col) {
+    const gridContainer = document.getElementById('grid-container');
+    // Each row * width + col = index in NodeList
+    const index = row * width + col;
+    return gridContainer.childNodes[index];
+}
+
+function scaleToFit() {
+    const scrollbox = document.querySelector('.grid-scrollbox');
+    const container = document.getElementById('grid-container');
+
+    // Reset scale to calculate true size
+    container.style.transform = 'scale(1)';
+    container.style.transformOrigin = 'top left';
+
+    // Get dimensions of parent and child
+    const scrollboxWidth = scrollbox.clientWidth;
+    const scrollboxHeight = scrollbox.clientHeight;
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+
+    // Calculate scale factors
+    const scaleX = scrollboxWidth / containerWidth;
+    const scaleY = scrollboxHeight / containerHeight;
+
+    // Use the smaller scale factor to ensure no overflow
+    const scale = Math.min(scaleX, scaleY);
+
+    // Apply the scale
+    container.style.transform = `scale(${scale - .1})`;
+    container.style.transformOrigin = 'center';
+  }
+
+  // Run when the window loads or resizes
+  window.addEventListener('load', scaleToFit);
+  window.addEventListener('resize', scaleToFit);
+
+  const container = document.getElementById('grid-container');
+  const resizeObserver = new ResizeObserver(() => {
+    scaleToFit();
+  });
+  resizeObserver.observe(container);
+
+  // MutationObserver: Detect changes to child nodes of #grid-container
+  const mutationObserver = new MutationObserver(() => {
+    scaleToFit();
+  });
+  mutationObserver.observe(container, { childList: true, subtree: true });
+</script>
+</body>
+</html>
