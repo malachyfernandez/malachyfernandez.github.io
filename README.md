@@ -1,4 +1,4 @@
-# malachyfernandez.github.io 🌐
+# malachyfernandez.github.io
 
 Welcome to my personal **GitHub Pages** site — a centralized website that showcases my various projects, all hosted directly from this repository.
 
