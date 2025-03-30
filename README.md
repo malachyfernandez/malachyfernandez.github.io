@@ -23,13 +23,12 @@ Example structure:
 ├── 📁 project-one/
 ├── 📁 project-two/
 ├── 📁 project-three/
-└── index.html
 ```
 
 Each project has its own `index.html` file and can be accessed at a URL like:
 
 ```
-https://malachyfernandez.github.io/project-name/
+https://malachyfernandez.github.io/project-name/index.html
 ```
 
 ## 💻 What's here?
@@ -39,12 +38,6 @@ This site features:
 - Fully functional demos of my projects
 - Quick links to the original GitHub repositories
 - A centralized way to explore what I’ve built
-
-## 🛠️ Tech Stack
-
-- HTML / CSS / JavaScript (varies by project)
-- GitHub Pages for hosting
-- Manual syncing from separate GitHub repos
 
 ## 📬 Get in touch
 
