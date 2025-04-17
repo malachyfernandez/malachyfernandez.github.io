@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Malachy Fernandez – Projects</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3498db;
+      --text: #333;
+      --bg: #f4f4f4;
+      --card: #fff;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+    header p {
+      color: #666;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+    }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .project-card {
+      position: relative;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 2rem 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s, color 0.3s;
+      overflow: hidden;
+    }
+    .project-card:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .card-content {
+      text-align: center;
+      transition: opacity 0.3s;
+    }
+    .project-card:hover .card-content {
+      opacity: 0.3;
+    }
+    .card-content i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      transition: color 0.3s;
+    }
+    .project-card:hover .card-content i {
+      color: #fff;
+    }
+    .card-content h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-content p {
+      font-size: 0.95rem;
+    }
+    .card-actions {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 0.5rem;
+      opacity: 0;
+    }
+    .project-card:hover .card-actions {
+      opacity: 1;
+    }
+    .btn {
+      background: #fff;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .project-card:hover .btn {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .btn:hover {
+      background: #f0f0f0;
+    }
+    a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Malachy Fernandez</h1>
+    <p>Project Showcase</p>
+  </header>
+  <div class="container">
+    <div class="projects">
+
+      <!-- MinecraftGradient -->
+      <div class="project-card">
+        <div class="card-content">
+          <i class="fas fa-th-large"></i>
+          <h3>MinecraftGradient</h3>
+          <p>A highly customizable, visually interactive Minecraft block gradient generator.</p>
+        </div>
+        <div class="card-actions">
+          <a href="https://github.com/malachyfernandez/MinecraftGradient" target="_blank">
+            <button class="btn"><i class="fab fa-github"></i> GitHub</button>
+          </a>
+          <a href="https://malachyfernandez.github.io/MinecraftGradient/" target="_blank">
+            <button class="btn"><i class="fas fa-external-link-alt"></i> Demo</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- GerrymanderTheGame -->
+      <div class="project-card">
+        <div class="card-content">
+          <i class="fas fa-map"></i>
+          <h3>GerrymanderTheGame</h3>
+          <p>A browser-based strategy puzzle game where you redraw district lines to win elections with a minority.</p>
+        </div>
+        <div class="card-actions">
+          <a href="https://github.com/malachyfernandez/GerrymanderTheGame" target="_blank">
+            <button class="btn"><i class="fab fa-github"></i> GitHub</button>
+          </a>
+          <a href="https://malachyfernandez.github.io/GerrymanderTheGame/" target="_blank">
+            <button class="btn"><i class="fas fa-external-link-alt"></i> Demo</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- SkipScroll -->
+      <div class="project-card">
+        <div class="card-content">
+          <i class="fas fa-mouse-pointer"></i>
+          <h3>SkipScroll</h3>
+          <p>Instantly jump to real Google search results using just your keyboard — Chrome Extension.</p>
+        </div>
+        <div class="card-actions">
+          <a href="https://github.com/malachyfernandez/SkipScroll" target="_blank">
+            <button class="btn"><i class="fab fa-github"></i> GitHub</button>
+          </a>
+          <a href="https://chromewebstore.google.com/detail/skipscroll-navigate-googl/feocoenjkpofbmnoiglchhmiofogkgbn" target="_blank">
+            <button class="btn"><i class="fab fa-chrome"></i> Web Store</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- Biasly -->
+      <div class="project-card">
+        <div class="card-content">
+          <i class="fas fa-brain"></i>
+          <h3>Biasly</h3>
+          <p>AI‑powered bias detection for articles—think Grammarly for political & ideological bias.</p>
+        </div>
+        <div class="card-actions">
+          <a href="https://github.com/dmavendano/biasly" target="_blank">
+            <button class="btn"><i class="fab fa-github"></i> GitHub</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- InstaChef -->
+      <div class="project-card">
+        <div class="card-content">
+          <i class="fas fa-utensils"></i>
+          <h3>InstaChef</h3>
+          <p>A minimal recipe platform focusing on step‑by‑step guidance over ads and fluff.</p>
+        </div>
+        <div class="card-actions">
+          <a href="https://github.com/ZaraTek/InstaChef" target="_blank">
+            <button class="btn"><i class="fab fa-github"></i> GitHub</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- LocalVoice -->
+      <div class="project-card">
+        <div class="card-content">
+          <i class="fas fa-bullhorn"></i>
+          <h3>LocalVoice</h3>
+          <p>Enter your address to find local election candidates with basic info, photos, and websites.</p>
+        </div>
+        <div class="card-actions">
+          <a href="https://github.com/ZaraTek/LocalVoice" target="_blank">
+            <button class="btn"><i class="fab fa-github"></i> GitHub</button>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
