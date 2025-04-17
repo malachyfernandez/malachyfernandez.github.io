@@ -18,7 +18,7 @@
       --radius: 12px;
       --transition: 0.3s ease;
     }
-    * { box-sizing: border-box; margin:0; padding:0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
@@ -37,8 +37,6 @@
       font-size: 2.75rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      word-break: break-word;
-      white-space: normal;
     }
     header .nav {
       font-size: 1rem;
@@ -55,10 +53,6 @@
     header .nav .active { color: #fff; }
     header .nav .dot { color: rgba(255,255,255,0.5); cursor: default; }
 
-    @media (max-width: 600px) {
-      header h1 { font-size: 2rem; }
-    }
-
     /* LAYOUT */
     .container {
       max-width: 1000px;
@@ -72,7 +66,7 @@
       .container { grid-template-columns: 1fr; }
     }
 
-    /* SECTIONS */
+    /* CARD SECTIONS */
     .section {
       background: var(--card);
       padding: 1.5rem;
@@ -87,18 +81,11 @@
       letter-spacing: 1px;
       margin-bottom: 1rem;
     }
-    .section p {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: #555;
-      margin-bottom: 1rem;
-    }
-    .section p:last-child { margin-bottom: 0; }
 
-    /* WORK / ACTIVITY SPACING */
+    /* WORK / ACTIVITY SPACING UTILITIES */
     .item-title  { font-size: 1rem;  margin-bottom: 0;      line-height: 1.4; }
-    .item-date   { font-size: .9rem; margin-top: 0; margin-bottom: .3rem; color:#666; }
-    .item-desc   { font-size: .95rem; margin-bottom: .5rem;  line-height: 1.55; }
+    .item-date   { font-size: 0.9rem; margin-top: 0; margin-bottom: 0.3rem; color: #666; }
+    .item-desc   { font-size: 0.95rem; margin-bottom: 0.5rem; line-height: 1.55; }
 
     /* CONTACT LINKS */
     .sidebar .section a {
@@ -120,7 +107,7 @@
     <div class="nav">
       <a href="../index.html">Project Showcase</a>
       <span class="dot">·</span>
-      <span class="active">About Me</span>
+      <span class="active">About Me</span>
     </div>
   </header>
 
@@ -128,11 +115,13 @@
     <!-- MAIN COLUMN -->
     <div>
 
+      <!-- Why Teach? -->
       <div class="section">
         <h3>Why Teach?</h3>
         <p>As a teacher, I will mold the minds of future generations. I will rebuild the natural love of learning we are all born with. I will create a lasting impact on the lives of my students and the people they will grow up to be.</p>
       </div>
 
+      <!-- Work Experience -->
       <div class="section">
         <h3>Work Experience</h3>
 
@@ -149,16 +138,17 @@
         <p class="item-desc">Experience swimming and communicating; ensuring patrons’ safety.</p>
       </div>
 
+      <!-- Activities -->
       <div class="section">
         <h3>Activities</h3>
 
         <!-- Apps -->
         <p class="item-title"><strong>App Development — Personal Projects</strong></p>
         <p class="item-desc">Created two apps with 6–12 months of planning & development.</p>
-        <p class="item-desc">Released a Christmas game in December 2020 on the Google Play Store.</p>
+        <p class="item-desc">Released a Christmas game in December 2020 on the Google Play Store.</p>
 
         <!-- Choir -->
-        <p class="item-title" style="margin-top:1.5rem;"><strong>Chamber Choir — W G Enloe Choir</strong></p>
+        <p class="item-title" style="margin-top:1.5rem;"><strong>Chamber Choir — W G Enloe Choir</strong></p>
         <p class="item-desc">Invited to sing at Duke Chapel (2022) and to the Athena Project in Nashville, TN (2023).</p>
         <p class="item-desc">Mentored two beginners to master solfège; organized auditions & new arrangements for Singing Valentines.</p>
       </div>
@@ -168,11 +158,26 @@
     <aside class="sidebar">
       <div class="section">
         <h3>Contact</h3>
-        <a href="mailto:malachyfernandez@gmail.com"><i class="fas fa-envelope"></i> malachyfernandez@gmail.com</a>
-        <a href="https://malachyf.com" target="_blank"><i class="fas fa-globe"></i> malachyf.com</a>
-        <a href="https://linkedin.com/in/malachyf" target="_blank"><i class="fab fa-linkedin"></i> linkedin.com/in/malachyf</a>
-        <a href="https://github.com/malachyfernandez" target="_blank"><i class="fab fa-github"></i> github.com/malachyfernandez</a>
-        <a href="https://devpost.com/malachyfernandez" target="_blank"><i class="fas fa-code"></i> devpost.com/malachyfernandez</a>
+        <a href="mailto:malachyfernandez@gmail.com">
+          <i class="fas fa-envelope"></i>
+          malachyfernandez@gmail.com
+        </a>
+        <a href="https://malachyf.com" target="_blank">
+          <i class="fas fa-globe"></i>
+          malachyf.com
+        </a>
+        <a href="https://linkedin.com/in/malachyf" target="_blank">
+          <i class="fab fa-linkedin"></i>
+          linkedin.com/in/malachyf
+        </a>
+        <a href="https://github.com/malachyfernandez" target="_blank">
+          <i class="fab fa-github"></i>
+          github.com/malachyfernandez
+        </a>
+        <a href="https://devpost.com/malachyfernandez" target="_blank">
+          <i class="fas fa-code"></i>
+          devpost.com/malachyfernandez
+        </a>
       </div>
 
       <div class="section">
