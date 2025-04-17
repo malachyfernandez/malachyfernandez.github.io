@@ -43,6 +43,7 @@
       font-size: 1rem;
       opacity: 0.85;
     }
+
     .container {
       max-width: 1200px;
       margin: auto;
@@ -51,13 +52,9 @@
     .projects {
       display: grid;
       gap: 2rem;
-      grid-template-columns: repeat(1,1fr);
-    }
-    @media (min-width: 600px) {
-      .projects { grid-template-columns: repeat(2,1fr); }
-    }
-    @media (min-width: 1000px) {
-      .projects { grid-template-columns: repeat(3,1fr); }
+      /* keep each card at least 360px wide; auto‑fit as many as will fully fit */
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      justify-content: center;
     }
 
     .project-card {
@@ -86,7 +83,6 @@
     .project-card:hover::before {
       top:-20px; right:-20px;
     }
-
     .card-content {
       text-align: center;
       transition: opacity var(--transition);
@@ -118,13 +114,13 @@
       color:#555;
     }
     .card-content .award {
-      font-size:0.85rem;
+      font-size:0.8rem;
       color: var(--award-color);
       margin-top:0.75rem;
       font-weight:600;
+      white-space: nowrap;
     }
 
-    /* buttons as grid to equalize height */
     .card-actions {
       position:absolute;
       top:50%; left:50%;
@@ -135,9 +131,9 @@
       gap:0.5rem;
       justify-content:center;
       opacity:0;
+      transition: opacity var(--transition);
     }
     .project-card:hover .card-actions { opacity:1; }
-
     .btn {
       background: var(--primary);
       color: #fff;
@@ -149,7 +145,6 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      min-width:100px;
       transition: background var(--transition);
     }
     .btn:hover { background: var(--primary-dark); }
@@ -161,6 +156,7 @@
     <h1>Malachy Fernandez</h1>
     <p>Project Showcase</p>
   </header>
+
   <div class="container">
     <div class="projects">
 
@@ -187,8 +183,8 @@
         <div class="card-content">
           <i class="fas fa-map"></i>
           <h3>Gerrymander The Game</h3>
-          <div class="type-label">Strategy Puzzle Game</div>
-          <p class="desc">Redraw district lines to win elections with a minority in this strategy puzzle.</p>
+          <div class="type-label">Puzzle Game</div>
+          <p class="desc">Redraw district lines to win elections with a minority in this puzzle.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/GerrymanderTheGame" target="_blank">
@@ -223,7 +219,7 @@
         <div class="card-content">
           <i class="fas fa-brain"></i>
           <h3>Biasly</h3>
-          <div class="type-label">AI Tool</div>
+          <div class="type-label">Chrome Extension</div>
           <p class="desc">AI‑powered bias detection for articles—think Grammarly for ideological slants.</p>
           <div class="award">🏆 Hack@UNCP 2025 Best Education Project</div>
         </div>
@@ -241,7 +237,7 @@
           <h3>InstaChef</h3>
           <div class="type-label">Web App</div>
           <p class="desc">A minimal recipe platform focusing on step‑by‑step guidance over fluff.</p>
-          <div class="award">🏆 Hack@Davidson 2025 Best AI Project</div>
+          <div class="award">🏆 Hack@Davidson 2025 Best AI Project</div>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/InstaChef" target="_blank">
