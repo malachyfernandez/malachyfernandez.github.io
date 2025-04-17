@@ -19,8 +19,9 @@
       --card: #fff;
       --radius: 12px;
       --transition: 0.3s ease;
+      --award-color: #d4af37;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin:0; padding:0; }
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
@@ -70,12 +71,12 @@
       transition: transform var(--transition), box-shadow var(--transition);
     }
     .project-card::before {
-      content: '';
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 100px; height: 100px;
+      content:'';
+      position:absolute;
+      top:-40px; right:-40px;
+      width:100px; height:100px;
       background: var(--accent-light);
-      border-radius: 50%;
+      border-radius:50%;
       transition: top var(--transition), right var(--transition);
     }
     .project-card:hover {
@@ -83,71 +84,76 @@
       box-shadow: 0 12px 20px rgba(0,0,0,0.15);
     }
     .project-card:hover::before {
-      top: -20px; right: -20px;
+      top:-20px; right:-20px;
     }
 
     .card-content {
       text-align: center;
       transition: opacity var(--transition);
     }
-    .project-card:hover .card-content {
-      opacity: 0.2;
-    }
+    .project-card:hover .card-content { opacity: 0.2; }
     .card-content i {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      font-size:2.5rem;
+      margin-bottom:1rem;
       color: var(--primary);
       transition: color var(--transition);
     }
-    .project-card:hover .card-content i {
-      color: #fff;
-    }
+    .project-card:hover .card-content i { color: #fff; }
     .card-content h3 {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size:1.4rem;
+      margin-bottom:0.25rem;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1px;
     }
-    .card-content p {
-      font-size: 0.95rem;
-      color: #555;
+    .card-content .type-label {
+      font-size:0.8rem;
+      color: var(--primary);
+      font-weight:600;
+      text-transform:uppercase;
+      margin-bottom:0.5rem;
+    }
+    .card-content p.desc {
+      font-size:0.95rem;
+      color:#555;
+    }
+    .card-content .award {
+      font-size:0.85rem;
+      color: var(--award-color);
+      margin-top:0.75rem;
+      font-weight:600;
     }
 
+    /* buttons as grid to equalize height */
     .card-actions {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex; gap: 0.5rem;
-      opacity: 0;
+      position:absolute;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:max-content;
+      gap:0.5rem;
+      justify-content:center;
+      opacity:0;
     }
-    .project-card:hover .card-actions {
-      opacity: 1;
-    }
+    .project-card:hover .card-actions { opacity:1; }
+
     .btn {
       background: var(--primary);
       color: #fff;
       border: none;
       padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      min-width: 100px;
-      transform: translateY(20px);
-      opacity: 0;
-      transition: all var(--transition);
+      border-radius:6px;
+      font-size:0.9rem;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-width:100px;
+      transition: background var(--transition);
     }
-    .project-card:hover .btn {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .btn:hover {
-      background: var(--primary-dark);
-    }
-    a { text-decoration: none; }
+    .btn:hover { background: var(--primary-dark); }
+    a { text-decoration:none; }
   </style>
 </head>
 <body>
@@ -155,7 +161,6 @@
     <h1>Malachy Fernandez</h1>
     <p>Project Showcase</p>
   </header>
-
   <div class="container">
     <div class="projects">
 
@@ -164,7 +169,8 @@
         <div class="card-content">
           <i class="fas fa-th-large"></i>
           <h3>Minecraft Gradient</h3>
-          <p>A highly customizable, visually interactive Minecraft block gradient generator.</p>
+          <div class="type-label">Web App</div>
+          <p class="desc">A highly customizable, visually interactive Minecraft block gradient generator.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/MinecraftGradient" target="_blank">
@@ -181,7 +187,8 @@
         <div class="card-content">
           <i class="fas fa-map"></i>
           <h3>Gerrymander The Game</h3>
-          <p>Redraw district lines to win elections with a minority in this strategy puzzle.</p>
+          <div class="type-label">Strategy Puzzle Game</div>
+          <p class="desc">Redraw district lines to win elections with a minority in this strategy puzzle.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/GerrymanderTheGame" target="_blank">
@@ -198,7 +205,8 @@
         <div class="card-content">
           <i class="fas fa-mouse-pointer"></i>
           <h3>SkipScroll</h3>
-          <p>Instantly jump to real Google search results using just your keyboard — Chrome Extension.</p>
+          <div class="type-label">Chrome Extension</div>
+          <p class="desc">Instantly jump to real Google search results using just your keyboard.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/SkipScroll" target="_blank">
@@ -215,7 +223,9 @@
         <div class="card-content">
           <i class="fas fa-brain"></i>
           <h3>Biasly</h3>
-          <p>AI‑powered bias detection for articles—think Grammarly for ideological slants.</p>
+          <div class="type-label">AI Tool</div>
+          <p class="desc">AI‑powered bias detection for articles—think Grammarly for ideological slants.</p>
+          <div class="award">🏆 Hack@UNCP 2025 Best Education Project</div>
         </div>
         <div class="card-actions">
           <a href="https://github.com/dmavendano/biasly" target="_blank">
@@ -229,7 +239,9 @@
         <div class="card-content">
           <i class="fas fa-utensils"></i>
           <h3>InstaChef</h3>
-          <p>A minimal recipe platform focusing on step‑by‑step guidance over fluff.</p>
+          <div class="type-label">Web App</div>
+          <p class="desc">A minimal recipe platform focusing on step‑by‑step guidance over fluff.</p>
+          <div class="award">🏆 Hack@Davidson 2025 Best AI Project</div>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/InstaChef" target="_blank">
@@ -243,7 +255,9 @@
         <div class="card-content">
           <i class="fas fa-bullhorn"></i>
           <h3>LocalVoice</h3>
-          <p>Enter your address to find local election candidates with basic info & photos.</p>
+          <div class="type-label">Web App</div>
+          <p class="desc">Enter your address to find local election candidates with basic info & photos.</p>
+          <div class="award">🥈 Hack NC 2nd Place Beginner Project</div>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/LocalVoice" target="_blank">
