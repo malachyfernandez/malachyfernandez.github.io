@@ -9,67 +9,109 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
+    /* ▷ color palette ▷ */
     :root {
       --primary: #3498db;
+      --accent-light: rgba(52,152,219,0.2);
       --text: #333;
-      --bg: #f4f4f4;
+      --bg-start: #f0f4f8;
+      --bg-end: #ffffff;
       --card: #fff;
-      --radius: 8px;
+      --radius: 12px;
+      --transition: 0.3s ease;
     }
-    * { box-sizing: border-box; margin:0; padding:0; }
+
+    /* ▷ global resets ▷ */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ▷ page bg ▷ */
     body {
       font-family: 'Montserrat', sans-serif;
-      background: var(--bg);
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       color: var(--text);
       line-height: 1.5;
+      min-height: 100vh;
     }
+
+    /* ▷ header ▷ */
     header {
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 3rem 1rem;
+      background: linear-gradient(120deg, var(--primary), #8e44ad);
+      color: #fff;
     }
     header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.3rem;
+      font-size: 2.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
     }
     header p {
-      color: #666;
+      font-size: 1rem;
+      opacity: 0.8;
     }
+
+    /* ▷ container ▷ */
     .container {
       max-width: 1200px;
       margin: auto;
-      padding: 1rem;
+      padding: 2rem 1rem;
     }
+
+    /* ▷ project grid ▷ */
     .projects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 2rem;
-      margin-top: 2rem;
+      /* on small screens, 1 col; mid, 2; large, exactly 3 */
+      grid-template-columns: repeat(1,1fr);
     }
+    @media (min-width: 600px) {
+      .projects { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (min-width: 1000px) {
+      .projects { grid-template-columns: repeat(3,1fr); }
+    }
+
+    /* ▷ project card ▷ */
     .project-card {
       position: relative;
       background: var(--card);
+      padding: 2rem 1.5rem;
       border-radius: var(--radius);
-      padding: 2rem 1rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: background 0.3s, color 0.3s;
+      border-left: 5px solid var(--primary);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 100px; height: 100px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      transition: top var(--transition), right var(--transition);
     }
     .project-card:hover {
-      background: var(--primary);
-      color: #fff;
+      transform: translateY(-6px) rotate(1deg) scale(1.02);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.15);
     }
+    .project-card:hover::before {
+      top: -20px; right: -20px;
+    }
+
+    /* ▷ card content fades on hover ▷ */
     .card-content {
       text-align: center;
-      transition: opacity 0.3s;
+      transition: opacity var(--transition);
     }
     .project-card:hover .card-content {
-      opacity: 0.3;
+      opacity: 0.2;
     }
     .card-content i {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: var(--primary);
-      transition: color 0.3s;
+      transition: color var(--transition);
     }
     .project-card:hover .card-content i {
       color: #fff;
@@ -77,16 +119,19 @@
     .card-content h3 {
       font-size: 1.4rem;
       margin-bottom: 0.5rem;
+      font-weight: 600;
     }
     .card-content p {
       font-size: 0.95rem;
+      color: #555;
     }
+
+    /* ▷ buttons slide in ▷ */
     .card-actions {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      display: flex;
-      gap: 0.5rem;
+      display: flex; gap: 0.5rem;
       opacity: 0;
     }
     .project-card:hover .card-actions {
@@ -96,7 +141,7 @@
       background: #fff;
       border: none;
       padding: 0.5rem 0.8rem;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 0.9rem;
       cursor: pointer;
       display: flex;
@@ -104,7 +149,7 @@
       gap: 0.4rem;
       transform: translateY(20px);
       opacity: 0;
-      transition: all 0.3s ease;
+      transition: all var(--transition);
     }
     .project-card:hover .btn {
       transform: translateY(0);
@@ -146,7 +191,7 @@
         <div class="card-content">
           <i class="fas fa-map"></i>
           <h3>GerrymanderTheGame</h3>
-          <p>A browser-based strategy puzzle game where you redraw district lines to win elections with a minority.</p>
+          <p>Redraw district lines to win elections with a minority in this strategy puzzle.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/GerrymanderTheGame" target="_blank">
@@ -169,7 +214,7 @@
           <a href="https://github.com/malachyfernandez/SkipScroll" target="_blank">
             <button class="btn"><i class="fab fa-github"></i> GitHub</button>
           </a>
-          <a href="https://chromewebstore.google.com/detail/skipscroll-navigate-googl/feocoenjkpofbmnoiglchhmiofogkgbn" target="_blank">
+          <a href="https://chrome.google.com/webstore/detail/skipscroll-navigate-googl/feocoenjkpofbmnoiglchhmiofogkgbn" target="_blank">
             <button class="btn"><i class="fab fa-chrome"></i> Web Store</button>
           </a>
         </div>
@@ -180,7 +225,7 @@
         <div class="card-content">
           <i class="fas fa-brain"></i>
           <h3>Biasly</h3>
-          <p>AI‑powered bias detection for articles—think Grammarly for political & ideological bias.</p>
+          <p>AI‑powered bias detection for articles—think Grammarly for ideological slants.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/dmavendano/biasly" target="_blank">
@@ -194,7 +239,7 @@
         <div class="card-content">
           <i class="fas fa-utensils"></i>
           <h3>InstaChef</h3>
-          <p>A minimal recipe platform focusing on step‑by‑step guidance over ads and fluff.</p>
+          <p>A minimal recipe platform focusing on step‑by‑step guidance over fluff.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/InstaChef" target="_blank">
@@ -208,7 +253,7 @@
         <div class="card-content">
           <i class="fas fa-bullhorn"></i>
           <h3>LocalVoice</h3>
-          <p>Enter your address to find local election candidates with basic info, photos, and websites.</p>
+          <p>Enter your address to find local election candidates with basic info & photos.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/LocalVoice" target="_blank">
