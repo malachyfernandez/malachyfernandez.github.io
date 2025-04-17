@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Malachy Fernandez – Projects</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <title>Malachy Fernandez – Projects</title>
+  <!-- Google Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
-    /* ▷ color palette ▷ */
+    /* ▷ palette ▷ */
     :root {
       --primary: #3498db;
+      --primary-dark: #2c81ba;
       --accent-light: rgba(52,152,219,0.2);
       --text: #333;
       --bg-start: #f0f4f8;
@@ -21,15 +22,12 @@
       --transition: 0.3s ease;
     }
 
-    /* ▷ global resets ▷ */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* ▷ page bg ▷ */
+    /* ▷ reset & typography ▷ */
+    * { box-sizing: border-box; margin:0; padding:0; }
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       color: var(--text);
-      line-height: 1.5;
       min-height: 100vh;
     }
 
@@ -41,27 +39,21 @@
       color: #fff;
     }
     header h1 {
-      font-size: 2.75rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
+      font-size: 2.75rem; font-weight: 600; margin-bottom: 0.25rem;
     }
     header p {
-      font-size: 1rem;
-      opacity: 0.8;
+      font-size: 1rem; opacity: 0.8;
     }
 
-    /* ▷ container ▷ */
+    /* ▷ layout ▷ */
     .container {
       max-width: 1200px;
       margin: auto;
       padding: 2rem 1rem;
     }
-
-    /* ▷ project grid ▷ */
     .projects {
       display: grid;
       gap: 2rem;
-      /* on small screens, 1 col; mid, 2; large, exactly 3 */
       grid-template-columns: repeat(1,1fr);
     }
     @media (min-width: 600px) {
@@ -71,11 +63,11 @@
       .projects { grid-template-columns: repeat(3,1fr); }
     }
 
-    /* ▷ project card ▷ */
+    /* ▷ cards ▷ */
     .project-card {
       position: relative;
       background: var(--card);
-      padding: 2rem 1.5rem;
+      padding: 2.5rem 2rem;           /* ← more “space” inside */
       border-radius: var(--radius);
       border-left: 5px solid var(--primary);
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
@@ -99,7 +91,7 @@
       top: -20px; right: -20px;
     }
 
-    /* ▷ card content fades on hover ▷ */
+    /* ▷ content fade ▷ */
     .card-content {
       text-align: center;
       transition: opacity var(--transition);
@@ -117,16 +109,13 @@
       color: #fff;
     }
     .card-content h3 {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+      font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 600;
     }
     .card-content p {
-      font-size: 0.95rem;
-      color: #555;
+      font-size: 0.95rem; color: #555;
     }
 
-    /* ▷ buttons slide in ▷ */
+    /* ▷ buttons ▷ */
     .card-actions {
       position: absolute;
       top: 50%; left: 50%;
@@ -138,15 +127,17 @@
       opacity: 1;
     }
     .btn {
-      background: #fff;
+      background: var(--primary);
+      color: #fff;
       border: none;
-      padding: 0.5rem 0.8rem;
+      padding: 0.6rem 1.2rem;    /* ← wider to prevent wrap */
       border-radius: 6px;
       font-size: 0.9rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      min-width: 110px;         /* ← ensures “Web Store” won’t wrap */
       transform: translateY(20px);
       opacity: 0;
       transition: all var(--transition);
@@ -156,7 +147,7 @@
       opacity: 1;
     }
     .btn:hover {
-      background: #f0f0f0;
+      background: var(--primary-dark);
     }
     a { text-decoration: none; }
   </style>
@@ -174,7 +165,7 @@
         <div class="card-content">
           <i class="fas fa-th-large"></i>
           <h3>MinecraftGradient</h3>
-          <p>A highly customizable, visually interactive Minecraft block gradient generator.</p>
+          <p>Visually interactive Minecraft block gradient generator.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/MinecraftGradient" target="_blank">
@@ -191,7 +182,7 @@
         <div class="card-content">
           <i class="fas fa-map"></i>
           <h3>GerrymanderTheGame</h3>
-          <p>Redraw district lines to win elections with a minority in this strategy puzzle.</p>
+          <p>Redraw district lines to win elections with a minority.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/GerrymanderTheGame" target="_blank">
@@ -208,7 +199,7 @@
         <div class="card-content">
           <i class="fas fa-mouse-pointer"></i>
           <h3>SkipScroll</h3>
-          <p>Instantly jump to real Google search results using just your keyboard — Chrome Extension.</p>
+          <p>Jump to real Google results with your keyboard — Chrome Extension.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/malachyfernandez/SkipScroll" target="_blank">
@@ -225,7 +216,7 @@
         <div class="card-content">
           <i class="fas fa-brain"></i>
           <h3>Biasly</h3>
-          <p>AI‑powered bias detection for articles—think Grammarly for ideological slants.</p>
+          <p>AI‑powered bias detection for news & articles.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/dmavendano/biasly" target="_blank">
@@ -239,7 +230,7 @@
         <div class="card-content">
           <i class="fas fa-utensils"></i>
           <h3>InstaChef</h3>
-          <p>A minimal recipe platform focusing on step‑by‑step guidance over fluff.</p>
+          <p>Minimal recipe platform with step‑by‑step guidance.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/InstaChef" target="_blank">
@@ -253,7 +244,7 @@
         <div class="card-content">
           <i class="fas fa-bullhorn"></i>
           <h3>LocalVoice</h3>
-          <p>Enter your address to find local election candidates with basic info & photos.</p>
+          <p>Enter your address to find local election candidates.</p>
         </div>
         <div class="card-actions">
           <a href="https://github.com/ZaraTek/LocalVoice" target="_blank">
