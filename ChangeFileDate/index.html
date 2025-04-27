@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DOCX Date-Fixer</title>
+  <title>DOCX fix Date-Fixer</title>
   <style>
     body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
     input, button { margin: .5rem 0; display: block; width: 100%; }
@@ -74,13 +74,18 @@
       const updated = new XMLSerializer().serializeToString(xmlDoc);
       zip.file(corePath, updated);
 
-      // Generate new .docx
-      const outBlob = await zip.generateAsync({ type:"blob" });
-      // Trigger download
+      // --- after ---
+      const arrayBuffer = await zip.generateAsync({ type: "arraybuffer" });
+      // re-wrap with the correct MIME type for .docx
+      const outBlob = new Blob(
+        [ arrayBuffer ],
+        { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }
+      );
+      // now download using the filename ending in .docx
       if (window.saveAs) {
         saveAs(outBlob, filename);
       } else {
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = URL.createObjectURL(outBlob);
         a.download = filename;
         a.click();
