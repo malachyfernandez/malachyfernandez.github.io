@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DOCX Date-Fixer</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    input, button { margin: .5rem 0; display: block; width: 100%; }
+    label { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>DOCX Created/Modified Date Editor</h1>
+
+  <label>
+    1. Choose a .docx file
+    <input type="file" id="fileInput" accept=".docx">
+  </label>
+
+  <label>
+    2. New **Created** date-time
+    <input type="datetime-local" id="createdInput">
+  </label>
+
+  <label>
+    3. New **Modified** date-time
+    <input type="datetime-local" id="modifiedInput">
+  </label>
+
+  <button id="processButton" disabled>Apply Dates & Download</button>
+
+  <!-- JSZip (for ZIP/unzip) -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+  <!-- FileSaver (for cross-browser download) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <script>
+  (function(){
+    const fileIn  = document.getElementById('fileInput');
+    const btn     = document.getElementById('processButton');
+    const cIn     = document.getElementById('createdInput');
+    const mIn     = document.getElementById('modifiedInput');
+    let zip, filename;
+
+    fileIn.addEventListener('change', async () => {
+      if (!fileIn.files.length) return;
+      filename = fileIn.files[0].name.replace(/\.docx$/i, '') + '-fixed.docx';
+      const buf = await fileIn.files[0].arrayBuffer();
+      zip = await JSZip.loadAsync(buf);
+      btn.disabled = false;
+    });
+
+    btn.addEventListener('click', async () => {
+      if (!zip) return alert('No file loaded!');
+      // Read core.xml
+      const corePath = "docProps/core.xml";
+      let xmlStr = await zip.file(corePath).async("string");
+      // Parse & update
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlStr, "application/xml");
+
+      function setDate(tagName, inputEl) {
+        const els = xmlDoc.getElementsByTagNameNS("http://purl.org/dc/terms/", tagName);
+        if (els.length && inputEl.value) {
+          // Convert local datetime to ISO (with Z)
+          const iso = new Date(inputEl.value).toISOString();
+          els[0].textContent = iso;
+        }
+      }
+      setDate('created',  cIn);
+      setDate('modified', mIn);
+
+      // Serialize & update zip
+      const updated = new XMLSerializer().serializeToString(xmlDoc);
+      zip.file(corePath, updated);
+
+      // Generate new .docx
+      const outBlob = await zip.generateAsync({ type:"blob" });
+      // Trigger download
+      if (window.saveAs) {
+        saveAs(outBlob, filename);
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(outBlob);
+        a.download = filename;
+        a.click();
+      }
+    });
+  })();
+  </script>
+</body>
+</html>
