@@ -53,10 +53,10 @@
 <div class="content-asset"><!-- dwMarker="content" dwContentID="34a33e54e1d9eaea7b5d5f354d" -->
 <div class="view-print-content">
 <div id="print">
-<button type="button" class="certificateprint button-fancy-large" value="View &amp; Print" name="Print">
+<button id="printCertificateButton" type="button" class="certificateprint button-fancy-large" value="View & Print" name="Print">
 Print
 </button>
-<button type="button" class="certificatedownload button-fancy-large bigsize" value="View &amp; Print" name="Downloadt">
+<button id="downloadPdfButton" type="button" class="certificatedownload button-fancy-large bigsize" value="View & Print" name="Downloadt">
 Download pdf
 </button>
 <a id="downloadLink" download="certificate.pdf" style="display: none;">
@@ -202,7 +202,23 @@ background: none;
 }
 }
 
+@media print {
+    /* Hide the print and download buttons when printing */
+    #printCertificateButton,
+    #downloadPdfButton {
+        display: none !important;
+    }
 
+    /*
+       If there are other specific elements from your certificate page
+       that you also want to hide during printing, add their IDs or classes here.
+       For example:
+       .social-links-main {
+           display: none !important;
+       }
+    */
+}
+	
 </style>
 
 
@@ -473,6 +489,30 @@ function trackPage() {
 <script src="/on/demandware.static/Sites-RedCross-Site/-/default/v1746755620526/internal/jscript/dwac-21.7.js" type="text/javascript" async="async"></script><!-- CQuotient Activity Tracking (body_end-cquotient.js) -->
 <script src="https://cdn.cquotient.com/js/v2/gretel.min.js" type="text/javascript" async="async"></script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the buttons by their new IDs
+    var printBtn = document.getElementById('printCertificateButton');
+    var downloadBtn = document.getElementById('downloadPdfButton');
 
+    if (printBtn) {
+        printBtn.addEventListener('click', function() {
+            window.print(); // Opens the browser's print dialog
+        });
+    } else {
+        console.warn('Print button with ID "printCertificateButton" not found. Please check the ID in your HTML.');
+    }
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            // Instruct the user on how to save as PDF
+            alert("To download as PDF, please select 'Save as PDF' (or 'Microsoft Print to PDF', etc.) as the printer destination in the upcoming print dialog.");
+            window.print(); // Opens the browser's print dialog
+        });
+    } else {
+        console.warn('Download PDF button with ID "downloadPdfButton" not found. Please check the ID in your HTML.');
+    }
+});
+</script>
 
 </a></body></html>
