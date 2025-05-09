@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .certificate-container {
+            background-color: #fff;
+            padding: 40px;
+            border: 10px solid #ddd;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 800px; /* Adjust as needed */
+            text-align: center;
+        }
+        .certificate-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .recipient-name {
+            font-size: 24px;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .course-name {
+            font-size: 20px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        .date-issued {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .signature {
+            font-size: 18px;
+            /* Add more styling for signature line/image */
+        }
+        .button-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styles for printing - hides buttons and other non-certificate elements */
+        @media print {
+            body {
+                background-color: #fff; /* Ensure background is white for printing */
+            }
+            .button-container {
+                display: none !important;
+            }
+            /* Add any other elements you want to hide during printing */
+            nav, footer, .no-print {
+                display: none !important;
+            }
+            .certificate-container {
+                box-shadow: none;
+                border: 10px solid #000; /* Ensure border prints well */
+                width: 100%; /* Use full page width */
+                margin: 0;
+                padding: 20px; /* Adjust padding for print if needed */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="certificate-container" id="certificateContent">
+        <div class="certificate-title">Certificate of Completion</div>
+        <div class="recipient-name">John Doe</div>
+        <div class="course-name">Advanced Web Development</div>
+        <div class="date-issued">Issued on: May 7, 2025</div>
+        <div class="signature">_________________________<br>Authorized Signatory</div>
+        </div>
+
+    <div class="button-container">
+        <button id="printButton" class="button">Print Certificate</button>
+        <button id="downloadPdfButton" class="button">Download as PDF</button>
+    </div>
+
+    <script>
+        // JavaScript for Print and Download PDF functionality
+        document.getElementById('printButton').addEventListener('click', function() {
+            window.print();
+        });
+
+        document.getElementById('downloadPdfButton').addEventListener('click', function() {
+            // This will also open the print dialog.
+            // Instruct users to choose "Save as PDF" or "Microsoft Print to PDF"
+            // as the printer destination.
+            alert("To download as PDF, please select 'Save as PDF' or your system's PDF printer in the upcoming print dialog.");
+            window.print();
+        });
+    </script>
+
+</body>
+</html>
