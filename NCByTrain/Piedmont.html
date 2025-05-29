@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NC Piedmont Train Schedule</title>
+    <style>
+        /* --- General Styles & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* --- Main Layout & Headers --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            color: #0d47a1; /* NCDOT Blue */
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        /* --- Train Card Styles --- */
+        .train-card {
+            background-color: #fff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .train-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* --- Details & Summary for Accordion --- */
+        details {
+            padding: 20px 25px;
+        }
+
+        summary {
+            list-style: none; /* Hide the default marker */
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        summary::-webkit-details-marker {
+            display: none; /* Hide marker for Chrome/Safari */
+        }
+        
+        /* --- Card Header Content --- */
+        .card-header {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+        }
+        
+        .route-info {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #1a237e;
+        }
+
+        .route-info .times {
+            font-weight: 700;
+            color: #0d47a1;
+        }
+
+        .train-number {
+            font-size: 0.9em;
+            color: #757575;
+            margin-left: 15px;
+            background-color: #e3f2fd;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        
+        .expand-text {
+            color: #1565c0;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 20px;
+        }
+
+        /* Change text on expand */
+        details[open] .expand-text::before {
+            content: "Hide All Stops";
+        }
+        details:not([open]) .expand-text::before {
+            content: "Show All Stops";
+        }
+
+        /* --- Expanded Stops List --- */
+        .stops-list {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .stop-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .stop-item:last-child {
+            border-bottom: none;
+        }
+
+        .stop-city a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+        .stop-city a:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+        }
+
+        .stop-time {
+            font-weight: 500;
+            color: #424242;
+        }
+        
+        /* --- Ticket Button --- */
+        .ticket-button {
+            display: inline-block;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 12px 25px;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .ticket-button:hover {
+            background-color: #45a049;
+        }
+        
+        /* --- Services Section --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .service-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .service-card h3 {
+            margin-top: 0;
+            color: #1a237e;
+        }
+        
+        .service-card ul {
+            padding-left: 20px;
+            margin: 0;
+            color: #555;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+
+            summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .expand-text { margin-left: 0; margin-top: 5px; }
+            details { padding: 15px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <h1>NC Piedmont Train Schedule</h1>
+
+        <section id="raleigh-to-charlotte">
+            <h2>Raleigh to Charlotte (Southbound)  southbound</h2>
+            <div id="southbound-trains">
+                </div>
+        </section>
+
+        <section id="charlotte-to-raleigh">
+            <h2>Charlotte to Raleigh (Northbound)  northbound</h2>
+            <div id="northbound-trains">
+                </div>
+        </section>
+        
+        <section id="services-info">
+            <h2>Services & On-Board Features</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>On-Board Amenities</h3>
+                    <ul>
+                        <li>Wi-Fi and electrical outlets</li>
+                        <li>Lounge car with vending machines</li>
+                        <li>Diaper-changing stations</li>
+                        <li>Volunteer train hosts</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Bike Racks</h3>
+                    <ul>
+                        <li>Limited availability</li>
+                        <li>Reservation required</li>
+                        <li>No handling fee</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Boxed Bikes & Baggage</h3>
+                    <ul>
+                        <li>Handled only at stations with checked baggage service</li>
+                        <li>Fees may apply for boxed bikes</li>
+                        <li>Carry-on and checked baggage at select stations</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- DATA ARRAYS ---
+        // TO EDIT THE SCHEDULE:
+        // Simply modify the arrays below. Each train has its own array.
+        // Each stop within a train's array is another array with three parts:
+        // [ 'City Name', 'Link to Station Info', 'Departure/Arrival Time' ]
+
+        // -- Base URL for station links
+        const stationUrlBase = 'https://www.ncbytrain.org/stations/pages/';
+
+        // == SOUTHBOUND TRAINS (Raleigh to Charlotte) ==
+        // Data is organized as: [City, Link Suffix, Time]
+        const train71 = [
+            ['Raleigh, N.C.', 'raleigh.aspx', '6:30 a.m.'],
+            ['Cary, N.C.', 'cary.aspx', '6:42 a.m.'],
+            ['Durham, N.C.', 'durham.aspx', '7:02 a.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '8:01 a.m.'],
+            ['Kannapolis, N.C.', 'kannapolis.aspx', '8:59 a.m.'],
+            ['Charlotte, N.C.', 'charlotte.aspx', '(ar) 9:28 a.m.']
+        ];
+        
+        const train73 = [
+            ['Raleigh, N.C.', 'raleigh.aspx', '10:00 a.m.'],
+            ['Cary, N.C.', 'cary.aspx', '10:12 a.m.'],
+            ['Durham, N.C.', 'durham.aspx', '10:32 a.m.'],
+            ['Burlington, N.C.', 'burlington.aspx', '11:08 a.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '11:35 a.m.'],
+            ['High Point, N.C.', 'high-point.aspx', '11:52 a.m.'],
+            ['Salisbury, N.C.', 'salisbury.aspx', '12:25 p.m.'],
+            ['Kannapolis, N.C.', 'kannapolis.aspx', '12:42 p.m.'],
+            ['Charlotte, N.C.', 'charlotte.aspx', '(ar) 1:10 p.m.']
+        ];
+
+        const train75 = [
+            ['Raleigh, N.C.', 'raleigh.aspx', '12:45 p.m.'],
+            ['Cary, N.C.', 'cary.aspx', '12:57 p.m.'],
+            ['Durham, N.C.', 'durham.aspx', '1:17 p.m.'],
+            ['Burlington, N.C.', 'burlington.aspx', '1:55 p.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '2:20 p.m.'],
+            ['High Point, N.C.', 'high-point.aspx', '2:37 p.m.'],
+            ['Salisbury, N.C.', 'salisbury.aspx', '3:11 p.m.'],
+            ['Kannapolis, N.C.', 'kannapolis.aspx', '3:27 p.m.'],
+            ['Charlotte, N.C.', 'charlotte.aspx', '(ar) 3:55 p.m.']
+        ];
+
+        const train77 = [
+            ['Raleigh, N.C.', 'raleigh.aspx', '3:15 p.m.'],
+            ['Cary, N.C.', 'cary.aspx', '3:27 p.m.'],
+            ['Durham, N.C.', 'durham.aspx', '3:47 p.m.'],
+            ['Burlington, N.C.', 'burlington.aspx', '4:26 p.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '4:51 p.m.'],
+            ['High Point, N.C.', 'high-point.aspx', '5:08 p.m.'],
+            ['Salisbury, N.C.', 'salisbury.aspx', '5:41 p.m.'],
+            ['Charlotte, N.C.', 'charlotte.aspx', '(ar) 6:21 p.m.']
+        ];
+        
+        // This array holds all the southbound train arrays.
+        const southboundTrains = {
+            'Train 71': train71,
+            'Train 73': train73,
+            'Train 75': train75,
+            'Train 77': train77
+        };
+
+
+        // == NORTHBOUND TRAINS (Charlotte to Raleigh) ==
+        // Data is organized as: [City, Link Suffix, Time]
+        const train72 = [
+            ['Charlotte, N.C.', 'charlotte.aspx', '10:25 a.m.'],
+            ['Kannapolis, N.C.', 'kannapolis.aspx', '10:50 a.m.'],
+            ['Salisbury, N.C.', 'salisbury.aspx', '11:06 a.m.'],
+            ['High Point, N.C.', 'high-point.aspx', '11:40 a.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '11:59 a.m.'],
+            ['Burlington, N.C.', 'burlington.aspx', '12:21 p.m.'],
+            ['Durham, N.C.', 'durham.aspx', '1:02 p.m.'],
+            ['Cary, N.C.', 'cary.aspx', '1:28 p.m.'],
+            ['Raleigh, N.C.', 'raleigh.aspx', '(ar) 1:41 p.m.']
+        ];
+
+        const train74 = [
+            ['Charlotte, N.C.', 'charlotte.aspx', '2:20 p.m.'],
+            ['Kannapolis, N.C.', 'kannapolis.aspx', '2:45 p.m.'],
+            ['Salisbury, N.C.', 'salisbury.aspx', '3:01 p.m.'],
+            ['High Point, N.C.', 'high-point.aspx', '3:35 p.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '3:54 p.m.'],
+            ['Burlington, N.C.', 'burlington.aspx', '4:15 p.m.'],
+            ['Durham, N.C.', 'durham.aspx', '5:01 p.m.'],
+            ['Cary, N.C.', 'cary.aspx', '5:22 p.m.'],
+            ['Raleigh, N.C.', 'raleigh.aspx', '(ar) 5:36 p.m.']
+        ];
+        
+        const train76 = [
+            ['Charlotte, N.C.', 'charlotte.aspx', '5:00 p.m.'],
+            ['Kannapolis, N.C.', 'kannapolis.aspx', '5:25 p.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '6:25 p.m.'],
+            ['Durham, N.C.', 'durham.aspx', '7:23 p.m.'],
+            ['Cary, N.C.', 'cary.aspx', '7:45 p.m.'],
+            ['Raleigh, N.C.', 'raleigh.aspx', '(ar) 7:59 p.m.']
+        ];
+
+        const train78 = [
+            ['Charlotte, N.C.', 'charlotte.aspx', '7:45 p.m.'],
+            ['Salisbury, N.C.', 'salisbury.aspx', '8:22 p.m.'],
+            ['High Point, N.C.', 'high-point.aspx', '8:56 p.m.'],
+            ['Greensboro, N.C.', 'greensboro.aspx', '9:15 p.m.'],
+            ['Burlington, N.C.', 'burlington.aspx', '9:37 p.m.'],
+            ['Durham, N.C.', 'durham.aspx', '10:17 p.m.'],
+            ['Cary, N.C.', 'cary.aspx', '10:38 p.m.'],
+            ['Raleigh, N.C.', 'raleigh.aspx', '(ar) 10:52 p.m.']
+        ];
+
+        // This array holds all the northbound train arrays.
+        const northboundTrains = {
+            'Train 72': train72,
+            'Train 74': train74,
+            'Train 76': train76,
+            'Train 78': train78
+        };
+        
+        // --- DYNAMIC CARD CREATION ---
+        
+        // Function to create HTML for a single train card
+        function createTrainCard(trainNumber, trainData) {
+            const firstStop = trainData[0];
+            const lastStop = trainData[trainData.length - 1];
+            const routeDirection = `${firstStop[0].replace(', N.C.', '')} to ${lastStop[0].replace(', N.C.', '')}`;
+            
+            // Create the list of stops for the dropdown
+            const stopsHtml = trainData.map(stop => `
+                <div class="stop-item">
+                    <span class="stop-city">
+                        <a href="${stationUrlBase}${stop[1]}" target="_blank">${stop[0]}</a>
+                    </span>
+                    <span class="stop-time">${stop[2]}</span>
+                </div>
+            `).join('');
+
+            // Assemble the full card
+            const cardHtml = `
+                <article class="train-card">
+                    <details>
+                        <summary>
+                            <div class="card-header">
+                                <div class="route-info">
+                                    ${routeDirection} <span class="times">${firstStop[2]} &ndash; ${lastStop[2].replace('(ar) ', '')}</span>
+                                </div>
+                                <span class="train-number">${trainNumber}</span>
+                            </div>
+                            <span class="expand-text"></span>
+                        </summary>
+                        <div class="stops-list">
+                            ${stopsHtml}
+                            <a href="https://www.ncbytrain.org/tickets/Pages/default.aspx" class="ticket-button" target="_blank">Get Tickets</a>
+                        </div>
+                    </details>
+                </article>
+            `;
+            return cardHtml;
+        }
+
+        // --- PAGE POPULATION ---
+
+        // Get the containers from the HTML
+        const southboundContainer = document.getElementById('southbound-trains');
+        const northboundContainer = document.getElementById('northbound-trains');
+        
+        // Populate Southbound trains
+        for (const trainNumber in southboundTrains) {
+            const card = createTrainCard(trainNumber, southboundTrains[trainNumber]);
+            southboundContainer.innerHTML += card;
+        }
+
+        // Populate Northbound trains
+        for (const trainNumber in northboundTrains) {
+            const card = createTrainCard(trainNumber, northboundTrains[trainNumber]);
+            northboundContainer.innerHTML += card;
+        }
+    });
+    </script>
+</body>
+</html>
