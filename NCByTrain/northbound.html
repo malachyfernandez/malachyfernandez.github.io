@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Northbound Schedule</title>
+    <title>Train Schedule Component</title>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         
-        // == NORTHBOUND TRAINS (Charlotte to Raleigh) ==
-        const train72 = [
+        // == DEFINE DATA FOR EACH TRAIN ==
+        const train1 = [
             ['Charlotte, N.C.*', 'charlotte',    '10:25 a.m.'],
             ['Kannapolis, N.C.', 'kannapolis',   '10:50 a.m.'],
             ['Salisbury, N.C.',  'salisbury',    '11:06 a.m.'],
@@ -21,7 +21,7 @@
             ['Raleigh, N.C.*',   'raleigh',      '(ar) 1:41 p.m.']
         ];
 
-        const train74 = [
+        const train2 = [
             ['Charlotte, N.C.*', 'charlotte',    '2:20 p.m.'],
             ['Kannapolis, N.C.', 'kannapolis',   '2:45 p.m.'],
             ['Salisbury, N.C.',  'salisbury',    '3:01 p.m.'],
@@ -33,7 +33,7 @@
             ['Raleigh, N.C.*',   'raleigh',      '(ar) 5:36 p.m.']
         ];
         
-        const train76 = [
+        const train3 = [
             ['Charlotte, N.C.*', 'charlotte',    '5:00 p.m.'],
             ['Kannapolis, N.C.', 'kannapolis',   '5:25 p.m.'],
             ['Greensboro, N.C.*','greensboro',   '6:25 p.m.'],
@@ -42,7 +42,7 @@
             ['Raleigh, N.C.*',   'raleigh',      '(ar) 7:59 p.m.']
         ];
 
-        const train78 = [
+        const train4 = [
             ['Charlotte, N.C.*', 'charlotte',    '7:45 p.m.'],
             ['Salisbury, N.C.',  'salisbury',    '8:22 p.m.'],
             ['High Point, N.C.†','high-point',   '8:56 p.m.'],
@@ -53,7 +53,14 @@
             ['Raleigh, N.C.*',   'raleigh',      '(ar) 10:52 p.m.']
         ];
 
-        const northboundTrains = { 'Train 72': train72, 'Train 74': train74, 'Train 76': train76, 'Train 78': train78 };
+        // This object holds all the trains to be displayed on the page.
+        // The key (e.g., 'Train 72') is what will be displayed on the card.
+        const trainSchedules = {
+            'Train 72': train1,
+            'Train 74': train2,
+            'Train 76': train3,
+            'Train 78': train4
+        };
 
         // --- HELPER FUNCTIONS ---
         function parseTime(timeStr) { const cleanTime = timeStr.replace('(ar) ', '').trim(); const [time, period] = cleanTime.split(' '); let [hours, minutes] = time.split(':').map(Number); if (period.toLowerCase() === 'p.m.' && hours !== 12) { hours += 12; } else if (period.toLowerCase() === 'a.m.' && hours === 12) { hours = 0; } const date = new Date(); date.setHours(hours, minutes, 0, 0); return date; }
@@ -64,8 +71,8 @@
         function createTrainCard(trainNumber, trainData) { const firstStop = trainData[0]; const lastStop = trainData[trainData.length - 1]; const duration = calculateDuration(firstStop[2], lastStop[2]); const stopsHtml = trainData.map(stop => { const stationName = stop[0]; const stationUrlPart = stop[1]; const stationTime = stop[2]; const cityHtml = stationUrlPart ? `<a href="https://www.ncbytrain.org/stations/${stationUrlPart}/Pages/default.aspx" target="_blank">${stationName}</a>` : `<span>${stationName}</span>`; return `<div class="stop-item"><span class="stop-city">${cityHtml}</span><span class="stop-time">${stationTime}</span></div>`; }).join(''); return ` <details class="train-card-wrapper"> <summary class="train-card"> <div class="card-header"><span class="train-type">Piedmont</span><span class="train-number">${trainNumber}</span></div> <div class="card-body"> <div class="departure-info"><span class="time">${formatDisplayTime(firstStop[2])}</span><span class="city">${firstStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> <div class="travel-arrow"><span class="duration">${duration}</span><svg viewBox="0 0 100 10" preserveAspectRatio="none"><line x1="0" y1="5" x2="95" y2="5" /><polyline points="90 0 100 5 90 10" fill="none" /></svg></div> <div class="arrival-info"><span class="time">${formatDisplayTime(lastStop[2])}</span><span class="city">${lastStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> </div> <div class="card-footer"><div class="expand-button">Show all ${trainData.length} stops <span class="arrow-icon">▼</span></div></div> </summary> <div class="stops-wrapper"><div class="stops-list">${stopsHtml}<a href="https://www.ncbytrain.org/tickets/Pages/default.aspx" class="ticket-button" target="_blank">Get Tickets</a></div></div> </details> `; }
 
         // --- PAGE POPULATION ---
-        const container = document.getElementById('northbound-schedule-container');
-        for (const trainNumber in northboundTrains) { container.innerHTML += createTrainCard(trainNumber, northboundTrains[trainNumber]); }
+        const container = document.getElementById('schedule-container');
+        for (const trainNumber in trainSchedules) { container.innerHTML += createTrainCard(trainNumber, trainSchedules[trainNumber]); }
     });
     </script>
     
@@ -107,8 +114,9 @@
 </head>
 <body class="schedule-component-body">
 
-    <div id="northbound-schedule-container">
+    <div id="schedule-container" style="max-width: 800px; margin: auto;">
         </div>
 
 </body>
 </html>
+
