@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Execute Command Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #command-display-area {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 900px;
+        }
+        #command-built-area {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 40px;
+            background-color: #fff;
+            display: flex; /* To allow inputs and spans to line up */
+            flex-wrap: wrap; /* To allow wrapping of command parts */
+            align-items: center;
+            overflow-x: auto; /* For very long commands */
+        }
+        #command-built-area span, #command-built-area input {
+            margin-right: 5px; /* Spacing between command parts */
+            padding: 2px 0;
+        }
+        #command-built-area input.command-bar-input {
+            border: 1px solid #007bff;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        #copy-button {
+            padding: 10px;
+            margin-left: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #copy-button:hover {
+            background-color: #218838;
+        }
+        .button-panels-container {
+            width: 80%;
+            max-width: 900px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .button-panel {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        .button-panel:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .button-panel h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .button-panel button {
+            padding: 8px 12px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button-panel button:hover {
+            background-color: #0056b3;
+        }
+        .button-panel button.special-action {
+            background-color: #ffc107; /* Yellow for special actions like adding text */
+            color: #212529;
+        }
+        .button-panel button.selector-arg-end {
+            background-color: #dc3545; /* Red for ending selector args */
+        }
+        /* Initially hide all panels except the first one (JavaScript will manage this) */
+        .button-panel:not(#panel-initial) {
+            /* display: none; */ /* Uncomment this when JS is ready to manage visibility */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Minecraft <code>/execute</code> Command Generator</h1>
+
+    <div id="command-display-area">
+        <div id="command-built-area">
+            </div>
+        <button id="copy-button">Copy</button>
+    </div>
+
+    <div class="button-panels-container">
+
+        <div id="panel-initial" class="button-panel">
+            <h3>Start Building</h3>
+            <button id="start-execute-button" data-command-part="/execute ">/execute</button>
+        </div>
+
+        <div id="panel-execute-subcommands" class="button-panel" style="display:none;">
+            <h3>Execute Subcommands</h3>
+            <button data-command-part="as ">as</button>
+            <button data-command-part="at ">at</button>
+            <button data-command-part="in ">in</button>
+            <button data-command-part="positioned ">positioned</button>
+            <button data-command-part="align ">align</button>
+            <button data-command-part="anchored ">anchored</button>
+            <button data-command-part="rotated ">rotated</button>
+            <button data-command-part="facing ">facing</button>
+            <button data-command-part="if ">if</button>
+            <button data-command-part="unless ">unless</button>
+            <hr>
+            <button data-command-part="run ">run</button>
+        </div>
+
+        <div id="panel-targets" class="button-panel" style="display:none;">
+            <h3>Target Selectors</h3>
+            <button data-selector="@p" data-command-part="@p">@p</button>
+            <button data-selector="@r" data-command-part="@r">@r</button>
+            <button data-selector="@a" data-command-part="@a">@a</button>
+            <button data-selector="@s" data-command-part="@s">@s</button>
+            <button data-selector="@e" data-command-part="@e">@e</button>
+            <p style="font-size: 0.9em; color: #555;">(After choosing a selector like @e, selector argument buttons will appear. For manual target names, use the 'Add Typeable Text Field' button.)</p>
+        </div>
+        
+        <div id="panel-selector-args" class="button-panel" style="display:none;">
+            <h3>Selector Arguments (e.g., for @e[...])</h3>
+            <p style="font-size: 0.9em; color: #555;">(JS will add '[' automatically after selector, and ',' between arguments)</p>
+            <button data-selector-arg="type=">type=</button>
+            <button data-selector-arg="name=">name=</button>
+            <button data-selector-arg="tag=">tag=</button>
+            <button data-selector-arg="team=">team=</button>
+            <button data-selector-arg="scores={">scores={...}=</button> <button data-selector-arg="limit=">limit=</button>
+            <button data-selector-arg="sort=">sort=</button>
+            <button data-selector-arg="x=">x=</button>
+            <button data-selector-arg="y=">y=</button>
+            <button data-selector-arg="z=">z=</button>
+            <button data-selector-arg="distance=">distance=</button>
+            <button data-selector-arg="dx=">dx=</button>
+            <button data-selector-arg="dy=">dy=</button>
+            <button data-selector-arg="dz=">dz=</button>
+            <button data-selector-arg="x_rotation=">x_rotation=</button>
+            <button data-selector-arg="y_rotation=">y_rotation=</button>
+            <button data-selector-arg="level=">level=</button>
+            <button data-selector-arg="gamemode=">gamemode=</button>
+            <hr>
+            <button id="end-selector-args-button" data-command-part="]" class="selector-arg-end">End Selector Arguments ( ] )</button>
+        </div>
+
+        <div id="panel-dimensions" class="button-panel" style="display:none;">
+            <h3>Dimension</h3>
+            <button data-command-part="overworld ">overworld</button>
+            <button data-command-part="nether ">the_nether</button>
+            <button data-command-part="the_end ">the_end</button>
+        </div>
+
+        <div id="panel-axes" class="button-panel" style="display:none;">
+            <h3>Align Axes</h3>
+            <p style="font-size: 0.9em; color: #555;">(Use the 'Add Typeable Text Field' to input axes like 'xyz', 'x', 'yz')</p>
+            </div>
+        
+        <div id="panel-anchors" class="button-panel" style="display:none;">
+            <h3>Anchor</h3>
+            <button data-command-part="eyes ">eyes</button>
+            <button data-command-part="feet ">feet</button>
+        </div>
+
+        <div id="panel-conditional-type" class="button-panel" style="display:none;">
+            <h3>Conditional Type</h3>
+            <button data-command-part="block ">block</button> <button data-command-part="blocks ">blocks</button> <button data-command-part="entity ">entity</button> <button data-command-part="score ">score</button> </div>
+
+        <div id="panel-all-masked" class="button-panel" style="display:none;">
+            <h3>Condition for Blocks</h3>
+            <button data-command-part="all ">all</button>
+            <button data-command-part="masked ">masked</button>
+        </div>
+        
+        <div id="panel-score-condition" class="button-panel" style="display:none;">
+            <h3>Score Condition</h3>
+            <button data-command-part="matches ">matches</button> <hr>
+            <p style="font-size:0.9em; color: #555;">Or compare to another score:</p>
+            <button data-command-part="= "> = (equals)</button>
+            <button data-command-part="< "> &lt; (less than)</button>
+            <button data-command-part="<= "> &lt;= (less than or equal to)</button>
+            <button data-command-part="> "> &gt; (greater than)</button>
+            <button data-command-part=">= "> &gt;= (greater than or equal to)</button>
+            </div>
+
+        <div id="panel-general-input" class="button-panel">
+             <h3>Add Custom Text/Value</h3>
+            <button id="add-text-input-button" class="special-action">Add Typeable Text Field</button>
+            <p style="font-size: 0.9em; color: #555;">Click this to add a field in the command bar for coordinates (e.g., <code>~ ~1 ~</code>), names, values, selectors, commands (e.g., <code>say hello</code>), etc.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Basic JavaScript to illustrate the concept and make it minimally interactive.
+        // A full implementation would require more sophisticated state management.
+
+        const commandBuiltArea = document.getElementById('command-built-area');
+        const copyButton = document.getElementById('copy-button');
+        const allPanels = document.querySelectorAll('.button-panel');
+        const addTextInputButton = document.getElementById('add-text-input-button');
+
+        let currentTargetSelector = ''; // To remember if we are in selector argument mode
+
+        function hideAllPanels() {
+            allPanels.forEach(panel => panel.style.display = 'none');
+        }
+
+        function showPanel(panelId) {
+            hideAllPanels();
+            const panelToShow = document.getElementById(panelId);
+            if (panelToShow) {
+                panelToShow.style.display = 'block';
+            }
+            // Always show the general input panel as it's broadly useful
+            document.getElementById('panel-general-input').style.display = 'block';
+        }
+        
+        function addCommandPart(text, isInput = false, placeholder = "value") {
+            if (isInput) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'command-bar-input';
+                input.placeholder = placeholder;
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        // Optional: Finalize input to span on Enter, or just let user click next button
+                        // For simplicity, we'll leave it as an editable input for now.
+                        // Or automatically focus next logical element / show next panel.
+                    }
+                });
+                commandBuiltArea.appendChild(input);
+                input.focus();
+            } else {
+                const span = document.createElement('span');
+                span.textContent = text;
+                commandBuiltArea.appendChild(span);
+            }
+            // Add a space after each part for readability, unless it's an opening bracket for selector
+            if (!text.endsWith('[')) {
+                 const space = document.createElement('span');
+                 space.textContent = ' ';
+                 commandBuiltArea.appendChild(space);
+            }
+        }
+
+        // Initial setup
+        document.getElementById('panel-initial').style.display = 'block';
+        document.getElementById('panel-general-input').style.display = 'block';
+
+
+        document.getElementById('start-execute-button').addEventListener('click', function() {
+            commandBuiltArea.innerHTML = ''; // Clear previous command
+            addCommandPart(this.dataset.commandPart);
+            showPanel('panel-execute-subcommands');
+        });
+
+        addTextInputButton.addEventListener('click', function() {
+            addCommandPart('', true, 'Enter value...');
+        });
+        
+        copyButton.addEventListener('click', () => {
+            let commandText = '';
+            commandBuiltArea.childNodes.forEach(node => {
+                if (node.nodeName === 'SPAN') {
+                    commandText += node.textContent;
+                } else if (node.nodeName === 'INPUT' && node.type === 'text') {
+                    commandText += node.value;
+                }
+            });
+            navigator.clipboard.writeText(commandText.trim())
+                .then(() => alert('Command copied to clipboard!'))
+                .catch(err => console.error('Failed to copy: ', err));
+        });
+
+        // Simplified event listeners for execute subcommands
+        document.querySelectorAll('#panel-execute-subcommands button').forEach(button => {
+            button.addEventListener('click', function() {
+                const part = this.dataset.commandPart;
+                addCommandPart(part);
+                const command = part.trim();
+                // Based on command, show next relevant panel
+                if (command === 'as' || command === 'at' || (command === 'positioned' && this.textContent.includes('as')) || (command === 'rotated' && this.textContent.includes('as'))) {
+                    showPanel('panel-targets');
+                } else if (command === 'in') {
+                    showPanel('panel-dimensions');
+                } else if (command === 'align') {
+                    showPanel('panel-axes'); // Primarily for the text input field
+                } else if (command === 'anchored') {
+                    showPanel('panel-anchors');
+                } else if (command === 'if' || command === 'unless') {
+                    showPanel('panel-conditional-type');
+                } else if (command === 'run') {
+                    // Expect user to use "Add Typeable Text Field" for the command
+                    alert("Now use 'Add Typeable Text Field' to enter the command to run.");
+                    showPanel('panel-execute-subcommands'); // Or a dedicated "end command" state
+                } else if (command === 'positioned' || command === 'rotated' || command === 'facing') {
+                     alert("Now use 'Add Typeable Text Field' to enter coordinates/rotation.");
+                     showPanel('panel-execute-subcommands'); // Loop back for more subcommands or 'run'
+                }
+                // More logic needed here for each subcommand type
+            });
+        });
+
+        // Target selectors
+        document.querySelectorAll('#panel-targets button').forEach(button => {
+            button.addEventListener('click', function() {
+                const selector = this.dataset.commandPart;
+                addCommandPart(selector);
+                currentTargetSelector = selector; // Remember the selector
+                if (selector === '@e' || selector === '@a' || selector === '@p' || selector === '@r' || selector === '@s') { // All selectors can have arguments
+                    addCommandPart('['); // Automatically add opening bracket
+                    showPanel('panel-selector-args');
+                } else {
+                    // If it was a typed selector name, go back to execute subcommands
+                    showPanel('panel-execute-subcommands');
+                }
+            });
+        });
+        
+        // Selector arguments
+        let firstSelectorArg = true;
+        document.querySelectorAll('#panel-selector-args button').forEach(button => {
+            button.addEventListener('click', function() {
+                const arg = this.dataset.selectorArg;
+                if (arg) { // It's an argument like type= or name=
+                    if (!firstSelectorArg) {
+                        addCommandPart(','); // Add comma before next argument
+                    }
+                    addCommandPart(arg);
+                    firstSelectorArg = false;
+                    // Prompt for value using the general input
+                    alert("Now use 'Add Typeable Text Field' to enter the value for " + arg);
+                    // Stay on panel-selector-args or make it clear value is needed
+                } else if (this.id === 'end-selector-args-button') {
+                    addCommandPart(']');
+                    firstSelectorArg = true; // Reset for next selector
+                    currentTargetSelector = ''; // Clear remembered selector
+                    showPanel('panel-execute-subcommands');
+                }
+            });
+        });
+
+        // Dimensions
+        document.querySelectorAll('#panel-dimensions button').forEach(button => {
+            button.addEventListener('click', function() {
+                addCommandPart(this.dataset.commandPart);
+                showPanel('panel-execute-subcommands'); // Go back to main subcommands
+            });
+        });
+        
+        // Anchors
+        document.querySelectorAll('#panel-anchors button').forEach(button => {
+            button.addEventListener('click', function() {
+                addCommandPart(this.dataset.commandPart);
+                showPanel('panel-execute-subcommands');
+            });
+        });
+
+        // Conditional Types
+        document.querySelectorAll('#panel-conditional-type button').forEach(button => {
+            button.addEventListener('click', function() {
+                const part = this.dataset.commandPart.trim();
+                addCommandPart(this.dataset.commandPart);
+                if (part === 'entity') {
+                    showPanel('panel-targets'); // Needs a target selector
+                } else if (part === 'block') {
+                    alert("Use 'Add Typeable Text Field' for <position> and then for <block>.");
+                    showPanel('panel-execute-subcommands'); // Or a specific flow for block details
+                } else if (part === 'blocks') {
+                    alert("Use 'Add Typeable Text Field' for <begin>, <end>, <destination> coordinates.");
+                    showPanel('panel-all-masked'); // Then choose all/masked
+                } else if (part === 'score') {
+                    alert("First, choose a target selector or use 'Add Typeable Text Field' for target name, then another for objective name.");
+                    // This would ideally guide to panel-targets, then panel-general-input for objective, then panel-score-condition
+                    showPanel('panel-targets'); // Start with target for the score
+                    // After target and objective are entered, you'd transition to panel-score-condition
+                }
+            });
+        });
+        
+        document.querySelectorAll('#panel-all-masked button').forEach(button => {
+            button.addEventListener('click', function() {
+                addCommandPart(this.dataset.commandPart);
+                showPanel('panel-execute-subcommands');
+            });
+        });
+        
+        document.querySelectorAll('#panel-score-condition button').forEach(button => {
+            button.addEventListener('click', function() {
+                const part = this.dataset.commandPart.trim();
+                addCommandPart(this.dataset.commandPart);
+                if (part === "matches") {
+                    alert("Use 'Add Typeable Text Field' for the range.");
+                } else { // It's an operator
+                    alert("Use 'Add Typeable Text Field' for source target and then source objective.");
+                }
+                showPanel('panel-execute-subcommands');
+            });
+        });
+
+        // Note: The JS above is a simplified starting point.
+        // A full implementation would involve a more robust state machine to correctly
+        // guide the user through options (e.g., after 'if score <target> <objective>',
+        // then show 'matches' or comparison operators, etc.).
+        // It would also handle the automatic insertion of commas in selector arguments more gracefully.
+    </script>
+
+</body>
+</html>
