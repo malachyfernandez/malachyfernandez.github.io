@@ -159,7 +159,7 @@
             margin: 30px 0;
         }
         .image-wrapper {
-            flex: 1; /* This makes them equal width */
+            flex: 1;
             display: flex;
             flex-direction: column;
         }
@@ -172,8 +172,8 @@
         }
         .image-wrapper img {
             width: 100%;
-            aspect-ratio: 3 / 5; /* Force the 3:5 aspect ratio */
-            object-fit: cover; /* Crop to fit without distortion */
+            aspect-ratio: 3 / 5;
+            object-fit: cover;
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
@@ -220,16 +220,41 @@
         .service-card h3 { margin-top: 0; color: var(--primary-blue); }
         .service-card ul { padding-left: 20px; margin: 0; color: #555; line-height: 1.6; }
 
-        /* --- Modal Styles --- */
+        /* --- MODAL STYLES (CORRECTED) --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; visibility: hidden; opacity: 0; transition: visibility 0s 0.3s, opacity 0.3s ease; }
         .modal-overlay.active { visibility: visible; opacity: 1; transition: visibility 0s, opacity 0.3s ease; }
         .modal-content { background: #fff; border-radius: 12px; max-width: 650px; width: 90%; position: relative; line-height: 1.7; transform: scale(0.95); transition: transform 0.3s ease; display: flex; flex-direction: column; max-height: 85vh; }
         .modal-overlay.active .modal-content { transform: scale(1); }
-        .modal-header { position: sticky; top: 0; background-color: #fff; z-index: 11; padding: 30px 40px 15px; border-bottom: 1px solid #eee; }
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            z-index: 11;
+            padding: 15px 25px; /* Reduced padding */
+            border-bottom: 1px solid #eee;
+            display: flex; /* Aligns items in a row */
+            justify-content: space-between; /* Pushes title and button apart */
+            align-items: center; /* Vertically centers them */
+            border-top-left-radius: 12px; /* Rounds the top-left corner */
+            border-top-right-radius: 12px; /* Rounds the top-right corner */
+        }
         .modal-body { padding: 15px 40px 30px; overflow-y: auto; }
-        .modal-content h1 { font-size: 1.8em; color: var(--primary-blue); margin-top: 0; margin-bottom: 15px; }
+        .modal-content h1 {
+            font-size: 1.3em; /* Reduced font size */
+            color: var(--primary-blue);
+            margin: 0; /* Removed top and bottom margin */
+        }
         .modal-content .contact-info { margin-top: 25px; font-weight: 500; }
-        .close-button { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2.2em; color: #aaa; cursor: pointer; line-height: 1; z-index: 12; }
+        .close-button {
+            position: static; /* Removed absolute positioning */
+            background: none;
+            border: none;
+            font-size: 1.8em; /* Adjusted font size */
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1; /* Ensures consistent height */
+            padding: 0;
+        }
         .close-button:hover { color: var(--dark-text); }
         .modal-link-pill { display: inline-block; background-color: #f0f0f0; color: black; padding: 6px 14px; text-decoration: none; border-radius: 20px; font-size: 0.9em; font-weight: 500; margin-top: 15px; transition: background-color 0.2s ease; }
         .modal-link-pill:hover { background-color: #e0e0e0; }
@@ -300,8 +325,8 @@
     <div id="welcome-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                 <button class="close-button">&times;</button>
                  <h1>Greetings, NC By Train!</h1>
+                 <button class="close-button">&times;</button>
             </div>
             <div class="modal-body">
                 <p>As a big fan of passenger rail, I'm passionate about seeing North Carolina's train service succeed.</p>
