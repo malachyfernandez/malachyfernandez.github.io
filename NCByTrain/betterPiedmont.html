@@ -153,10 +153,30 @@
         h2 { font-size: 1.8em; margin-top: 40px; color: var(--primary-blue); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 30px; }
         
         /* --- Image Comparison Section --- */
-        .comparison-container { display: flex; gap: 20px; margin: 30px 0; }
-        .image-wrapper { flex: 1; display: flex; flex-direction: column; }
-        .image-wrapper h3 { text-align: center; margin-bottom: 10px; font-size: 1em; font-weight: 500; color: var(--light-text); }
-        .image-wrapper img { width: 100%; aspect-ratio: 3 / 5; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); }
+        .comparison-container {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .image-wrapper {
+            flex: 1; /* This makes them equal width */
+            display: flex;
+            flex-direction: column;
+        }
+        .image-wrapper h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+        .image-wrapper img {
+            width: 100%;
+            aspect-ratio: 3 / 5; /* Force the 3:5 aspect ratio */
+            object-fit: cover; /* Crop to fit without distortion */
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
 
         /* --- Train Card Styles --- */
         .train-card-wrapper { cursor: pointer; display: block; margin-bottom: 30px; }
@@ -203,13 +223,13 @@
         /* --- Modal Styles --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; visibility: hidden; opacity: 0; transition: visibility 0s 0.3s, opacity 0.3s ease; }
         .modal-overlay.active { visibility: visible; opacity: 1; transition: visibility 0s, opacity 0.3s ease; }
-        .modal-content { background: #fff; border-radius: 12px; max-width: 650px; width: 90%; position: relative; line-height: 1.7; transform: scale(0.95); transition: transform 0.3s ease; display: flex; flex-direction: column; max-height: 85vh; overflow: hidden; padding: 0; }
+        .modal-content { background: #fff; border-radius: 12px; max-width: 650px; width: 90%; position: relative; line-height: 1.7; transform: scale(0.95); transition: transform 0.3s ease; display: flex; flex-direction: column; max-height: 85vh; }
         .modal-overlay.active .modal-content { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background-color: #fff; z-index: 11; padding: 15px 25px; border-bottom: 1px solid #eee; flex-shrink: 0; }
-        .modal-body { padding: 20px 25px 30px; overflow-y: auto; }
-        .modal-content h1 { font-size: 1.6em; color: var(--primary-blue); margin: 0; }
+        .modal-header { position: sticky; top: 0; background-color: #fff; z-index: 11; padding: 30px 40px 15px; border-bottom: 1px solid #eee; }
+        .modal-body { padding: 15px 40px 30px; overflow-y: auto; }
+        .modal-content h1 { font-size: 1.8em; color: var(--primary-blue); margin-top: 0; margin-bottom: 15px; }
         .modal-content .contact-info { margin-top: 25px; font-weight: 500; }
-        .close-button { background: none; border: none; font-size: 2em; color: #aaa; cursor: pointer; line-height: 1; padding-left: 15px; }
+        .close-button { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2.2em; color: #aaa; cursor: pointer; line-height: 1; z-index: 12; }
         .close-button:hover { color: var(--dark-text); }
         .modal-link-pill { display: inline-block; background-color: #f0f0f0; color: black; padding: 6px 14px; text-decoration: none; border-radius: 20px; font-size: 0.9em; font-weight: 500; margin-top: 15px; transition: background-color 0.2s ease; }
         .modal-link-pill:hover { background-color: #e0e0e0; }
@@ -232,17 +252,6 @@
                 * indicates checked baggage service available at stop<br>
                 † indicates connector service is available at stop
             </p>
-        </div>
-
-        <div class="comparison-container">
-            <div class="image-wrapper">
-                <h3>Old Design</h3>
-                <img src="https://i.imgur.com/2s3j4mR.jpeg" alt="Screenshot of the original table-based train schedule">
-            </div>
-            <div class="image-wrapper">
-                <h3>New Design Concept</h3>
-                <img src="https://i.imgur.com/eBqA3P7.png" alt="Screenshot of the new card-based train schedule">
-            </div>
         </div>
 
         <section id="southbound-section">
@@ -291,13 +300,22 @@
     <div id="welcome-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                 <h1 class="modal-title">Greetings, NC By Train!</h1>
                  <button class="close-button">&times;</button>
+                 <h1>Greetings, NC By Train!</h1>
             </div>
             <div class="modal-body">
                 <p>As a big fan of passenger rail, I'm passionate about seeing North Carolina's train service succeed.</p>
                 <p>I felt the current schedule page was very information-heavy, so I created this conceptual redesign to offer a more modern and intuitive user experience. This fully functional page is designed to be easier to read at a glance and simpler to update.</p>
-                
+                <div class="comparison-container">
+                    <div class="image-wrapper">
+                        <h3>Old Design</h3>
+                        <img src="IMG_1778.jpeg" alt="Screenshot of the original table-based train schedule">
+                    </div>
+                    <div class="image-wrapper">
+                        <h3>New Design Concept</h3>
+                        <img src="IMG_1779.jpeg" alt="Screenshot of the new card-based train schedule">
+                    </div>
+                </div>
                 <p>Please consider all rights to this concept and its code to be yours to use, adapt, or build upon as you see fit.</p>
                 <p>A self-contained "Schedule Component" of this design is also available. It is built to be easily integrated into any webpage and can be populated with different route data.</p>
                 <a href="https://malachyfernandez.github.io/NCByTrain/schedulecomponent.html" class="modal-link-pill" target="_blank">View Schedule Component</a>
