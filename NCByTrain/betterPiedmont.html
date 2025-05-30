@@ -161,9 +161,9 @@
         h2 { font-size: 1.8em; margin-top: 40px; color: var(--primary-blue); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 30px; }
         
         /* --- Train Card Styles --- */
+        .train-card-wrapper { cursor: pointer; display: block; margin-bottom: 30px; }
         .train-card { display: block; background-color: var(--card-background); border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); transition: all 0.3s ease; border: 1px solid var(--border-color); padding: 20px 25px; }
         details[open] > .train-card { border-bottom-left-radius: 0; border-bottom-right-radius: 0; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-        .train-card-wrapper { cursor: pointer; }
         .train-card-wrapper:hover .train-card { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
         summary { list-style: none; }
         summary::-webkit-details-marker { display: none; }
@@ -184,15 +184,24 @@
         .arrow-icon { margin-left: 8px; display: inline-block; transition: transform 0.3s ease-in-out; }
         details[open] summary .arrow-icon { transform: rotate(180deg); }
         
-        /* --- Smooth Dropdown Animation --- */
-        .stops-wrapper { background: var(--card-background); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border: 1px solid var(--border-color); border-top: none; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); margin-top: -1px; max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-        details[open] > .stops-wrapper { max-height: 1000px; }
+        /* --- Speedy Dropdown Animation --- */
+        .stops-wrapper { background: var(--card-background); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border: 1px solid var(--border-color); border-top: none; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); margin-top: -1px; max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out; }
+        details[open] > .stops-wrapper { max-height: 1000px; opacity: 1; }
         .stops-list { padding: 20px 25px 25px 25px; border-top: 1px solid var(--border-color); }
+        
+        /* --- Link and Stop Styling --- */
         .stop-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
-        .stop-city, .stop-city a { text-decoration: none; color: var(--dark-text); font-weight: 500; }
-        .stop-city a:hover { color: var(--primary-blue); }
+        .stop-city a { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-decoration-color: var(--light-text); color: var(--dark-text); font-weight: 500; }
+        .stop-city a:hover { text-decoration-color: var(--dark-text); }
+        .stop-city a::after { content: '↗'; font-size: 0.8em; margin-left: 4px; display: inline-block; text-decoration: none; color: var(--light-text); }
         .ticket-button { display: inline-block; background-color: var(--accent-green); color: white; padding: 12px 25px; margin-top: 20px; text-align: center; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s ease; }
         .ticket-button:hover { background-color: #45a049; transform: scale(1.05); }
+
+        /* --- Services Section --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .service-card { background: var(--card-background); padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .service-card h3 { margin-top: 0; color: var(--primary-blue); }
+        .service-card ul { padding-left: 20px; margin: 0; color: #555; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -220,6 +229,38 @@
         <section id="northbound-section">
             <h2>Charlotte to Raleigh (Northbound)</h2>
             <div id="northbound-trains"></div>
+        </section>
+
+        <section id="services-info">
+            <h2>Services & On-Board Features</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>On-Board Amenities</h3>
+                    <ul>
+                        <li>Wi-Fi and electrical outlets</li>
+                        <li>Lounge car with vending machines</li>
+                        <li>Diaper-changing stations</li>
+                        <li>Volunteer train hosts</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Bikes & Baggage</h3>
+                    <ul>
+                        <li>Carry-on and checked baggage at select stations</li>
+                        <li>Bike racks have limited availability; reservations required</li>
+                        <li>Boxed bikes handled at stations with checked baggage service</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Pet Policy</h3>
+                    <ul>
+                        <li>Small dogs and cats in a carrier are permitted</li>
+                        <li>Pet and carrier must be under 20 pounds combined</li>
+                        <li>Reservations are required and a fee applies</li>
+                        <li>Service animals are not considered pets and are welcome</li>
+                    </ul>
+                </div>
+            </div>
         </section>
         
     </main>
