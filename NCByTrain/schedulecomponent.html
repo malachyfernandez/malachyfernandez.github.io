@@ -79,7 +79,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         :root { --primary-blue: #0d47a1; --light-blue: #e3f2fd; --accent-green: #4CAF50; --dark-text: #212121; --light-text: #616161; --border-color: #e0e0e0; --card-background: #ffffff; }
-        .schedule-component-body { font-family: 'Inter', sans-serif; }
         .train-card-wrapper { cursor: pointer; display: block; margin-bottom: 30px; font-family: 'Inter', sans-serif; }
         .train-card { display: block; background-color: var(--card-background); border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); transition: all 0.3s ease; border: 1px solid var(--border-color); padding: 20px 25px; }
         details[open] > .train-card { border-bottom-left-radius: 0; border-bottom-right-radius: 0; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
@@ -112,11 +111,10 @@
         .ticket-button:hover { background-color: #45a049; transform: scale(1.05); }
     </style>
 </head>
-<body class="schedule-component-body">
+<body>
 
-    <div id="schedule-container" style="max-width: 800px; margin: auto;">
+    <div id="schedule-container">
         </div>
 
 </body>
 </html>
-
