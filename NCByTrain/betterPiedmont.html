@@ -108,7 +108,7 @@
         function formatDisplayTime(timeStr) { const cleanTime = timeStr.replace('(ar) ', '').trim(); const parts = cleanTime.split(' '); return `${parts[0]}<span class="period">${parts[1]}</span>`; }
 
         // --- DYNAMIC CARD CREATION ---
-        function createTrainCard(trainNumber, trainData) { /* ... same as before ... */ const firstStop = trainData[0]; const lastStop = trainData[trainData.length - 1]; const duration = calculateDuration(firstStop[2], lastStop[2]); const stopsHtml = trainData.map(stop => { const stationName = stop[0]; const stationUrlPart = stop[1]; const stationTime = stop[2]; const cityHtml = stationUrlPart ? `<a href="https://www.ncbytrain.org/stations/${stationUrlPart}/Pages/default.aspx" target="_blank">${stationName}</a>` : `<span>${stationName}</span>`; return `<div class="stop-item"><span class="stop-city">${cityHtml}</span><span class="stop-time">${stationTime}</span></div>`; }).join(''); return ` <details class="train-card-wrapper"> <summary class="train-card"> <div class="card-header"><span class="train-type">Piedmont</span><span class="train-number">${trainNumber}</span></div> <div class="card-body"> <div class="departure-info"><span class="time">${formatDisplayTime(firstStop[2])}</span><span class="city">${firstStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> <div class="travel-arrow"><span class="duration">${duration}</span><svg viewBox="0 0 100 10" preserveAspectRatio="none"><line x1="0" y1="5" x2="95" y2="5" /><polyline points="90 0 100 5 90 10" fill="none" /></svg></div> <div class="arrival-info"><span class="time">${formatDisplayTime(lastStop[2])}</span><span class="city">${lastStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> </div> <div class="card-footer"><div class="expand-button">Show all ${trainData.length} stops <span class="arrow-icon">▼</span></div></div> </summary> <div class="stops-wrapper"><div class="stops-list">${stopsHtml}<a href="https://www.ncbytrain.org/tickets/Pages/default.aspx" class="ticket-button" target="_blank">Get Tickets</a></div></div> </details> `; }
+        function createTrainCard(trainNumber, trainData) { const firstStop = trainData[0]; const lastStop = trainData[trainData.length - 1]; const duration = calculateDuration(firstStop[2], lastStop[2]); const stopsHtml = trainData.map(stop => { const stationName = stop[0]; const stationUrlPart = stop[1]; const stationTime = stop[2]; const cityHtml = stationUrlPart ? `<a href="https://www.ncbytrain.org/stations/${stationUrlPart}/Pages/default.aspx" target="_blank">${stationName}</a>` : `<span>${stationName}</span>`; return `<div class="stop-item"><span class="stop-city">${cityHtml}</span><span class="stop-time">${stationTime}</span></div>`; }).join(''); return ` <details class="train-card-wrapper"> <summary class="train-card"> <div class="card-header"><span class="train-type">Piedmont</span><span class="train-number">${trainNumber}</span></div> <div class="card-body"> <div class="departure-info"><span class="time">${formatDisplayTime(firstStop[2])}</span><span class="city">${firstStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> <div class="travel-arrow"><span class="duration">${duration}</span><svg viewBox="0 0 100 10" preserveAspectRatio="none"><line x1="0" y1="5" x2="95" y2="5" /><polyline points="90 0 100 5 90 10" fill="none" /></svg></div> <div class="arrival-info"><span class="time">${formatDisplayTime(lastStop[2])}</span><span class="city">${lastStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> </div> <div class="card-footer"><div class="expand-button">Show all ${trainData.length} stops <span class="arrow-icon">▼</span></div></div> </summary> <div class="stops-wrapper"><div class="stops-list">${stopsHtml}<a href="https://www.ncbytrain.org/tickets/Pages/default.aspx" class="ticket-button" target="_blank">Get Tickets</a></div></div> </details> `; }
 
         // --- PAGE POPULATION ---
         const southboundContainer = document.getElementById('southbound-trains');
@@ -131,9 +131,8 @@
 
         closeButton.addEventListener('click', closeModal);
         modal.addEventListener('click', closeModal);
-        modalContent.addEventListener('click', (e) => e.stopPropagation()); // Prevent closing when clicking inside content
+        modalContent.addEventListener('click', (e) => e.stopPropagation());
 
-        // Open modal automatically after a short delay
         setTimeout(openModal, 500);
     });
     </script>
@@ -204,6 +203,10 @@
         .modal-content .contact-info { margin-top: 25px; font-weight: 500; }
         .close-button { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2.2em; color: #aaa; cursor: pointer; line-height: 1; }
         .close-button:hover { color: var(--dark-text); }
+        .modal-button { display: block; background-color: var(--primary-blue); color: white !important; padding: 12px 20px; text-align: center; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 25px 0 20px; transition: background-color 0.2s ease; }
+        .modal-button:hover { background-color: #0b3a82; color: white !important; }
+        .contact-info a { color: var(--primary-blue); text-decoration: none; font-weight: 600; }
+        .contact-info a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -273,300 +276,16 @@
             <p>As a big fan of passenger rail, I'm passionate about seeing North Carolina's train service succeed.</p>
             <p>I felt the current schedule page was very information-heavy, so I created this conceptual redesign to offer a more modern and intuitive user experience. This fully functional page is designed to be easier to read at a glance and simpler to update.</p>
             <p>Please consider all rights to this concept and its code to be yours to use, adapt, or build upon as you see fit.</p>
+            
+            <a href="https://malachyfernandez.github.io/NCByTrain/schedulecomponent.html" class="modal-button" target="_blank">View Schedule Component</a>
+
             <div class="contact-info">
                 <p>Thank you for your time and for all you do for transportation in our state. Please feel free to reach out with any questions.</p>
                 <p>
                     Best regards,<br>
                     Malachy Fernandez<br>
-                    malachyfernandez@gmail.com
-                </p>
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piedmont Train Schedule</title>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // == SOUTHBOUND TRAINS (Raleigh to Charlotte) ==
-        const train71 = [
-            ['Raleigh, N.C.',   'raleigh',      '6:30 a.m.'],
-            ['Cary, N.C.',      'cary',         '6:42 a.m.'],
-            ['Durham, N.C.',    'durham',       '7:02 a.m.'],
-            ['Greensboro, N.C.','greensboro',   '8:01 a.m.'],
-            ['Kannapolis, N.C.','kannapolis',   '8:59 a.m.'],
-            ['Charlotte, N.C.', 'charlotte',    '(ar) 9:28 a.m.']
-        ];
-        
-        const train73 = [
-            ['Raleigh, N.C.*',   'raleigh',      '10:00 a.m.'],
-            ['Cary, N.C.*',      'cary',         '10:12 a.m.'],
-            ['Durham, N.C.*',    'durham',       '10:32 a.m.'],
-            ['Burlington, N.C.', 'burlington',   '11:08 a.m.'],
-            ['Greensboro, N.C.*','greensboro',   '11:35 a.m.'],
-            ['High Point, N.C.†','high-point',   '11:52 a.m.'],
-            ['Salisbury, N.C.',  'salisbury',    '12:25 p.m.'],
-            ['Kannapolis, N.C.', 'kannapolis',   '12:42 p.m.'],
-            ['Charlotte, N.C.*', 'charlotte',    '(ar) 1:10 p.m.']
-        ];
-
-        const train75 = [
-            ['Raleigh, N.C.*',   'raleigh',      '12:45 p.m.'],
-            ['Cary, N.C.*',      'cary',         '12:57 p.m.'],
-            ['Durham, N.C.*',    'durham',       '1:17 p.m.'],
-            ['Burlington, N.C.', 'burlington',   '1:55 p.m.'],
-            ['Greensboro, N.C.*','greensboro',   '2:20 p.m.'],
-            ['High Point, N.C.†','high-point',   '2:37 p.m.'],
-            ['Salisbury, N.C.',  'salisbury',    '3:11 p.m.'],
-            ['Kannapolis, N.C.', 'kannapolis',   '3:27 p.m.'],
-            ['Charlotte, N.C.*', 'charlotte',    '(ar) 3:55 p.m.']
-        ];
-
-        const train77 = [
-            ['Raleigh, N.C.*',   'raleigh',      '3:15 p.m.'],
-            ['Cary, N.C.*',      'cary',         '3:27 p.m.'],
-            ['Durham, N.C.*',    'durham',       '3:47 p.m.'],
-            ['Burlington, N.C.', 'burlington',   '4:26 p.m.'],
-            ['Greensboro, N.C.*','greensboro',   '4:51 p.m.'],
-            ['High Point, N.C.†','high-point',   '5:08 p.m.'],
-            ['Salisbury, N.C.',  'salisbury',    '5:41 p.m.'],
-            ['Charlotte, N.C.*', 'charlotte',    '(ar) 6:21 p.m.']
-        ];
-        
-        const southboundTrains = { 'Train 71': train71, 'Train 73': train73, 'Train 75': train75, 'Train 77': train77 };
-
-        // == NORTHBOUND TRAINS (Charlotte to Raleigh) ==
-        const train72 = [
-            ['Charlotte, N.C.*', 'charlotte',    '10:25 a.m.'],
-            ['Kannapolis, N.C.', 'kannapolis',   '10:50 a.m.'],
-            ['Salisbury, N.C.',  'salisbury',    '11:06 a.m.'],
-            ['High Point, N.C.†','high-point',   '11:40 a.m.'],
-            ['Greensboro, N.C.*','greensboro',   '11:59 a.m.'],
-            ['Burlington, N.C.', 'burlington',   '12:21 p.m.'],
-            ['Durham, N.C.*',    'durham',       '1:02 p.m.'],
-            ['Cary, N.C.*',      'cary',         '1:28 p.m.'],
-            ['Raleigh, N.C.*',   'raleigh',      '(ar) 1:41 p.m.']
-        ];
-
-        const train74 = [
-            ['Charlotte, N.C.*', 'charlotte',    '2:20 p.m.'],
-            ['Kannapolis, N.C.', 'kannapolis',   '2:45 p.m.'],
-            ['Salisbury, N.C.',  'salisbury',    '3:01 p.m.'],
-            ['High Point, N.C.†','high-point',   '3:35 p.m.'],
-            ['Greensboro, N.C.*','greensboro',   '3:54 p.m.'],
-            ['Burlington, N.C.', 'burlington',   '4:15 p.m.'],
-            ['Durham, N.C.*',    'durham',       '5:01 p.m.'],
-            ['Cary, N.C.*',      'cary',         '5:22 p.m.'],
-            ['Raleigh, N.C.*',   'raleigh',      '(ar) 5:36 p.m.']
-        ];
-        
-        const train76 = [
-            ['Charlotte, N.C.*', 'charlotte',    '5:00 p.m.'],
-            ['Kannapolis, N.C.', 'kannapolis',   '5:25 p.m.'],
-            ['Greensboro, N.C.*','greensboro',   '6:25 p.m.'],
-            ['Durham, N.C.*',    'durham',       '7:23 p.m.'],
-            ['Cary, N.C.*',      'cary',         '7:45 p.m.'],
-            ['Raleigh, N.C.*',   'raleigh',      '(ar) 7:59 p.m.']
-        ];
-
-        const train78 = [
-            ['Charlotte, N.C.*', 'charlotte',    '7:45 p.m.'],
-            ['Salisbury, N.C.',  'salisbury',    '8:22 p.m.'],
-            ['High Point, N.C.†','high-point',   '8:56 p.m.'],
-            ['Greensboro, N.C.*','greensboro',   '9:15 p.m.'],
-            ['Burlington, N.C.', 'burlington',   '9:37 p.m.'],
-            ['Durham, N.C.*',    'durham',       '10:17 p.m.'],
-            ['Cary, N.C.*',      'cary',         '10:38 p.m.'],
-            ['Raleigh, N.C.*',   'raleigh',      '(ar) 10:52 p.m.']
-        ];
-
-        const northboundTrains = { 'Train 72': train72, 'Train 74': train74, 'Train 76': train76, 'Train 78': train78 };
-
-        // --- HELPER FUNCTIONS ---
-        function parseTime(timeStr) { const cleanTime = timeStr.replace('(ar) ', '').trim(); const [time, period] = cleanTime.split(' '); let [hours, minutes] = time.split(':').map(Number); if (period.toLowerCase() === 'p.m.' && hours !== 12) { hours += 12; } else if (period.toLowerCase() === 'a.m.' && hours === 12) { hours = 0; } const date = new Date(); date.setHours(hours, minutes, 0, 0); return date; }
-        function calculateDuration(startTimeStr, endTimeStr) { const startDate = parseTime(startTimeStr); const endDate = parseTime(endTimeStr); let diff = (endDate.getTime() - startDate.getTime()) / (1000 * 60); if (diff < 0) diff += 24 * 60; const hours = Math.floor(diff / 60); const minutes = Math.round(diff % 60); return `${hours}h ${minutes}m`; }
-        function formatDisplayTime(timeStr) { const cleanTime = timeStr.replace('(ar) ', '').trim(); const parts = cleanTime.split(' '); return `${parts[0]}<span class="period">${parts[1]}</span>`; }
-
-        // --- DYNAMIC CARD CREATION ---
-        function createTrainCard(trainNumber, trainData) { /* ... same as before ... */ const firstStop = trainData[0]; const lastStop = trainData[trainData.length - 1]; const duration = calculateDuration(firstStop[2], lastStop[2]); const stopsHtml = trainData.map(stop => { const stationName = stop[0]; const stationUrlPart = stop[1]; const stationTime = stop[2]; const cityHtml = stationUrlPart ? `<a href="https://www.ncbytrain.org/stations/${stationUrlPart}/Pages/default.aspx" target="_blank">${stationName}</a>` : `<span>${stationName}</span>`; return `<div class="stop-item"><span class="stop-city">${cityHtml}</span><span class="stop-time">${stationTime}</span></div>`; }).join(''); return ` <details class="train-card-wrapper"> <summary class="train-card"> <div class="card-header"><span class="train-type">Piedmont</span><span class="train-number">${trainNumber}</span></div> <div class="card-body"> <div class="departure-info"><span class="time">${formatDisplayTime(firstStop[2])}</span><span class="city">${firstStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> <div class="travel-arrow"><span class="duration">${duration}</span><svg viewBox="0 0 100 10" preserveAspectRatio="none"><line x1="0" y1="5" x2="95" y2="5" /><polyline points="90 0 100 5 90 10" fill="none" /></svg></div> <div class="arrival-info"><span class="time">${formatDisplayTime(lastStop[2])}</span><span class="city">${lastStop[0].replace(/[*†]/g, '').replace(', N.C.', '')}</span></div> </div> <div class="card-footer"><div class="expand-button">Show all ${trainData.length} stops <span class="arrow-icon">▼</span></div></div> </summary> <div class="stops-wrapper"><div class="stops-list">${stopsHtml}<a href="https://www.ncbytrain.org/tickets/Pages/default.aspx" class="ticket-button" target="_blank">Get Tickets</a></div></div> </details> `; }
-
-        // --- PAGE POPULATION ---
-        const southboundContainer = document.getElementById('southbound-trains');
-        const northboundContainer = document.getElementById('northbound-trains');
-        for (const trainNumber in southboundTrains) { southboundContainer.innerHTML += createTrainCard(trainNumber, southboundTrains[trainNumber]); }
-        for (const trainNumber in northboundTrains) { northboundContainer.innerHTML += createTrainCard(trainNumber, northboundTrains[trainNumber]); }
-        
-        // --- MODAL FUNCTIONALITY ---
-        const modal = document.getElementById('welcome-modal');
-        const modalContent = document.querySelector('.modal-content');
-        const closeButton = document.querySelector('.close-button');
-
-        function openModal() {
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-
-        closeButton.addEventListener('click', closeModal);
-        modal.addEventListener('click', closeModal);
-        modalContent.addEventListener('click', (e) => e.stopPropagation()); // Prevent closing when clicking inside content
-
-        // Open modal automatically after a short delay
-        setTimeout(openModal, 500);
-    });
-    </script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        :root { --primary-blue: #0d47a1; --light-blue: #e3f2fd; --accent-green: #4CAF50; --dark-text: #212121; --light-text: #616161; --border-color: #e0e0e0; --card-background: #ffffff; }
-        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; color: var(--dark-text); margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        
-        /* --- Intro Content --- */
-        .page-title { font-size: 2.8em; font-weight: 700; color: var(--dark-text); margin: 20px 0 0 0; }
-        .title-underline { height: 4px; width: 80px; background-color: var(--primary-blue); margin-top: 5px; margin-bottom: 30px; }
-        .intro-image { width: 100%; height: auto; border-radius: 12px; margin-bottom: 20px; }
-        .intro-text { line-height: 1.6; margin-bottom: 20px; }
-        .intro-text p { margin: 0 0 1em 0; }
-        .legend { font-size: 0.9em; color: var(--light-text); }
-        h2 { font-size: 1.8em; margin-top: 40px; color: var(--primary-blue); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 30px; }
-        
-        /* --- Train Card Styles --- */
-        .train-card-wrapper { cursor: pointer; display: block; margin-bottom: 30px; }
-        .train-card { display: block; background-color: var(--card-background); border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); transition: all 0.3s ease; border: 1px solid var(--border-color); padding: 20px 25px; }
-        details[open] > .train-card { border-bottom-left-radius: 0; border-bottom-right-radius: 0; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-        .train-card-wrapper:hover .train-card { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
-        summary { list-style: none; }
-        summary::-webkit-details-marker { display: none; }
-        .card-header { display: flex; align-items: center; margin-bottom: 15px; }
-        .train-type { font-weight: 600; color: var(--primary-blue); background-color: var(--light-blue); padding: 4px 10px; border-radius: 12px; font-size: 0.9em; }
-        .train-number { font-size: 0.9em; color: var(--light-text); margin-left: 10px; font-weight: 500; }
-        .card-body { display: flex; align-items: center; width: 100%; }
-        .departure-info, .arrival-info { flex: 2; display: flex; flex-direction: column; }
-        .arrival-info { align-items: flex-end; }
-        .time { font-size: 2em; font-weight: 600; color: var(--dark-text); line-height: 1.1; }
-        .time .period { font-size: 0.5em; font-weight: 500; color: var(--light-text); margin-left: 2px; }
-        .city { font-size: 1.1em; color: var(--light-text); font-weight: 500; }
-        .travel-arrow { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; color: var(--light-text); }
-        .duration { font-size: 0.9em; font-weight: 500; margin-bottom: 2px; }
-        .travel-arrow svg { width: 100%; max-width: 80px; height: auto; stroke: var(--light-text); stroke-width: 2; }
-        .card-footer { margin-top: 15px; text-align: right; }
-        .expand-button { display: inline-flex; align-items: center; padding: 8px 15px; background-color: #f1f1f1; border-radius: 20px; color: var(--light-text); font-weight: 500; font-size: 0.9em; transition: background-color 0.2s ease; }
-        .arrow-icon { margin-left: 8px; display: inline-block; transition: transform 0.3s ease-in-out; }
-        details[open] summary .arrow-icon { transform: rotate(180deg); }
-        
-        /* --- Speedy Dropdown Animation --- */
-        .stops-wrapper { background: var(--card-background); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border: 1px solid var(--border-color); border-top: none; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); margin-top: -1px; max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out; }
-        details[open] > .stops-wrapper { max-height: 1000px; opacity: 1; }
-        .stops-list { padding: 20px 25px 25px 25px; border-top: 1px solid var(--border-color); }
-        
-        /* --- Link and Stop Styling --- */
-        .stop-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
-        .stop-city a { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-decoration-color: var(--light-text); color: var(--dark-text); font-weight: 500; }
-        .stop-city a:hover { text-decoration-color: var(--dark-text); }
-        .ticket-button { display: inline-block; background-color: var(--accent-green); color: white; padding: 12px 25px; margin-top: 20px; text-align: center; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s ease; }
-        .ticket-button:hover { background-color: #45a049; transform: scale(1.05); }
-
-        /* --- Services Section --- */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px;}
-        .service-card { background: var(--card-background); padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .service-card h3 { margin-top: 0; color: var(--primary-blue); }
-        .service-card ul { padding-left: 20px; margin: 0; color: #555; line-height: 1.6; }
-
-        /* --- Modal Styles --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; visibility: hidden; opacity: 0; transition: visibility 0s 0.3s, opacity 0.3s ease; }
-        .modal-overlay.active { visibility: visible; opacity: 1; transition: visibility 0s, opacity 0.3s ease; }
-        .modal-content { background: #fff; padding: 30px 40px; border-radius: 12px; max-width: 600px; width: 90%; position: relative; line-height: 1.7; transform: scale(0.95); transition: transform 0.3s ease; }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-        .modal-content h1 { font-size: 1.8em; color: var(--primary-blue); margin-top: 0; }
-        .modal-content .contact-info { margin-top: 25px; font-weight: 500; }
-        .close-button { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2.2em; color: #aaa; cursor: pointer; line-height: 1; }
-        .close-button:hover { color: var(--dark-text); }
-    </style>
-</head>
-<body>
-    <main class="container">
-
-        <h1 class="page-title">Piedmont</h1>
-        <div class="title-underline"></div>
-
-        <img src="https://www.ncbytrain.org/PublishingImages/piedmont-at-raleigh.jpg" alt="NC Piedmont train at a station" class="intro-image">
-        
-        <div class="intro-text">
-            <p>Eight Piedmont trains, owned and operated by the N.C. Department of Transportation, offer daily service to Charlotte, Kannapolis, Salisbury, High Point, Greensboro, Burlington, Durham, Cary and Raleigh.</p>
-            <p>Schedules are subject to change without notice. Times are departure times unless indicated by (ar) for arrival times.</p>
-            <p class="legend">
-                * indicates checked baggage service available at stop<br>
-                † indicates connector service is available at stop
-            </p>
-        </div>
-
-        <section id="southbound-section">
-            <h2>Raleigh to Charlotte (Southbound)</h2>
-            <div id="southbound-trains"></div>
-        </section>
-
-        <section id="northbound-section">
-            <h2>Charlotte to Raleigh (Northbound)</h2>
-            <div id="northbound-trains"></div>
-        </section>
-
-        <section id="services-info">
-            <h2>Services & On-Board Features</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <h3>On-Board Amenities</h3>
-                    <ul>
-                        <li>Wi-Fi and electrical outlets</li>
-                        <li>Lounge car with vending machines</li>
-                        <li>Diaper-changing stations</li>
-                        <li>Volunteer train hosts</li>
-                    </ul>
-                </div>
-                <div class="service-card">
-                    <h3>Bikes & Baggage</h3>
-                    <ul>
-                        <li>Carry-on and checked baggage at select stations</li>
-                        <li>Bike racks have limited availability; reservations required</li>
-                        <li>Boxed bikes handled at stations with checked baggage service</li>
-                    </ul>
-                </div>
-                <div class="service-card">
-                    <h3>Pet Policy</h3>
-                    <ul>
-                        <li>Small dogs and cats in a carrier are permitted</li>
-                        <li>Pet and carrier must be under 20 pounds combined</li>
-                        <li>Reservations are required and a fee applies</li>
-                        <li>Service animals are not considered pets and are welcome</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <div id="welcome-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-button">&times;</button>
-            <h1>Greetings, NC By Train!</h1>
-            <p>Thank you for viewing this conceptual redesign of the train schedule page.</p>
-            <p>I felt the previous design was very information-heavy, so I created this concept to offer a more modern and intuitive user experience.</p>
-            <p>This fully functional page is designed to be easier to read at a glance and simpler to update. It can be integrated as a whole page, or its components could be adapted into the existing site.</p>
-            <div class="contact-info">
-                <p>I hope this concept is helpful! I would welcome any opportunity to discuss it further.</p>
-                <p>
-                    Best regards,<br>
-                    Machy Fernandez<br>
-                    makachyfernandez@gmail.com
+                    malachyfernandez@gmail.com<br>
+                    NCSU ‘28 | <a href="https://malachyf.com" target="_blank">malachyf.com</a>
                 </p>
             </div>
         </div>
