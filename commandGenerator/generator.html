@@ -100,7 +100,15 @@
             border-radius: 4px; z-index: 1000; cursor: pointer; font-size: 0.8em;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
+        .change-popup button {
+            background: #444; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer;
+        }
+        .change-popup button:hover { background: #555; }
+
 
         #copy-button {
             padding: 12px 15px; margin-left: 8px; background-color: #1b74e4;
@@ -216,7 +224,7 @@
         </div>
 
         <div class="button-panels-container">
-            <div id="panel-initial" class="button-panel">
+            <div id="panel-initial" class="button-panel" style="display: block;">
                 <div class="panel-button-list">
                     <button id="start-execute-button" class="panel-button primary">Start with /execute</button>
                 </div>
@@ -256,11 +264,18 @@
                 <section>
                     <h4>Add Argument</h4>
                     <div id="selector-args-options-container" class="panel-button-grid">
-                        <button class="panel-button" data-selector-arg-key="type">type=</button>
-                        <button class="panel-button" data-selector-arg-key="name">name=</button>
-                        <button class="panel-button" data-selector-arg-key="tag">tag=</button>
-                        <button class="panel-button" data-selector-arg-key="limit">limit=</button>
-                        </div>
+                        <button class="panel-button" data-selector-arg-key="type" data-arg-value-type="entity_list">type=</button>
+                        <button class="panel-button" data-selector-arg-key="name" data-arg-value-type="text_input">name=</button>
+                        <button class="panel-button" data-selector-arg-key="tag" data-arg-value-type="text_input">tag=</button>
+                        <button class="panel-button" data-selector-arg-key="limit" data-arg-value-type="keypad_number">limit=</button>
+                        <button class="panel-button" data-selector-arg-key="x" data-arg-value-type="keypad_number">x=</button>
+                        <button class="panel-button" data-selector-arg-key="y" data-arg-value-type="keypad_number">y=</button>
+                        <button class="panel-button" data-selector-arg-key="z" data-arg-value-type="keypad_number">z=</button>
+                        <button class="panel-button" data-selector-arg-key="dx" data-arg-value-type="keypad_number">dx=</button>
+                        <button class="panel-button" data-selector-arg-key="dy" data-arg-value-type="keypad_number">dy=</button>
+                        <button class="panel-button" data-selector-arg-key="dz" data-arg-value-type="keypad_number">dz=</button>
+                        <button class="panel-button" data-selector-arg-key="distance" data-arg-value-type="keypad_range">distance=</button>
+                    </div>
                 </section>
                 <hr style="margin: 15px 0;">
                 <section>
@@ -279,7 +294,13 @@
                 </div>
             </div>
 
-            </div> </div> <div id="fullscreen-entity-list" class="fullscreen-list-container">
+            <div id="panel-simple-text-input" class="button-panel">
+                <h3 id="simple-text-input-header">Enter Value</h3>
+                <input type="text" id="simple-text-input-field" style="width: 90%; padding: 10px; margin-bottom: 10px;" placeholder="Enter text here...">
+                <button id="simple-text-input-submit" class="panel-button primary">Submit</button>
+            </div>
+
+        </div> </div> <div id="fullscreen-entity-list" class="fullscreen-list-container">
         <button class="fullscreen-list-back-button" data-action="close-fullscreen-list">X</button>
         <h3 class="fullscreen-list-header">Select Entity Type</h3>
         </div>
@@ -299,12 +320,15 @@
 
     <script>
         // --- DATA STORE ---
-        const MINECRAFT_ENTITIES = ["allay", "armor_stand", /* ... a_very_long_list_here ... */ "zombified_piglin"];
+        const MINECRAFT_ENTITIES = ["allay", "area_effect_cloud", "armor_stand", "arrow", "axolotl", "bat", "bee", "blaze", "block_display", "boat", "camel", "cat", "cave_spider", "chest_boat", "chicken", "cod", "cow", "creeper", "dolphin", "donkey", "dragon_fireball", "drowned", "egg", "elder_guardian", "end_crystal", "ender_dragon", "ender_pearl", "enderman", "endermite", "evoker", "evoker_fangs", "experience_bottle", "experience_orb", "eye_of_ender", "falling_block", "fireball", "firework_rocket", "fishing_bobber", "fox", "frog", "ghast", "giant", "glow_item_frame", "glow_squid", "goat", "guardian", "hoglin", "horse", "husk", "illusioner", "interaction", "iron_golem", "item", "item_display", "item_frame", "leash_knot", "lightning_bolt", "llama", "llama_spit", "magma_cube", "marker", "minecart", "chest_minecart", "command_block_minecart", "furnace_minecart", "hopper_minecart", "spawner_minecart", "tnt_minecart", "mule", "mooshroom", "ocelot", "painting", "panda", "parrot", "phantom", "pig", "piglin", "piglin_brute", "pillager", "polar_bear", "potion", "pufferfish", "rabbit", "ravager", "salmon", "sheep", "shulker", "shulker_bullet", "silverfish", "skeleton", "skeleton_horse", "slime", "small_fireball", "sniffer", "snow_golem", "snowball", "spawner_minecart", "spectral_arrow", "spider", "squid", "stray", "strider", "tadpole", "text_display", "tnt", "trader_llama", "trident", "tropical_fish", "turtle", "vex", "villager", "vindicator", "wandering_trader", "warden", "witch", "wither", "wither_skeleton", "wither_skull", "wolf", "zoglin", "zombie", "zombie_horse", "zombie_villager", "zombified_piglin"];
         const RUN_COMMANDS_LIST = [
-            { id: "say", name: "say", handler: "handleSayCommand" },
-            { id: "tp", name: "tp", handler: "handleTpCommand" },
-            { id: "summon", name: "summon", handler: "handleSummonCommand" },
-            // ... more commands
+            { id: "say", name: "say", requiresInput: { type: "simple_text", placeholder: "message", nextPanel: 'panel-execute-subcommands' } },
+            { id: "tp", name: "tp", requiresInput: { type: "target_player_location", placeholder: "[target] [x y z]", complexHandler: true } }, // Needs more specific handling
+            { id: "summon", name: "summon", requiresInput: { type: "entity_type_location", placeholder: "[entity] [x y z]", complexHandler: true } }, // Needs specific handling
+            { id: "give", name: "give", requiresInput: { type: "player_item_count", placeholder: "[player] [item] [count]", complexHandler: true } },
+            { id: "effect_give", name: "effect give", requiresInput: { type: "target_effect_duration_amplifier", placeholder: "[target] [effect] [duration] [amplifier]", complexHandler: true } },
+            { id: "setblock", name: "setblock", requiresInput: { type: "xyz_block", placeholder: "[x y z] [block_id]", complexHandler: true} },
+            { id: "fill", name: "fill", requiresInput: {type: "xyz_xyz_block", placeholder: "[x1 y1 z1] [x2 y2 z2] [block_id]", complexHandler: true}}
         ];
 
         // --- DOM ELEMENTS ---
@@ -319,17 +343,22 @@
         const selectorNextExecuteOptionsContainer = document.getElementById('selector-next-execute-options-container');
         const keypadContainer = document.getElementById('keypad-container');
         const keypadDisplay = document.getElementById('keypad-display');
+        const simpleTextInputHeader = document.getElementById('simple-text-input-header');
+        const simpleTextInputField = document.getElementById('simple-text-input-field');
+        const simpleTextInputSubmit = document.getElementById('simple-text-input-submit');
 
         // --- STATE ---
         let commandParts = [];
         let currentPanelId = 'panel-initial';
-        let activeInputTarget = null; // Object: { partId, inputType, currentIndex, values[], placeholder, nextPanelAfterInput, sourcePanelId, targetCommandPart }
+        let activeInputTarget = null; 
         let pendingSelector = null; 
         let selectorArgState = {
             isActive: false,
             baseSelectorPartId: null,
-            hasOpenBracket: false
+            hasOpenBracket: false,
+            currentSelectorCommandPart: null 
         };
+        let simpleTextCallback = null;
 
         // --- INITIALIZATION ---
         function initialize() {
@@ -344,35 +373,84 @@
             setupEventListeners(); 
         }
         
-        // --- Fullscreen List & Panel Management (mostly same as before) ---
-        function hideFullscreenLists() { /* ... */ }
-        function showFullscreenList(listId, context = {}) { /* ... */ }
-        function hideCurrentFullscreenListAndShowPanel(panelId) { /* ... */ }
-        function populateEntityListForFullscreen() { /* ... ensure click calls handleEntityTypeSelection ... */ }
-        function populateRunCommandListForFullscreen() { /* ... ensure click calls handleRunCommandSelection ... */ }
-        function showPanel(panelId) { /* ... */ }
-        // (Copy these functions from the previous complete code block you liked)
-        // For brevity, I'll omit the exact same code for these helper functions here.
-        // Just make sure they are present and work as before.
-        // The key is they are called correctly.
+        // --- Fullscreen List & Panel Management ---
+        function showPanel(panelId) {
+            allPanels.forEach(p => p.style.display = 'none');
+            const targetPanel = document.getElementById(panelId);
+            if (targetPanel) {
+                targetPanel.style.display = 'block';
+                currentPanelId = panelId;
+            } else {
+                console.error("Panel not found:", panelId);
+            }
+            // Ensure keypad is hidden when switching panels unless an input is active
+            if (keypadContainer.style.display === 'grid' && !activeInputTarget) {
+                 keypadContainer.style.display = 'none';
+            }
+        }
+
+        function hideFullscreenLists() {
+            fullscreenEntityList.style.display = 'none';
+            fullscreenRunCommandList.style.display = 'none';
+        }
+
+        function showFullscreenList(listId, context = {}) {
+            hideFullscreenLists(); // Hide others first
+            const listToShow = document.getElementById(listId);
+            if (listToShow) {
+                listToShow.style.display = 'flex'; 
+                // Store context if needed, e.g., which command part this list is for
+                listToShow.dataset.context = JSON.stringify(context);
+            }
+        }
+        
+        function hideCurrentFullscreenListAndShowPanel(panelId) {
+            hideFullscreenLists();
+            showPanel(panelId);
+        }
+
+        function populateEntityListForFullscreen() {
+            const listContainer = fullscreenEntityList;
+            // Clear previous (if any, though typically done once)
+            listContainer.querySelectorAll('.list-item-button').forEach(btn => btn.remove());
+            
+            MINECRAFT_ENTITIES.forEach(entityId => {
+                const button = document.createElement('button');
+                button.className = 'list-item-button';
+                button.textContent = entityId;
+                button.addEventListener('click', () => handleEntityTypeSelection(entityId));
+                listContainer.appendChild(button);
+            });
+        }
+
+        function populateRunCommandListForFullscreen() {
+            const listContainer = fullscreenRunCommandList;
+            listContainer.querySelectorAll('.list-item-button').forEach(btn => btn.remove());
+
+            RUN_COMMANDS_LIST.forEach(cmdInfo => {
+                const button = document.createElement('button');
+                button.className = 'list-item-button';
+                button.textContent = cmdInfo.name;
+                button.addEventListener('click', () => handleRunCommandSelection(cmdInfo));
+                listContainer.appendChild(button);
+            });
+        }
 
         // --- COMMAND BUILDING & RENDERING ---
         function addCommandSegment(text, type, options = {}) {
             const segment = {
                 id: `cmd-part-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-                text: options.isEditableInput && !text ? (options.placeholder || `[${type}]`) : text,
-                type: type,
+                text: options.isEditableInput && !text && options.placeholder ? options.placeholder : text,
+                type: type, // e.g., 'keyword', 'selector', 'argument_key', 'argument_value', 'coordinate_input', 'bracket_open', 'comma'
                 isEditableInput: options.isEditableInput || false,
                 placeholder: options.placeholder || "",
-                requiresInput: options.requiresInput || null, // 'keypad_coordinates', 'keypad_number', 'text'
-                sourcePanelId: currentPanelId,
+                requiresInput: options.requiresInput || null, 
+                sourcePanelId: currentPanelId, // Panel that created this part
+                nextPanelAfterInput: options.nextPanelAfterInput,
                 ...options
             };
             commandParts.push(segment);
             renderCommandBuiltArea();
-            
-            // If an editable input was just added, and it's keypad driven, auto-prepare if desired.
-            // However, the user now clicks the placeholder to activate keypad.
             return segment;
         }
 
@@ -385,20 +463,25 @@
                     wrapper.className = 'command-part-input-wrapper';
                     element = document.createElement('input');
                     element.type = 'text';
-                    element.value = part.text; // Display current text (e.g. "[x y z]" or "10 ~ 20")
+                    element.value = part.text; 
                     element.placeholder = part.placeholder || 'value';
                     element.dataset.partId = part.id;
                     element.dataset.partIndex = index;
                     
-                    element.addEventListener('input', (e) => { // For regular text inputs
-                        if (part.requiresInput !== 'keypad_coordinates' && part.requiresInput !== 'keypad_number') {
-                            part.text = e.target.value;
-                        }
-                    });
-
                     if (part.requiresInput && part.requiresInput.startsWith('keypad')) {
                         element.readOnly = true; 
                         element.addEventListener('click', () => prepareKeypadForInput(part));
+                    } else { // For regular text inputs (not keypad driven)
+                         element.addEventListener('input', (e) => {
+                            part.text = e.target.value;
+                            // No full re-render on every input to avoid losing focus,
+                            // but part.text is updated.
+                        });
+                        element.addEventListener('blur', (e) => { // Update on blur if needed
+                            part.text = e.target.value.trim();
+                            if (part.text === "" && part.placeholder) part.text = part.placeholder;
+                            renderCommandBuiltArea(); // Re-render to confirm or clean up
+                        });
                     }
                     wrapper.appendChild(element);
                     commandBuiltArea.appendChild(wrapper);
@@ -416,55 +499,162 @@
                     element.dataset.partIndex = index;
                     element.addEventListener('click', (e) => {
                         e.stopPropagation(); 
-                        showChangeOption(element, part.id, index);
+                        showChangeOption(element, part, index);
                     });
                     commandBuiltArea.appendChild(element);
                 }
             });
+            commandBuiltArea.scrollLeft = commandBuiltArea.scrollWidth; // Auto-scroll to the end
         }
         
-        // --- Change Popup Logic (same as before, check bounds) ---
+        // --- Change Popup Logic ---
         let currentChangePopup = null;
-        function showChangeOption(parentButtonOrInput, partId, index) { /* ... same ... */ }
-        function handleChangeCommandPart(index) { /* ... Needs careful implementation ... */ }
+        function showChangeOption(parentButtonOrInput, part, index) {
+            if (currentChangePopup) currentChangePopup.remove();
 
+            currentChangePopup = document.createElement('div');
+            currentChangePopup.className = 'change-popup';
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete This & Following';
+            deleteButton.onclick = () => {
+                commandParts.splice(index); // Remove from this part onwards
+                if (selectorArgState.isActive && selectorArgState.baseSelectorPartId === part.id || (part.type === 'selector_arg_key' && commandParts[index-1]?.id === selectorArgState.baseSelectorPartId)) {
+                     // If deleting the selector or its args, reset selector state
+                    resetSelectorState();
+                }
+                renderCommandBuiltArea();
+                currentChangePopup.remove();
+                currentChangePopup = null;
+                // Try to go back to the panel that created the part BEFORE the deleted one, or a sensible default.
+                const previousPart = commandParts[index - 1];
+                if (previousPart && previousPart.sourcePanelId) {
+                    showPanel(previousPart.sourcePanelId);
+                } else if (commandParts.length === 0) {
+                    showPanel('panel-initial');
+                } else {
+                    showPanel('panel-execute-subcommands'); 
+                }
+            };
+
+            const changeButton = document.createElement('button');
+            changeButton.textContent = 'Edit/Revisit';
+            changeButton.onclick = () => handleChangeCommandPart(index, part);
+
+
+            currentChangePopup.appendChild(changeButton);
+            currentChangePopup.appendChild(deleteButton);
+            
+            document.body.appendChild(currentChangePopup);
+            const parentRect = parentButtonOrInput.getBoundingClientRect();
+            currentChangePopup.style.top = `${parentRect.bottom + window.scrollY + 5}px`;
+            currentChangePopup.style.left = `${parentRect.left + window.scrollX + parentRect.width / 2}px`;
+
+            // Close on outside click
+            setTimeout(() => { // Timeout to avoid immediate close due to event bubbling
+                 document.addEventListener('click', function closePopup(event) {
+                    if (currentChangePopup && !currentChangePopup.contains(event.target) && event.target !== parentButtonOrInput) {
+                        currentChangePopup.remove();
+                        currentChangePopup = null;
+                        document.removeEventListener('click', closePopup);
+                    }
+                }, { once: true });
+            },0);
+        }
+
+        function handleChangeCommandPart(index, part) {
+            // More sophisticated logic could go here. For now, just go back to its source panel.
+            // And perhaps remove subsequent parts if they are dependent.
+            // This is a simplified "revisit"
+            if (currentChangePopup) {
+                currentChangePopup.remove();
+                currentChangePopup = null;
+            }
+            
+            // Remove this part and subsequent parts before going back
+            commandParts.splice(index);
+
+            // If the part being changed was a selector or part of selector args, reset selector state
+            if (part.type.startsWith('selector') || part.type === 'bracket_open' || part.type === 'bracket_close' || part.type === 'comma') {
+                const selectorPartIndex = commandParts.findIndex(p => p.id === selectorArgState.baseSelectorPartId);
+                if (selectorPartIndex !== -1 && index >= selectorPartIndex) {
+                    resetSelectorState();
+                }
+            }
+            
+            renderCommandBuiltArea();
+            
+            if (part.sourcePanelId) {
+                showPanel(part.sourcePanelId);
+                // If it was an input, maybe pre-fill or re-activate? For now, just show panel.
+                if (part.isEditableInput && part.requiresInput && part.requiresInput.startsWith('keypad')) {
+                    // Potentially call prepareKeypadForInput(part) if desired to auto-open keypad
+                } else if (part.isEditableInput && part.sourcePanelId === 'panel-simple-text-input') {
+                    // If it was simple text input, repopulate field
+                    simpleTextInputField.value = part.text === part.placeholder ? '' : part.text;
+                    simpleTextInputHeader.textContent = `Edit: ${part.description || "Value"}`;
+                    simpleTextCallback = (newValue) => {
+                        part.text = newValue;
+                        if (part.nextPanelAfterInput) showPanel(part.nextPanelAfterInput);
+                        else showPanel('panel-execute-subcommands'); // Default
+                        renderCommandBuiltArea();
+                    };
+                }
+            } else {
+                showPanel('panel-execute-subcommands'); // Fallback
+            }
+        }
+
+        function resetSelectorState() {
+            selectorArgState = { isActive: false, baseSelectorPartId: null, hasOpenBracket: false, currentSelectorCommandPart: null };
+            pendingSelector = null;
+        }
 
         // --- KEYPAD LOGIC (ENHANCED FOR COORDINATES) ---
         function prepareKeypadForInput(partData) {
             if (!partData || !partData.requiresInput || !partData.requiresInput.startsWith('keypad')) return;
 
-            let initialValues = ["", "", ""];
-            if (partData.text && partData.text !== partData.placeholder) {
-                const splitValues = partData.text.split(' ');
-                for(let i=0; i<3; i++) {
-                    initialValues[i] = splitValues[i] || "";
+            let initialValues = ["", "", ""]; // For coordinates
+            let singleValue = ""; // For numbers
+
+            if (partData.requiresInput === 'keypad_coordinates') {
+                 if (partData.text && partData.text !== partData.placeholder) {
+                    const splitValues = partData.text.split(' ');
+                    for(let i=0; i<3; i++) {
+                        initialValues[i] = splitValues[i] || "";
+                    }
+                }
+            } else if (partData.requiresInput === 'keypad_number' || partData.requiresInput === 'keypad_range') {
+                 if (partData.text && partData.text !== partData.placeholder) {
+                    singleValue = partData.text;
                 }
             }
+
 
             activeInputTarget = {
                 partId: partData.id,
                 inputType: partData.requiresInput, 
                 currentIndex: 0,      
-                values: initialValues,
+                values: partData.requiresInput === 'keypad_coordinates' ? initialValues : [singleValue],
                 placeholder: partData.placeholder || (partData.requiresInput === 'keypad_coordinates' ? 'X Y Z' : 'Enter value'),
                 nextPanelAfterInput: partData.nextPanelAfterInput,
                 sourcePanelId: partData.sourcePanelId,
                 targetCommandPart: partData 
             };
             
-            updateKeypadDisplayForCurrentCoordinate();
+            updateKeypadDisplayForCurrentValue();
             keypadContainer.style.display = 'grid';
         }
 
-        function updateKeypadDisplayForCurrentCoordinate() {
+        function updateKeypadDisplayForCurrentValue() {
             if (!activeInputTarget) return;
             const coordLabels = ["X", "Y", "Z"];
             if (activeInputTarget.inputType === 'keypad_coordinates') {
                 keypadDisplay.placeholder = `${coordLabels[activeInputTarget.currentIndex]}: ${activeInputTarget.values[activeInputTarget.currentIndex] || '~'}`;
                 keypadDisplay.value = activeInputTarget.values[activeInputTarget.currentIndex] || "";
-            } else { // For keypad_number
-                keypadDisplay.placeholder = activeInputTarget.placeholder;
-                keypadDisplay.value = activeInputTarget.values[0] || ""; // Assumes single value for keypad_number
+            } else { // For keypad_number or keypad_range
+                keypadDisplay.placeholder = activeInputTarget.targetCommandPart.placeholder || "Enter value";
+                keypadDisplay.value = activeInputTarget.values[0] || ""; 
             }
         }
 
@@ -472,32 +662,43 @@
         function handleKeypadInput(key) {
             if (!activeInputTarget || !activeInputTarget.targetCommandPart) return;
 
-            const currentValIndex = activeInputTarget.currentIndex;
+            const currentValIndex = activeInputTarget.inputType === 'keypad_coordinates' ? activeInputTarget.currentIndex : 0;
             let currentDisplayValue = keypadDisplay.value;
 
             switch (key) {
                 case 'enter': 
-                    activeInputTarget.values[currentValIndex] = currentDisplayValue.trim();
-                    activeInputTarget.targetCommandPart.text = activeInputTarget.values.join(' ').trim();
+                    activeInputTarget.values[currentValIndex] = currentDisplayValue.trim() || (activeInputTarget.inputType === 'keypad_coordinates' ? "~" : "0");
+                    
+                    if (activeInputTarget.inputType === 'keypad_coordinates') {
+                         activeInputTarget.targetCommandPart.text = activeInputTarget.values.join(' ').trim();
+                    } else {
+                         activeInputTarget.targetCommandPart.text = activeInputTarget.values[0].trim();
+                    }
                     activeInputTarget.targetCommandPart.isPlaceholder = false; 
                     
                     renderCommandBuiltArea();
                     keypadContainer.style.display = 'none';
                     
                     const nextPanel = activeInputTarget.nextPanelAfterInput;
+                    const sourcePanel = activeInputTarget.sourcePanelId;
                     activeInputTarget = null; 
                     
-                    if (nextPanel) showPanel(nextPanel);
-                    else if (selectorArgState.isActive) showPanel('panel-selector-activated');
-                    else showPanel('panel-execute-subcommands');
+                    if (nextPanel) {
+                        showPanel(nextPanel);
+                    } else if (selectorArgState.isActive) { // If keypad was for a selector arg
+                        showPanel('panel-selector-activated');
+                    } else if (sourcePanel) { // Fallback to the panel that requested the input
+                        showPanel(sourcePanel);
+                    } else { // Generic fallback
+                        showPanel('panel-execute-subcommands');
+                    }
                     break;
 
                 case 'backspace':
                     currentDisplayValue = currentDisplayValue.slice(0, -1);
                     keypadDisplay.value = currentDisplayValue;
                     activeInputTarget.values[currentValIndex] = currentDisplayValue;
-                    activeInputTarget.targetCommandPart.text = activeInputTarget.values.join(' ').trim();
-                    // No renderCommandBuiltArea here to avoid flicker while typing
+                    // activeInputTarget.targetCommandPart.text = activeInputTarget.values.join(' ').trim(); // Live update in command bar?
                     break;
                 
                 case ' ': // Space key for "Next Coordinate"
@@ -508,27 +709,28 @@
                             activeInputTarget.currentIndex = 0; 
                         }
                         activeInputTarget.targetCommandPart.text = activeInputTarget.values.join(' ').trim();
-                        renderCommandBuiltArea(); // Update the command bar display
-                        updateKeypadDisplayForCurrentCoordinate();
-                    } else { 
-                        currentDisplayValue += ' ';
-                        keypadDisplay.value = currentDisplayValue;
-                        activeInputTarget.values[0] = currentDisplayValue; // Assuming single value for non-coord
-                        activeInputTarget.targetCommandPart.text = currentDisplayValue.trim();
+                        renderCommandBuiltArea(); 
+                        updateKeypadDisplayForCurrentValue();
+                    } else { // For non-coordinate, space might be part of the value or ignored
+                        // currentDisplayValue += ' '; // If spaces are allowed in number inputs (e.g. for ranges "1..5")
+                        // keypadDisplay.value = currentDisplayValue;
+                        // activeInputTarget.values[0] = currentDisplayValue;
+                        // activeInputTarget.targetCommandPart.text = currentDisplayValue.trim();
                     }
                     break;
 
-                default: // Number or '~'
+                default: // Number, '.', '~', '-'
                     if (key === '~' && activeInputTarget.inputType === 'keypad_coordinates') {
-                        currentDisplayValue += key;
-                    } else if (key === '~' && !currentDisplayValue.includes('~')) { // Allow only one leading ~ for non-coord numbers
+                        currentDisplayValue += key; // Allow multiple tildes or tilde with numbers
+                    } else if (key === '~' && !currentDisplayValue.includes('~') && activeInputTarget.inputType !== 'keypad_coordinates') { 
                         currentDisplayValue = key + currentDisplayValue;
-                    } else if (key !== '~') { // Regular numbers/dot
+                    } else if (key === '.' && currentDisplayValue.includes('.')) {
+                        // Prevent multiple decimal points
+                    } else if (key !== '~' || activeInputTarget.inputType !== 'keypad_coordinates') { 
                          currentDisplayValue += key;
                     }
-                    keypadDisplay.value = currentDisplayValue;
-                    activeInputTarget.values[currentValIndex] = currentDisplayValue;
-                    activeInputTarget.targetCommandPart.text = activeInputTarget.values.join(' ').trim();
+                     keypadDisplay.value = currentDisplayValue;
+                     activeInputTarget.values[currentValIndex] = currentDisplayValue;
                     break;
             }
         }
@@ -543,122 +745,325 @@
         }
 
 
-        // --- EVENT LISTENERS & LOGIC FLOW (Many parts are similar to before) ---
+        // --- EVENT LISTENERS & LOGIC FLOW ---
         function setupEventListeners() {
-            // Start Execute Button
-            document.getElementById('start-execute-button').addEventListener('click', () => { /* ... same ... */ });
+            document.getElementById('start-execute-button').addEventListener('click', () => {
+                commandParts = [];
+                resetSelectorState();
+                addCommandSegment('/execute', 'keyword', { sourcePanelId: 'panel-initial' });
+                showPanel('panel-execute-subcommands');
+            });
             
-            // Panel Targets (Selectors like @e)
-            document.querySelectorAll('#panel-targets .panel-button[data-selector]').forEach(button => { /* ... same ... */ });
-            
-            // Panel Selector Activated (Args and Next Execute)
-            // ... (Ensure this logic now adds explicit bracket/comma parts to commandParts) ...
-            // ... (And when choosing next execute, closes bracket if open) ...
+            document.querySelectorAll('#panel-targets .panel-button[data-selector]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const selector = button.dataset.selector;
+                    if (selectorArgState.isActive && selectorArgState.hasOpenBracket) { // Close previous selector if one was active.
+                        addCommandSegment(']', 'bracket_close');
+                    }
+                    resetSelectorState(); // Reset for the new selector
 
-            // Main Execute Subcommands Panel
+                    const selectorPart = addCommandSegment(selector, 'selector', { sourcePanelId: 'panel-targets' });
+                    selectorArgState.isActive = true;
+                    selectorArgState.baseSelectorPartId = selectorPart.id;
+                    selectorArgState.currentSelectorCommandPart = selectorPart; // Store the part itself
+                    pendingSelector = selector; // Keep this for display or simple reference
+                    
+                    currentActiveSelectorDisplay.textContent = selector;
+                    showPanel('panel-selector-activated');
+                });
+            });
+
+            document.querySelectorAll('#selector-args-options-container .panel-button[data-selector-arg-key]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const argKey = button.dataset.selectorArgKey;
+                    const valueType = button.dataset.argValueType; // e.g., entity_list, keypad_number, text_input
+
+                    if (!selectorArgState.isActive || !selectorArgState.baseSelectorPartId) {
+                        console.error("No active selector to add arguments to.");
+                        // Potentially guide user back, e.g., showPanel('panel-targets');
+                        return;
+                    }
+
+                    if (!selectorArgState.hasOpenBracket) {
+                        addCommandSegment('[', 'bracket_open', { sourcePanelId: 'panel-selector-activated' });
+                        selectorArgState.hasOpenBracket = true;
+                    } else {
+                        // Add comma if not the first argument (check last part before potential new arg)
+                        const lastPart = commandParts[commandParts.length -1];
+                        if(lastPart && lastPart.type !== 'bracket_open') {
+                             addCommandSegment(',', 'comma', { sourcePanelId: 'panel-selector-activated' });
+                        }
+                    }
+                    addCommandSegment(`${argKey}=`, 'selector_arg_key', { sourcePanelId: 'panel-selector-activated' });
+
+                    // Handle different value types
+                    if (valueType === 'entity_list') {
+                        showFullscreenList('fullscreen-entity-list', { 
+                            argKeyContext: argKey, 
+                            returnPanel: 'panel-selector-activated' 
+                        });
+                    } else if (valueType === 'keypad_number' || valueType === 'keypad_range') {
+                        addCommandSegment(`[${argKey}_val]`, 'selector_arg_value_input', {
+                            isEditableInput: true,
+                            requiresInput: valueType, // 'keypad_number' or 'keypad_range'
+                            placeholder: valueType === 'keypad_range' ? 'e.g. 1..5 or ..10' : 'number',
+                            nextPanelAfterInput: 'panel-selector-activated',
+                            sourcePanelId: 'panel-selector-activated'
+                        });
+                        // User will click the placeholder to activate keypad
+                    } else if (valueType === 'text_input') {
+                         addCommandSegment(`[${argKey}_val]`, 'selector_arg_value_input', {
+                            isEditableInput: true,
+                            requiresInput: 'text',
+                            placeholder: 'text value',
+                            nextPanelAfterInput: 'panel-selector-activated',
+                            sourcePanelId: 'panel-selector-activated'
+                        });
+                    } else {
+                        // Default for unknown: add a generic placeholder, then stay on panel-selector-activated
+                         addCommandSegment(`[${argKey}_val]`, 'selector_arg_value_input', {
+                            isEditableInput: true,
+                            placeholder: 'value',
+                            nextPanelAfterInput: 'panel-selector-activated',
+                            sourcePanelId: 'panel-selector-activated'
+                        });
+                    }
+                    renderCommandBuiltArea(); // Ensure new segment is clickable
+                });
+            });
+            
             document.querySelectorAll('#panel-execute-subcommands .panel-button[data-subcommand]').forEach(button => {
                  button.addEventListener('click', () => {
                     const subcommand = button.dataset.subcommand;
                     if (selectorArgState.isActive && selectorArgState.hasOpenBracket) {
-                        addCommandSegment(']', 'bracket_close'); // Explicitly close
+                        addCommandSegment(']', 'bracket_close');
                     }
-                    selectorArgState = { isActive: false, baseSelectorPartId: null, hasOpenBracket: false };
-                    pendingSelector = null;
+                    resetSelectorState();
 
-                    addCommandSegment(subcommand, 'keyword');
-                    const nextPanel = getNextPanelForExecuteSubcommand(subcommand); // This is now key
-                    if (nextPanel && nextPanel !== currentPanelId) { // Only show if it's a new panel
+                    addCommandSegment(subcommand, 'keyword', { sourcePanelId: 'panel-execute-subcommands' });
+                    const nextPanel = getNextPanelForExecuteSubcommand(subcommand);
+                    if (nextPanel && nextPanel !== currentPanelId) {
                         showPanel(nextPanel);
-                    } else if (!nextPanel && subcommand !== 'positioned' && subcommand !== 'rotated' && subcommand !== 'facing' && subcommand !== 'align') {
-                        // If no specific next panel, and not a command that adds an input in-place
-                        showPanel('panel-execute-subcommands'); // Default loop back
+                    } else if (!nextPanel && !['positioned', 'rotated', 'facing', 'align'].includes(subcommand)) {
+                         // If getNextPanel didn't return a panel, and it's not one that adds input in-place
+                         // then handleRunCommandSelection will take over for 'run', or loop back for others.
+                         if (subcommand !== 'run') showPanel('panel-execute-subcommands');
                     }
-                    // If it was 'positioned' etc., getNextPanelForExecuteSubcommand already added the placeholder
-                    // and returned currentPanelId, so no showPanel() call is needed here for those cases.
                  });
             });
 
-            // Fullscreen List Back Buttons
-            document.querySelectorAll('.fullscreen-list-back-button').forEach(button => { /* ... same ... */ });
+            document.querySelectorAll('#panel-dimensions .panel-button[data-dimension]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const dimension = button.dataset.dimension;
+                    addCommandSegment(dimension, 'dimension_value', { sourcePanelId: 'panel-dimensions' });
+                    showPanel('panel-execute-subcommands'); // After selecting dimension, go back to subcommands
+                });
+            });
             
-            // Copy Button
-            copyButton.addEventListener('click', () => { /* ... needs to correctly join part.text ... */ });
+            document.querySelectorAll('.fullscreen-list-back-button').forEach(button => {
+                 button.addEventListener('click', (e) => {
+                    const contextData = e.target.closest('.fullscreen-list-container').dataset.context;
+                    let returnPanel = 'panel-execute-subcommands'; // Default
+                    if (contextData) {
+                        const context = JSON.parse(contextData);
+                        if (context.returnPanel) returnPanel = context.returnPanel;
+                    }
+                    if (selectorArgState.isActive && returnPanel !== 'panel-selector-activated') {
+                        // If a selector was active and we are not explicitly returning to its panel,
+                        // assume the selection was cancelled or is not directly part of it.
+                        // For instance, if 'run' was chosen from selector panel, selector state is already cleared by 'run' button.
+                        // If entity list was for 'type=', returnPanel should be panel-selector-activated.
+                        // This logic might need refinement based on exact flow for each list.
+                    }
+                    hideCurrentFullscreenListAndShowPanel(returnPanel);
+                });
+            });
             
-            setupKeypadListeners(); // Make sure this is called
-            attachListenersToSelectorNextExecuteOptions(); // For panel-selector-activated
-             // Other listeners (dimensions, etc.)
+            copyButton.addEventListener('click', () => {
+                const commandString = commandParts.map(part => {
+                    // If part was an input and still shows placeholder, consider it empty or handle as needed
+                    if (part.isEditableInput && part.text === part.placeholder) {
+                        return ""; // Or some default like "~" for coordinates if not filled
+                    }
+                    return part.text;
+                }).join(' ')
+                  .replace(/\s*\[\s*/g, '[') // Cleanup spaces around [
+                  .replace(/\s*\]\s*/g, ']') // Cleanup spaces around ]
+                  .replace(/\s*,\s*/g, ',') // Cleanup spaces around ,
+                  .replace(/(\s\s+)/g, ' ') // Replace multiple spaces with single
+                  .trim();
+
+                navigator.clipboard.writeText(commandString).then(() => {
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                    }, 1500);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy command. See console for details.');
+                });
+            });
+            
+            simpleTextInputSubmit.addEventListener('click', () => {
+                const value = simpleTextInputField.value.trim();
+                if (simpleTextCallback) {
+                    simpleTextCallback(value);
+                    simpleTextCallback = null; // Reset callback
+                }
+                // Default behavior if no specific callback (e.g. just go back)
+                // Handled by the callback itself setting the next panel.
+            });
+
+            setupKeypadListeners();
+            attachListenersToSelectorNextExecuteOptions();
         } 
         
-        // --- Helper: Get Next Panel (Modified for positioned) ---
+        // --- Helper: Get Next Panel ---
         function getNextPanelForExecuteSubcommand(subcommand) {
             switch (subcommand) {
                 case 'as': case 'at': return 'panel-targets';
                 case 'in': return 'panel-dimensions';
                 case 'run': 
-                    showFullscreenList('fullscreen-run-command-list'); 
-                    return currentPanelId; 
+                    showFullscreenList('fullscreen-run-command-list', {returnPanel: 'panel-execute-subcommands'}); 
+                    return null; // Stays on current panel conceptually, fullscreen list overlays it
 
                 case 'positioned':
                 case 'rotated': 
-                case 'facing':
+                case 'facing': // facing entity <entity_selector> OR facing <x y z>
+                    // For this simplified version, we'll assume coordinates for facing.
+                    // A more complex UI could offer choice between entity and coordinates.
                     const placeholderText = subcommand === 'rotated' ? '[yaw pitch]' : '[x y z]';
                     addCommandSegment(placeholderText, `${subcommand}_coord_input`, { 
                         isEditableInput: true,
                         requiresInput: 'keypad_coordinates', 
-                        placeholder: placeholderText.slice(1,-1), // Remove brackets for placeholder
-                        nextPanelAfterInput: 'panel-execute-subcommands'
+                        placeholder: placeholderText.slice(1,-1),
+                        nextPanelAfterInput: 'panel-execute-subcommands',
+                        sourcePanelId: 'panel-execute-subcommands'
                     });
-                    return currentPanelId; // Stay on current, keypad triggered by clicking the new part
+                    return null; // Stays on current, keypad triggered by clicking the new part
 
                 case 'align':
                     addCommandSegment('[axes]', 'align_axes_input', { 
                         isEditableInput: true, 
-                        requiresInput: 'text', // Regular text input for align
-                        placeholder: 'xyz', 
-                        nextPanelAfterInput: 'panel-execute-subcommands' 
+                        requiresInput: 'text', // Regular text input for align (e.g. "xyz", "xy")
+                        placeholder: 'e.g. xyz', 
+                        nextPanelAfterInput: 'panel-execute-subcommands',
+                        sourcePanelId: 'panel-execute-subcommands'
                     });
-                    return currentPanelId;
+                    return null; // Stays on current, input is part of the command bar
+                // 'if', 'unless' would lead to condition types (block, entity, score etc.)
+                // For now, they loop back to execute subcommands.
                 default: return 'panel-execute-subcommands'; 
             }
         }
         
-        // --- Specific Handlers (handleEntityTypeSelection, handleRunCommandSelection) ---
-        // These need to be robust.
-        function handleEntityTypeSelection(entityType) { /* ... same, ensures correct panel return ... */ }
-        function handleRunCommandSelection(commandInfo) { /* ... same ... */ }
-        // (Make sure these functions are fully defined and correctly interact with states)
+        // --- Specific Handlers ---
+        function handleEntityTypeSelection(entityType) {
+            // Assumes this is called for a selector argument like 'type='
+            // Find the last 'selector_arg_key' (e.g. type=) and append entityType to it
+            // or add a new 'selector_arg_value' part.
+            // For simplicity, we'll assume it's filling an existing placeholder or adding a new part.
 
+            // Find the last command part that was an input expecting an entity type.
+            // This is a bit tricky; ideally, the context from showFullscreenList would tell us which part to update.
+            // Let's assume the activeInputTarget or a similar mechanism should be in place if an input field initiated this.
+            // For now, we'll just add it as a new segment. This is more robust if 'type=' was just added.
+            
+            const lastPart = commandParts[commandParts.length - 1];
+            if (lastPart && lastPart.type === 'selector_arg_key' && lastPart.text.endsWith('=')) {
+                 addCommandSegment(entityType, 'selector_arg_value', { sourcePanelId: 'fullscreen-entity-list' });
+            } else {
+                // This case might happen if 'type=' was added, then user backed out and re-entered list
+                // Or if the logic flow is different. For now, just add it.
+                addCommandSegment(entityType, 'selector_arg_value', { sourcePanelId: 'fullscreen-entity-list' });
+                console.warn("Added entity type without a preceding key= part. Review flow.");
+            }
+            
+            hideCurrentFullscreenListAndShowPanel('panel-selector-activated');
+        }
 
-        // --- Placeholder for attachListenersToSelectorNextExecuteOptions ---
+        function handleRunCommandSelection(commandInfo) {
+            // CommandInfo is an object like { id: "say", name: "say", requiresInput: ... }
+            addCommandSegment(commandInfo.name, 'run_command_name', { sourcePanelId: 'fullscreen-run-command-list' });
+
+            hideFullscreenLists(); // Explicitly hide before deciding next panel
+
+            if (commandInfo.requiresInput) {
+                if (commandInfo.requiresInput.type === 'simple_text') {
+                    simpleTextInputHeader.textContent = `Enter ${commandInfo.requiresInput.placeholder || 'message'}:`;
+                    simpleTextInputField.value = '';
+                    simpleTextInputField.placeholder = commandInfo.requiresInput.placeholder || 'Enter text';
+                    showPanel('panel-simple-text-input');
+                    
+                    simpleTextCallback = (value) => {
+                        addCommandSegment(value, 'run_command_arg', {
+                            placeholder: commandInfo.requiresInput.placeholder,
+                            sourcePanelId: 'panel-simple-text-input'
+                        });
+                        // After submitting text, decide where to go. Usually back to execute subcommands or allow chaining.
+                        if (commandInfo.requiresInput.nextPanel) {
+                            showPanel(commandInfo.requiresInput.nextPanel);
+                        } else {
+                            showPanel('panel-execute-subcommands'); 
+                        }
+                        renderCommandBuiltArea();
+                    };
+                } else if (commandInfo.requiresInput.complexHandler) {
+                    // For complex commands like tp, summon, give, effect - these need dedicated UI flows or sequences of inputs
+                    // For now, just add a placeholder and go back to subcommands panel, allowing user to manually build if they know how,
+                    // or to show that this part is not fully automated yet.
+                    addCommandSegment(`[${commandInfo.requiresInput.placeholder || 'args'}]`, 'run_command_args_complex', {
+                        isEditableInput: true, // Make it an input field
+                        requiresInput: 'text', // Generic text input for now
+                        placeholder: commandInfo.requiresInput.placeholder || 'arguments',
+                        nextPanelAfterInput: 'panel-execute-subcommands', // Or a specific next step
+                        sourcePanelId: currentPanelId 
+                    });
+                    showPanel('panel-execute-subcommands'); // Or a panel to start gathering args for this specific command
+                } else {
+                     // If no specific input needed or not handled, just go back.
+                     showPanel('panel-execute-subcommands');
+                }
+            } else {
+                // If command takes no arguments (rare for 'run' context), go back to subcommands.
+                showPanel('panel-execute-subcommands');
+            }
+        }
+
         function attachListenersToSelectorNextExecuteOptions() {
              selectorNextExecuteOptionsContainer.querySelectorAll('.panel-button[data-subcommand]').forEach(button => {
+                // Clone and replace to ensure fresh listeners, especially if innerHTML was used.
                 const newButton = button.cloneNode(true); 
                 button.parentNode.replaceChild(newButton, button);
+
                 newButton.addEventListener('click', () => {
                     handleNextExecuteSubcommandFromSelectorPanel(newButton.dataset.subcommand);
                 });
             });
         }
-        function handleNextExecuteSubcommandFromSelectorPanel(subcommandName) { /* ... Logic as discussed before ... */ }
-        // (Ensure these functions are fully defined)
+
+        function handleNextExecuteSubcommandFromSelectorPanel(subcommandName) {
+            if (selectorArgState.isActive && selectorArgState.hasOpenBracket) {
+                addCommandSegment(']', 'bracket_close', { sourcePanelId: 'panel-selector-activated' });
+            }
+            resetSelectorState();
+
+            addCommandSegment(subcommandName, 'keyword', { sourcePanelId: 'panel-selector-activated' });
+            const nextPanel = getNextPanelForExecuteSubcommand(subcommandName);
+            
+            if (nextPanel && nextPanel !== currentPanelId) {
+                 showPanel(nextPanel);
+            } else if (!nextPanel && !['positioned', 'rotated', 'facing', 'align'].includes(subcommandName)) {
+                if (subcommandName !== 'run') showPanel('panel-execute-subcommands');
+                // 'run' case is handled by getNextPanelForExecuteSubcommand showing the list.
+            }
+            // If an input was added in-place by getNextPanel..., no explicit showPanel is needed here.
+        }
 
 
         // --- START THE APP ---
         initialize();
-
-        // --- TEMPORARY: Populate missing functions for script to run without breaking ---
-        // Replace these with their actual implementations from previous versions or new logic
-        if (typeof populateEntityListForFullscreen !== 'function') populateEntityListForFullscreen = function(){ console.warn("populateEntityListForFullscreen stub"); };
-        if (typeof populateRunCommandListForFullscreen !== 'function') populateRunCommandListForFullscreen = function(){ console.warn("populateRunCommandListForFullscreen stub"); };
-        if (typeof hideFullscreenLists !== 'function') hideFullscreenLists = function(){ console.warn("hideFullscreenLists stub"); };
-        if (typeof showFullscreenList !== 'function') showFullscreenList = function(){ console.warn("showFullscreenList stub"); };
-        if (typeof hideCurrentFullscreenListAndShowPanel !== 'function') hideCurrentFullscreenListAndShowPanel = function(){ console.warn("hideCurrentFullscreenListAndShowPanel stub"); };
-        if (typeof handleEntityTypeSelection !== 'function') handleEntityTypeSelection = function(e){ console.warn("handleEntityTypeSelection stub", e); };
-        if (typeof handleRunCommandSelection !== 'function') handleRunCommandSelection = function(e){ console.warn("handleRunCommandSelection stub", e); };
-        if (typeof handleChangeCommandPart !== 'function') handleChangeCommandPart = function(idx){ console.warn("handleChangeCommandPart stub", idx); };
-        if (typeof handleNextExecuteSubcommandFromSelectorPanel !== 'function') handleNextExecuteSubcommandFromSelectorPanel = function(cmd){ console.warn("handleNextExecuteSubcommandFromSelectorPanel stub", cmd); };
-
-
     </script>
 </body>
 </html>
