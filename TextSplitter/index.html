@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimal Partitioner</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    textarea {
+      width: 300px;
+      height: 300px;
+      overflow-y: auto;
+      resize: none;
+      margin-bottom: 10px;
+    }
+    #controls {
+      display: flex;
+      align-items: center;
+    }
+    input, button {
+      font-size: 1em;
+      margin: 0 5px;
+    }
+    button {
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="text" placeholder="Enter your text…"></textarea>
+  <div id="controls">
+    <input type="number" id="count" min="1" value="10">
+    <button id="partition">Partition</button>
+  </div>
+  <script>
+    function partitionText() {
+      const text = document.getElementById('text').value.trim();
+      const n = parseInt(document.getElementById('count').value, 10);
+      if (!text || n < 1) return;
+      const tokens = text.split(/\s+/);
+      const total = tokens.length;
+      const base = Math.floor(total / n);
+      let rem = total % n;
+      const parts = [];
+      let idx = 0;
+      for (let i = 0; i < n; i++) {
+        const size = base + (rem > 0 ? 1 : 0);
+        if (rem > 0) rem--;
+        parts.push(tokens.slice(idx, idx + size).join(' '));
+        idx += size;
+      }
+      showPartition(parts);
+    }
+
+    function showPartition(parts) {
+      let current = 0;
+      // clear & set up full‐screen flex column
+      document.body.innerHTML = '';
+      Object.assign(document.body.style, {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: '0',
+        height: '100vh'
+      });
+      // content area
+      const p = document.createElement('p');
+      Object.assign(p.style, {
+        flex: '1',
+        padding: '20px',
+        margin: '0',
+        overflowY: 'auto'
+      });
+      document.body.appendChild(p);
+      // nav buttons
+      const nav = document.createElement('div');
+      Object.assign(nav.style, {
+        display: 'flex',
+        justifyContent: 'space-between',
+        borderTop: '1px solid #ccc',
+        padding: '10px'
+      });
+      const prev = document.createElement('button');
+      prev.textContent = 'Previous';
+      Object.assign(prev.style, { flex: '1', fontSize: '1.2em', marginRight: '10px' });
+      const next = document.createElement('button');
+      next.textContent = 'Next';
+      Object.assign(next.style, { flex: '1', fontSize: '1.2em' });
+      nav.append(prev, next);
+      document.body.appendChild(nav);
+
+      function update() {
+        p.textContent = parts[current];
+        prev.disabled = current === 0;
+        next.disabled = current === parts.length - 1;
+      }
+      prev.addEventListener('click', () => { if (current>0) current--, update(); });
+      next.addEventListener('click', () => { if (current<parts.length-1) current++, update(); });
+      update();
+    }
+
+    document.getElementById('partition').addEventListener('click', partitionText);
+  </script>
+</body>
+</html>
