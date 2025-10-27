@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE HUNT: An Educator's Amygdala</title>
+    <style>
+        /* --- CSS for the Hacker Terminal Aesthetic --- */
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background-color: #000;
+            color: #00FF41; /* Bright green */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* The main terminal window */
+        #terminal {
+            padding: 15px;
+            width: 100%;
+            min-height: 100%;
+            white-space: pre-wrap; /* Respects newlines in the game script */
+            word-wrap: break-word; /* Prevents horizontal scrolling */
+        }
+
+        /* The blinking cursor */
+        #cursor {
+            display: inline-block;
+            width: 12px;
+            height: 1.4rem;
+            background-color: #00FF41;
+            margin-left: 5px;
+            /* Blinking animation */
+            animation: blink 1s step-end infinite;
+        }
+
+        /* The prompt for choices */
+        .prompt {
+            display: block; /* Ensures choices appear on new lines */
+            padding-top: 10px;
+        }
+
+        @keyframes blink {
+            from, to {
+                background-color: transparent;
+            }
+            50% {
+                background-color: #00FF41;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="terminal"></div>
+
+    <script>
+        // --- JavaScript Game Engine ---
+
+        // --- 1. GAME DATA ---
+        // This object holds all the text and logic for the game.
+        // Each key is a "node" in the story.
+        const gameData = {
+            start: {
+                text: "> > > LOADING...\n> > > [ THE HUNT: An Educator's Amygdala ]\n\n> You are a HUNTER.\n> Your mind is sharp. Your instincts are primal. You are driven by one thing: SURVIVAL.\n\n> The forest is your classroom. You must stay in your COMFORT ZONE to remain safe.\n\n> You scan the woods for THREATS. Your bow is ready.\n\n> Press [ENTER] to begin your hunt.",
+                next: 'encounter1' // Automatically goes to this node next
+            },
+            encounter1: {
+                text: "\n> You ride into a clearing.\n> A herd of students is gathered by a stream. Most are quiet, grazing on the lesson. But one group is separate, making noise. They are agitated, loud, and clearly NOT FOCUSED.\n\n> They are a THREAT. They will scare off the others.\n> Your \"lizard brain\" screams at you to secure the environment.\n\n> What do you do?",
+                choices: [ // Presents these choices to the player
+                    { key: 'A', text: '[A] FIRE ARROW (Discipline & Control)' },
+                    { key: 'B', text: '[B] LOWER BOW (Observe & "Make the Familiar Strange")' }
+                ],
+                next: 'encounter2' // After choosing, go here
+            },
+            encounter2: {
+                text: "\n> You continue through the dense forest.\n> You spot a LONE WANDERER at the edge of the trees. They are completely silent, not interacting with the herd. They make no sound.\n\n> They are not participating. They are not learning. They are falling behind.\n> This is INEFFICIENT. This is a FAILED HUNT.\n\n> Your \"lizard brain\" tells you to focus on the students who are responsive. This one is not a threat, but it is a waste of energy.\n\n> What do you do?",
+                choices: [
+                    { key: 'A', text: '[A] RIDE PAST (Assume Low Potential)' },
+                    { key: 'B', text: '[B] LOWER BOW (Observe & Question Assumption)' }
+                ],
+                next: 'encounter3'
+            },
+            encounter3: {
+                text: "\n> Night falls. You arrive at the MEETING PLACE (Parent-Teacher Conferences).\n> Other hunters are here, meeting with their herds' families.\n> But the clearing for the LONE WANDERER's family is empty. They did not show.\n\n> This confirms your suspicion. The family does not care. This is a \"bad parent.\" Your hunt for collaboration has failed.\n\n> Your \"lizard brain\" files this away as a confirmed bias.\n\n> What do you do?",
+                choices: [
+                    { key: 'A', text: '[A] MARK AS FAILED (Internalize the Bias)' },
+                    { key: 'B', text: '[B] LOWER BOW (Challenge the \"Narrow Conception\")' }
+                ],
+                next: 'checkEnd' // Go to the logic-check node
+            },
+            checkEnd: {
+                // This is a special logic node. It has no text.
+                // It checks the player's choices and routes to the correct ending.
+                logic: true, 
+                next: (state) => (state.a_choices > state.b_choices) ? 'ending1' : 'ending2'
+            },
+            ending1: {
+                text: "\n> Your hunt was a success. The forest is quiet.\n> You fired your arrow. The loud herd scattered and fell silent.\n> You rode past the straggler. You wasted no energy.\n> You marked the family as failed. You confirmed your instincts.\n\n> Your comfort zone is secure. You survived.\n\n> You approach your \"prey\" to collect your reward.\n> ...\n> But there is nothing here.\n\n> The \"loud herd\" you scattered was not a threat. You listen closer and hear what you missed: they were having \"insightful observations\" and asking \"GREAT QUESTIONS\". You silenced students who were ready to contribute.\n\n> The \"lone wanderer\" you ignored was not failing. They were in the \"silent phase\", doing \"double the work\" of learning content *and* a new language in a high-anxiety environment.\n\n> The \"failed family\" you judged did not lack care. They held \"high expectations and aspirations\" but faced \"cross-cultural communication barriers\" and a school that held a \"narrow conception\" of involvement.\n\n> Your hunt was clean, decisive, and wrong.\n> Your \"lizard brain\" kept you safe... and ignorant.\n\n\n> [ GAME OVER ]\n> (Press [ENTER] to read The Reflection)",
+                next: 'reflection1'
+            },
+            ending2: {
+                text: "\n> You lowered your bow.\n> You fought your instinct. It was uncomfortable. You \"made the familiar strange.\"\n\n> You rode closer to the \"loud herd\" and listened.\n> You heard them having \"insightful observations.\" You heard them ask \"GREAT QUESTIONS\". You saw students engaging with each other's ideas and contributing analysis. You put down your bow and engaged them with a \"light hearted\" voice.\n\n> You approached the \"lone wanderer.\" You did not demand speech. You created a \"low-anxiety environment.\" You recognized they were in a \"silent phase\", doing \"double the work\" of a native speaker.\n\n> You did not judge the \"empty clearing.\" You challenged the \"narrow conception\" of a \"bad parent\". You remembered their \"high expectations and aspirations\" and sought to understand the \"communication barriers.\"\n\n> Your \"lizard brain\" is quiet. You have managed the \"internal gatekeeper.\"\n\n> This is not a hunt. This is a classroom.\n\n\n> [ YOU HAVE LEARNED ]\n> (Press [ENTER] to read The Reflection)",
+                next: 'reflection2'
+            },
+            reflection1: {
+                text: "\n\n> You have completed THE HUNT.\n\n> The \"lizard brain\" (amygdala) is not your enemy. It is your \"internal gatekeeper,\" designed to keep you safe from what is unfamiliar.\n\n> But a responsive practitioner cannot live in a \"comfort zone.\" They must engage in an \"inside-out process\" to dismantle their own implicit biases.\n\n> My K-12 observations showed me a master of this. When the class was loud, the teacher didn't see a threat. She recognized that students were having productive conversations and used casual, positive redirection. Her honesty and transparency built a relaxed atmosphere where students felt safe to share their analysis.\n\n> Our brains are wired to see \"monolithic groups.\" My readings taught me our job is to see individuals.\n\n> The realization is this: We must unlearn our instinct to hunt for threats and learn to build a sanctuary for \"great questions.\"",
+                next: 'restart'
+            },
+            reflection2: {
+                text: "\n\n> You have completed THE HUNT.\n\n> The \"lizard brain\" (amygdala) is not your enemy. It is your \"internal gatekeeper,\" designed to keep you safe from what is unfamiliar.\n\n> But a responsive practitioner cannot live in a \"comfort zone.\" They must engage in an \"inside-out process\" to dismantle their own implicit biases.\n\n> My K-12 observations showed me a master of this. When the class was loud, the teacher didn't see a threat. She recognized that students were having productive conversations and used casual, positive redirection. Her honesty and transparency built a relaxed atmosphere where students felt safe to share their analysis.\n\n> Our brains are wired to see \"monolithic groups.\" My readings taught me our job is to see individuals.\n\n> The realization is this: We must unlearn our instinct to hunt for threats and learn to build a sanctuary for \"great questions.\"",
+                next: 'restart'
+            },
+            restart: {
+                text: "\n\n> [ A game by Malachy - ED 204 ]\n> [ THANKS FOR PLAYING ]\n\n> (Press [ENTER] to restart)",
+                next: 'start'
+            }
+        };
+
+        // --- 2. GAME STATE & HELPERS ---
+        
+        // DOM Elements
+        const terminal = document.getElementById('terminal');
+        
+        // Create and append the cursor
+        const cursor = document.createElement('span');
+        cursor.id = 'cursor';
+        cursor.innerHTML = '█'; // A block cursor
+        terminal.appendChild(cursor);
+
+        // Game state
+        let gameState = {
+            currentNode: 'start',
+            a_choices: 0,
+            b_choices: 0,
+            isTyping: false,
+            currentChoices: []
+        };
+        
+        // A helper function for delays
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // --- 3. CORE GAME FUNCTIONS ---
+
+        /**
+         * Types out a block of text, word by word, before the cursor.
+         */
+        async function typeText(textBlock) {
+            gameState.isTyping = true;
+            const words = textBlock.split(' ');
+            for (const word of words) {
+                if (!word) continue;
+                
+                // Create a text node for the word and a space
+                const textNode = document.createTextNode(word + ' ');
+                
+                // Insert the text *before* the cursor
+                terminal.insertBefore(textNode, cursor);
+                
+                // Scroll to the bottom
+                window.scrollTo(0, document.body.scrollHeight);
+                
+                // Wait for a short time
+                await sleep(90); // Adjust typing speed here (in ms)
+            }
+            // Add a longer pause after a block of text
+            await sleep(500); 
+            gameState.isTyping = false;
+        }
+
+        /**
+         * Displays the choices for the player.
+         */
+        async function displayChoices(choices) {
+            let choiceText = '\n';
+            choices.forEach(choice => {
+                choiceText += `${choice.text}\n`;
+            });
+            choiceText += '> '; // Add a prompt prefix
+            
+            await typeText(choiceText); // Type out the choices
+            gameState.currentChoices = choices;
+            gameState.isTyping = false; // Ready for player input
+        }
+
+        /**
+         * The main game loop. It reads the current node and decides what to do.
+         */
+        async function runGameNode() {
+            if (gameState.isTyping) return; // Don't run if already running
+
+            const node = gameData[gameState.currentNode];
+
+            // Handle special logic-only nodes
+            if (node.logic) {
+                gameState.currentNode = node.next(gameState); // Get the next node based on logic
+                runGameNode(); // Run the loop again with the new node
+                return;
+            }
+
+            // Type out the main text for the node
+            if (node.text) {
+                await typeText(node.text);
+            }
+
+            // After typing, decide what's next
+            if (node.choices) {
+                // If there are choices, display them and wait for input
+                displayChoices(node.choices);
+            } else if (node.next) {
+                // If there's a 'next' node and no choices, we wait for [ENTER]
+                // (except for the very start, handled in handleInput)
+                if (gameState.currentNode !== 'start') {
+                    gameState.isTyping = false; // Ready for [ENTER]
+                }
+            }
+        }
+
+        /**
+         * Handles all keyboard input from the player.
+         * * --- THIS FUNCTION CONTAINS THE FIX ---
+         */
+        async function handleInput(e) { // <-- FIX 1: Added 'async'
+            if (gameState.isTyping) return; // Ignore keys while text is typing
+
+            const key = e.key.toUpperCase();
+            const node = gameData[gameState.currentNode];
+
+            // 1. Handle choice input (A/B)
+            if (node.choices && (key === 'A' || key === 'B')) {
+                // Find the chosen option
+                const choice = node.choices.find(c => c.key === key);
+                if (choice) {
+                    // Record the choice
+                    if (key === 'A') gameState.a_choices++;
+                    if (key === 'B') gameState.b_choices++;
+                    
+                    // Display the choice the user made
+                    await typeText(choice.text); // <-- FIX 2: Added 'await'
+                    
+                    // Move to the next node and run it
+                    gameState.currentNode = node.next;
+                    gameState.currentChoices = []; // Clear choices
+                    runGameNode();
+                }
+            } 
+            // 2. Handle [ENTER] key for advancing the story
+            else if (key === 'ENTER') {
+                e.preventDefault(); // Stop default [ENTER] behavior
+
+                // Special case: Restarting the game
+                if (gameState.currentNode === 'restart') {
+                    // Reset game state and clear terminal
+                    gameState = {
+                        currentNode: 'start',
+                        a_choices: 0,
+                        b_choices: 0,
+                        isTyping: false,
+                        currentChoices: []
+                    };
+                    // Clear all text nodes except for the cursor
+                    while (terminal.firstChild && terminal.firstChild !== cursor) {
+                        terminal.removeChild(terminal.firstChild);
+                    }
+                    runGameNode(); // Start from the beginning
+                }
+                // Standard case: Advancing from a node that's waiting for [ENTER]
+                else if (node.next && !node.choices) {
+                    gameState.currentNode = node.next;
+                    runGameNode();
+                }
+            }
+        }
+
+        // --- 4. START THE GAME ---
+
+        // Add the global key listener
+        document.addEventListener('keydown', handleInput);
+
+        // Run the first node
+        runGameNode();
+
+    </script>
+</body>
+</html>
