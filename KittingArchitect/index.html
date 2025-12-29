@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Knit Architect</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #27ae60;
+            --bg-color: #f4f6f7;
+            --text-color: #333;
+            --cell-grey: #e5e8e8;
+            --cell-gap: 2px;
+            --disabled-btn: #95a5a6;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 260px; /* Extra padding for tracker */
+            box-sizing: border-box;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; }
+
+        /* CONTROLS */
+        .controls { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            max-width: 800px; 
+            margin: 0 auto 30px auto;
+        }
+
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .input-wrapper { display: flex; flex-direction: column; flex: 1; min-width: 120px; }
+
+        .input-wrapper label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Better Mobile Inputs */
+        input[type="number"] { 
+            padding: 12px; 
+            border: 2px solid #ecf0f1; 
+            border-radius: 8px; 
+            font-size: 16px; /* Prevents iOS zoom */
+            width: 100%;
+            box-sizing: border-box;
+            -moz-appearance: textfield;
+        }
+        
+        input:disabled { background: #f9f9f9; color: #bdc3c7; border-color: #eee; }
+
+        /* Custom Toggles */
+        .toggle-group { display: flex; background: #ecf0f1; padding: 4px; border-radius: 10px; width: 100%; }
+        .toggle-option { flex: 1; text-align: center; }
+        .toggle-option input { display: none; }
+        .toggle-option label {
+            display: block;
+            padding: 10px 5px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .toggle-option input:checked + label {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Buttons */
+        button.generate-btn { 
+            width: 100%;
+            padding: 16px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: 800;
+            cursor: pointer; 
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+        
+        button.generate-btn:active { transform: scale(0.98); }
+        button.generate-btn:disabled { background: var(--disabled-btn); opacity: 0.6; }
+        button.generate-btn.refresh-active { background-color: var(--accent); }
+
+        /* Grid */
+        #pattern-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-height: 100px;
+        }
+        
+        .empty-state { text-align: center; color: #bdc3c7; padding: 40px 0; font-style: italic; }
+        .stale-grid { opacity: 0.4; pointer-events: none; }
+
+        .pattern-row {
+            display: flex;
+            align-items: stretch;
+            height: 28px; 
+            gap: 10px;
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        .row-number {
+            width: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 12px;
+            color: #95a5a6;
+            font-weight: 600;
+        }
+
+        .stitch-container { display: flex; flex-grow: 1; gap: var(--cell-gap); }
+
+        .cell { flex-grow: 1; border-radius: 2px; }
+        .cell.stitch-yes { background-color: var(--accent); }
+        .cell.stitch-no { background-color: var(--cell-grey); }
+
+        .pattern-row.active-row {
+            background-color: #fff9c4;
+            outline: 2px solid #fbc02d;
+            z-index: 10;
+        }
+
+        /* Tracker */
+        .tracker-panel {
+            position: fixed;
+            background: white;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border-radius: 24px 24px 0 0;
+            box-sizing: border-box;
+            padding-bottom: max(20px, env(safe-area-inset-bottom)); /* iPhone Home Bar Safe */
+        }
+
+        @media (min-width: 768px) {
+            .tracker-panel { width: 300px; right: 20px; left: auto; bottom: 20px; border-radius: 16px; border: 1px solid #ddd; padding-bottom: 20px; }
+        }
+
+        .tracker-display-large { font-size: 32px; font-weight: 900; color: var(--primary); text-align: center; margin: 5px 0; }
+        .tracker-subtext { font-size: 13px; color: #95a5a6; text-align: center; font-family: monospace; }
+        .tracker-buttons { display: flex; gap: 15px; margin-top: 15px; }
+
+        .btn-nav {
+            flex: 1;
+            padding: 16px;
+            background: #f0f2f5;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-nav:active { background: #dce1e6; }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <h2>Knitting Architect</h2>
+        
+        <div class="control-group">
+            <div class="input-wrapper">
+                <label>Shape</label>
+                <div class="toggle-group">
+                    <div class="toggle-option">
+                        <input type="radio" id="mode-circle" name="mode" value="circle">
+                        <label for="mode-circle">Circle</label>
+                    </div>
+                    <div class="toggle-option">
+                        <input type="radio" id="mode-beanie" name="mode" value="beanie" checked>
+                        <label for="mode-beanie">Beanie</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-wrapper">
+                <label>Row Style</label>
+                <div class="toggle-group">
+                    <div class="toggle-option">
+                        <input type="radio" id="style-double" name="rowstyle" value="double" checked>
+                        <label for="style-double">Double</label>
+                    </div>
+                    <div class="toggle-option">
+                        <input type="radio" id="style-single" name="rowstyle" value="single">
+                        <label for="style-single">Single</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="input-wrapper">
+                <label>Stitch Width</label>
+                <input type="number" id="stitchInput" value="15" inputmode="numeric">
+            </div>
+            <div class="input-wrapper" id="degreeWrapper">
+                <label>Degrees</label>
+                <input type="number" id="degreeInput" value="90" inputmode="numeric" disabled>
+            </div>
+        </div>
+
+        <button id="mainBtn" class="generate-btn">GENERATE PATTERN</button>
+    </div>
+
+    <div id="pattern-container">
+        <div class="empty-state">Select settings above and tap Generate</div>
+    </div>
+    
+    <div class="tracker-panel">
+        <div id="currentRowDisplay" class="tracker-display-large">--</div>
+        <div id="currentStitchCounts" class="tracker-subtext">Knitted: - | Skipped: -</div>
+        <div class="tracker-buttons">
+            <button class="btn-nav" id="btnPrev">▲ PREV</button>
+            <button class="btn-nav" id="btnNext">NEXT ▼</button>
+        </div>
+    </div>
+
+    <script>
+    // WRAP EVERYTHING IN DOMContentLoaded TO PREVENT RACE CONDITIONS
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. Element References ---
+        const els = {
+            modeInputs: document.querySelectorAll('input[name="mode"]'),
+            styleInputs: document.querySelectorAll('input[name="rowstyle"]'),
+            stitchInput: document.getElementById('stitchInput'),
+            degreeInput: document.getElementById('degreeInput'),
+            degreeWrapper: document.getElementById('degreeWrapper'),
+            mainBtn: document.getElementById('mainBtn'),
+            container: document.getElementById('pattern-container'),
+            btnPrev: document.getElementById('btnPrev'),
+            btnNext: document.getElementById('btnNext'),
+            dispRow: document.getElementById('currentRowDisplay'),
+            dispCounts: document.getElementById('currentStitchCounts')
+        };
+
+        // --- 2. State ---
+        let state = {
+            matrix: [],
+            totalRows: 0,
+            currentIndex: -1,
+            activeSettings: null
+        };
+
+        // --- 3. Event Listeners (Added safely) ---
+        
+        // Input Changes
+        const allInputs = [...els.modeInputs, ...els.styleInputs, els.stitchInput, els.degreeInput];
+        allInputs.forEach(el => {
+            el.addEventListener('input', handleInputChange);
+            el.addEventListener('change', handleInputChange);
+        });
+
+        // Main Action
+        els.mainBtn.addEventListener('click', calculateKnitting);
+
+        // Navigation
+        els.btnPrev.addEventListener('click', () => moveRow(-1));
+        els.btnNext.addEventListener('click', () => moveRow(1));
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowUp") { e.preventDefault(); moveRow(-1); }
+            if (e.key === "ArrowDown") { e.preventDefault(); moveRow(1); }
+        });
+
+        // Initialize UI
+        handleInputChange();
+
+        // --- 4. Logic Functions ---
+
+        function handleInputChange() {
+            // A. Handle "Degrees" Field Enable/Disable
+            const isCircle = document.querySelector('input[name="mode"][value="circle"]').checked;
+            
+            if (isCircle) {
+                els.degreeInput.disabled = false;
+                els.degreeWrapper.style.opacity = '1';
+            } else {
+                els.degreeInput.disabled = true;
+                els.degreeWrapper.style.opacity = '0.4';
+            }
+
+            // B. Check Dirty State
+            checkDirtyState();
+        }
+
+        function getCurrentSettings() {
+            const mode = document.querySelector('input[name="mode"]:checked').value;
+            const style = document.querySelector('input[name="rowstyle"]:checked').value;
+            const stitches = parseInt(els.stitchInput.value) || 0;
+            const degrees = parseInt(els.degreeInput.value) || 0;
+            return { mode, style, stitches, degrees };
+        }
+
+        function checkDirtyState() {
+            if (!state.activeSettings) return; // Still in initial state
+
+            const current = getCurrentSettings();
+            const active = state.activeSettings;
+            
+            // Deep compare simple object
+            const isDirty = JSON.stringify(current) !== JSON.stringify(active);
+
+            if (isDirty) {
+                els.mainBtn.innerText = "REFRESH PATTERN";
+                els.mainBtn.classList.add('refresh-active');
+                els.mainBtn.disabled = false;
+                els.container.classList.add('stale-grid');
+            } else {
+                els.mainBtn.innerText = "REFRESH PATTERN";
+                els.mainBtn.classList.remove('refresh-active');
+                els.mainBtn.disabled = true;
+                els.container.classList.remove('stale-grid');
+            }
+        }
+
+        function calculateKnitting() {
+            const settings = getCurrentSettings();
+            if (settings.stitches < 1) return;
+
+            // Update Active State
+            state.activeSettings = { ...settings };
+            
+            // A. Calculate Arc Lengths
+            const arcLengths = [];
+            const gaugeRatio = 27 / 15; // 1.8
+
+            for (let r = 1; r <= settings.stitches; r++) {
+                let arc;
+                if (settings.mode === 'circle') {
+                    // Linear: 2 * pi * r * fraction
+                    arc = 2 * Math.PI * r * (settings.degrees / 360);
+                } else {
+                    // Sine: 4 * L * sin(angle)
+                    const angle = (r / settings.stitches) * (Math.PI / 2);
+                    arc = 4 * settings.stitches * Math.sin(angle);
+                }
+
+                // Apply Gauge
+                arc = arc * gaugeRatio;
+
+                // Apply Row Style
+                if (settings.style === 'double') {
+                    arc = arc / 2;
+                }
+
+                arcLengths.push(Math.round(arc));
+            }
+
+            // B. Generate Matrix (Difference Logic)
+            let rawMatrix = [];
+            for (let i = settings.stitches - 1; i >= 0; i--) {
+                const outerArc = arcLengths[i];
+                const innerArc = (i === 0) ? 0 : arcLengths[i-1];
+                let count = outerArc - innerArc;
+                
+                if (count < 0) count = 0; // Safety
+
+                for (let k = 0; k < count; k++) {
+                    // Create row: 0s for inner, 1s for outer
+                    let row = new Array(settings.stitches).fill(0);
+                    for (let s = i; s < settings.stitches; s++) {
+                        row[s] = 1;
+                    }
+                    rawMatrix.push(row);
+                }
+            }
+
+            // C. Distribute Rows
+            state.matrix = distributeRows(rawMatrix);
+            state.totalRows = state.matrix.length;
+            state.currentIndex = -1;
+
+            // D. Render
+            renderGrid();
+            
+            // E. Reset UI
+            checkDirtyState();
+            updateTrackerUI();
+        }
+
+        function distributeRows(matrix) {
+            const len = matrix.length;
+            if (len < 3) return matrix;
+
+            // Sort Heavy -> Light
+            // Note: Use slice() to clone before sorting to avoid reference issues
+            const sorted = matrix.slice().sort((a, b) => {
+                const weightA = a.reduce((acc, v) => acc + v, 0);
+                const weightB = b.reduce((acc, v) => acc + v, 0);
+                return weightB - weightA;
+            });
+
+            const result = new Array(len);
+            
+            // Anchors
+            result[0] = sorted.pop(); // Lightest to Top
+            result[len - 1] = sorted.pop(); // 2nd Lightest to Bottom
+
+            // Ping Pong Middle
+            const indices = [];
+            const queue = [[1, len - 2]];
+            let flip = true;
+
+            while (queue.length > 0) {
+                const [start, end] = queue.shift();
+                if (start > end) continue;
+
+                const mid = Math.floor((start + end) / 2);
+                indices.push(mid);
+
+                if (flip) {
+                    queue.push([start, mid - 1]);
+                    queue.push([mid + 1, end]);
+                } else {
+                    queue.push([mid + 1, end]);
+                    queue.push([start, mid - 1]);
+                }
+                flip = !flip;
+            }
+
+            // Fill middle
+            indices.forEach((targetIndex, i) => {
+                if (sorted[i]) result[targetIndex] = sorted[i];
+            });
+
+            // Fallback for any holes (rare edge cases)
+            for(let i=0; i<len; i++) {
+                if(!result[i]) result[i] = matrix[0]; 
+            }
+
+            return result;
+        }
+
+        function renderGrid() {
+            els.container.innerHTML = '';
+            
+            if (state.totalRows === 0) {
+                els.container.innerHTML = '<div class="empty-state">Result is 0 rows. Increase degrees or stitches.</div>';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            state.matrix.forEach((row, idx) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'pattern-row';
+                rowDiv.id = `row-${idx}`;
+
+                // Number
+                const num = document.createElement('div');
+                num.className = 'row-number';
+                num.textContent = idx + 1;
+                
+                // Stitches
+                const sCont = document.createElement('div');
+                sCont.className = 'stitch-container';
+                
+                row.forEach(val => {
+                    const cell = document.createElement('div');
+                    cell.className = val ? 'cell stitch-yes' : 'cell stitch-no';
+                    sCont.appendChild(cell);
+                });
+
+                rowDiv.appendChild(num);
+                rowDiv.appendChild(sCont);
+                fragment.appendChild(rowDiv);
+            });
+
+            els.container.appendChild(fragment);
+        }
+
+        function moveRow(direction) {
+            if (state.totalRows === 0) return;
+
+            // Remove old active
+            if (state.currentIndex >= 0) {
+                const old = document.getElementById(`row-${state.currentIndex}`);
+                if (old) old.classList.remove('active-row');
+            }
+
+            // Update Index
+            state.currentIndex += direction;
+            if (state.currentIndex < 0) state.currentIndex = 0;
+            if (state.currentIndex >= state.totalRows) state.currentIndex = state.totalRows - 1;
+
+            // Add new active
+            const active = document.getElementById(`row-${state.currentIndex}`);
+            if (active) {
+                active.classList.add('active-row');
+                active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            updateTrackerUI();
+        }
+
+        function updateTrackerUI() {
+            if (state.currentIndex === -1) {
+                els.dispRow.textContent = "--";
+                els.dispCounts.textContent = "Knitted: - | Skipped: -";
+                return;
+            }
+
+            els.dispRow.textContent = `Row ${state.currentIndex + 1}`;
+            
+            const row = state.matrix[state.currentIndex];
+            const knitted = row.filter(x => x === 1).length;
+            const skipped = row.length - knitted;
+            
+            els.dispCounts.textContent = `${knitted} Knit | ${skipped} Skipped`;
+        }
+
+    }); // End DOMContentLoaded
+    </script>
+</body>
+</html>
