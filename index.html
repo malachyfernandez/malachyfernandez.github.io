@@ -406,7 +406,8 @@
           // Add click listener for mobile toggle
           if (isTouchDevice) {
             card.addEventListener('click', function(e) {
-              if (e.target.closest('.btn')) return;
+              // Don't toggle if clicking on a button link
+              if (e.target.closest('a')) return;
               this.classList.toggle('touch-active');
               document.querySelectorAll('.project-card').forEach(c => {
                 if (c !== this) c.classList.remove('touch-active');
