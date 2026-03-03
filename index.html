@@ -328,7 +328,7 @@
         if (wasActive) {
           activeCard.classList.remove('touch-active');
           debugLog(`REMOVED touch-active from "${cardName}"`);
-          activeCard = null;
+          // Don't set activeCard to null immediately - let the click handler deal with it
         } else {
           // Remove active class from any other card first
           document.querySelectorAll('.project-card.touch-active').forEach(c => {
