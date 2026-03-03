@@ -108,13 +108,23 @@
       overflow: hidden;
       transition: transform var(--transition), box-shadow var(--transition);
     }
-    .project-card.has-background-image {
+    /* ADD THIS: New dedicated background layer */
+    .card-bg {
+      position: absolute;
+      top: -10px; left: -10px; right: -10px; bottom: -10px; /* Negative inset prevents blurry white edges */
+      z-index: 1;
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
+      filter: blur(3px); /* Adjust for more/less blur */
     }
+
+    /* UPDATE THIS: Remove background properties here, we moved them to .card-bg */
     .project-card.has-background-image .card-content {
       color: #fff;
+      position: relative;
+      z-index: 4; /* Puts text above the ::before circle and .card-bg */
+      text-align: center;
+      transition: opacity var(--transition);
     }
     .project-card.has-background-image .card-content i {
       color: var(--primary);
@@ -170,6 +180,9 @@
       .project-card:hover .card-content i {
         color: #fff;
       }
+      .project-card.has-background-image:hover .card-content i {
+        color: var(--primary);
+      }
       .project-card:hover .card-actions {
         opacity: 1;
         pointer-events: auto;
@@ -222,6 +235,7 @@
       opacity: 0;
       transition: opacity var(--transition);
       pointer-events: none;
+      z-index: 4; /* Keep buttons clickable and on top */
     }
     .btn {
       background: var(--primary);
@@ -355,8 +369,11 @@
           // Apply background image if specified
           if (project.backgroundImage) {
             card.classList.add('has-background-image');
-            // Use a linear-gradient to darken the image, freeing up the ::before element!
-            card.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${project.backgroundImage}')`;
+            
+            const bgDiv = document.createElement('div');
+            bgDiv.className = 'card-bg';
+            bgDiv.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${project.backgroundImage}')`;
+            card.appendChild(bgDiv);
           }
 
           // Card content

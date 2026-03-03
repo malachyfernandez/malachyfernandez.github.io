@@ -11,6 +11,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "AI‑powered bias detection for articles—think Grammarly for ideological slants.",
           icon: "fas fa-brain",
+          backgroundImage: "cover-images/biasly.png",
           award: "🏆 Hack@UNCP 2025 Best Education Project",
           buttons: [
             {
@@ -22,7 +23,7 @@ const projectShowcaseConfig = {
             {
               text: "DevPost",
               icon: "fas fa-code",
-              link: "https://devpost.com/software/baisly",
+              link: "https://devpost.com/software/biasly",
               target: "_blank"
             }
           ]
@@ -32,6 +33,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A minimal recipe platform focusing on step‑by‑step guidance over fluff.",
           icon: "fas fa-utensils",
+          backgroundImage: "cover-images/instant-chef.png",
           award: "🏆 Hack@Davidson 2025 Best AI Project",
           buttons: [
             {
@@ -53,6 +55,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "Enter your address to find local election candidates with basic info & photos.",
           icon: "fas fa-bullhorn",
+          backgroundImage: "cover-images/local-voice.png",
           award: "🥈 Hack NC 2nd Place Beginner Project",
           buttons: [
             {
@@ -80,7 +83,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A highly customizable, visually interactive Minecraft block gradient generator.",
           icon: "fas fa-th-large",
-          backgroundImage: "minecraftGradient/cover-img.png",
+          backgroundImage: "cover-images/mc-gradient-cover-img.png",
           buttons: [
             {
               text: "GitHub",
@@ -101,6 +104,7 @@ const projectShowcaseConfig = {
           type: "Puzzle Game",
           description: "Redraw district lines to win elections with a minority in this puzzle.",
           icon: "fas fa-map",
+          backgroundImage: "cover-images/Gerrymander.png",
           buttons: [
             {
               text: "GitHub",
@@ -121,6 +125,7 @@ const projectShowcaseConfig = {
           type: "Game for ED204",
           description: "A text-based game created for ED204 that explores implicit bias in education through a metaphorical hunting experience.",
           icon: "fas fa-graduation-cap",
+          backgroundImage: "cover-images/the-hunt.png",
           buttons: [
             {
               text: "GitHub",
@@ -141,6 +146,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A powerful, browser-based photo editor with layer-based editing and AI-powered transformations using Google Gemini.",
           icon: "fas fa-image",
+          backgroundImage: "cover-images/photo-editor.png",
           buttons: [
             {
               text: "GitHub",
@@ -161,6 +167,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A powerful web-based tool for creating Minecraft Bedrock Edition schematics with smart shape generation and real-time preview.",
           icon: "fas fa-cube",
+          backgroundImage: "cover-images/mc-schematic.png",
           buttons: [
             {
               text: "GitHub",
@@ -171,7 +178,7 @@ const projectShowcaseConfig = {
             {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
-              link: "https://malachyfernandez.github.io/Bedrock-Schematic-Maker/",
+              link: "https://malachyfernandez.github.io/MinecraftSchematicMaker/index.html",
               target: "_blank"
             }
           ]
@@ -187,6 +194,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "Instantly jump to real Google search results using just your keyboard.",
           icon: "fas fa-mouse-pointer",
+          backgroundImage: "cover-images/skip-scroll.png",
           buttons: [
             {
               text: "GitHub",
@@ -207,6 +215,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "A Chrome extension that strips away inline source citations on Google Gemini for a cleaner reading experience.",
           icon: "fas fa-magic",
+          backgroundImage: "cover-images/gemini-strip.png",
           buttons: [
             {
               text: "GitHub",
@@ -227,6 +236,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "Bypass News & Observer ad-blocker detection screens to read articles without disabling your ad blocker.",
           icon: "fas fa-newspaper",
+          backgroundImage: "cover-images/news-breaker.png",
           buttons: [
             {
               text: "GitHub",
@@ -247,6 +257,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "A powerful Chrome extension that lets you download TikTok videos instantly with one click.",
           icon: "fab fa-tiktok",
+          backgroundImage: "cover-images/tiktok-grab.png",
           buttons: [
             {
               text: "GitHub",
