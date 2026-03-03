@@ -9,6 +9,9 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
+    @view-transition {
+      navigation: auto;
+    }
     :root {
       --primary: var(--primary-color);
       --primary-dark: var(--primary-dark-color);
@@ -278,7 +281,49 @@
       color: rgba(255,255,255,0.5);
       z-index: 1000;
     }
-  </style>
+
+    /* --- NATIVE VIEW TRANSITIONS --- */
+    header {
+      view-transition-name: main-header;
+    }
+
+    .profile-photo {
+      view-transition-name: profile-photo;
+    }
+
+    #content {
+      view-transition-name: page-content;
+    }
+
+    ::view-transition-old(page-content) {
+      animation: fade-out 0.2s cubic-bezier(0.4, 0, 1, 1) both;
+    }
+
+    ::view-transition-new(page-content) {
+      animation: slide-up 0.4s cubic-bezier(0, 0, 0.2, 1) both;
+    }
+
+    @keyframes fade-out {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Prevent the blurry crossfade on persistent elements */
+    ::view-transition-old(main-header),
+    ::view-transition-old(profile-photo) {
+      display: none; /* Instantly hide the old snapshot */
+    }
+
+    ::view-transition-new(main-header),
+    ::view-transition-new(profile-photo) {
+      animation: none; /* Prevent the new snapshot from fading in */
+    }
+
+    </style>
 </head>
 <body>
   <div class="version-number" id="version">v1.3</div>
@@ -350,7 +395,6 @@
         if (item.active) element.className = 'active';
         if (item.link) {
           element.href = item.link;
-          // Don't set target for internal navigation
         }
         element.textContent = item.text;
         navContainer.appendChild(element);
@@ -467,8 +511,8 @@
       });
     }
 
-    // Initialize the site when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initializeSite);
+    // Initialize the site immediately so View Transition can see it
+    initializeSite();
   </script>
 </body>
 </html>
