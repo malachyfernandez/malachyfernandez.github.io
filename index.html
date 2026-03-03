@@ -206,6 +206,15 @@
     }
     a { text-decoration: none; }
     
+    .version-number {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      z-index: 1000;
+    }
+    
     /* Disable hover effects on touch devices */
     body.touch-device .project-card:hover .card-actions {
       opacity: 0 !important;
@@ -228,6 +237,8 @@
   </style>
 </head>
 <body>
+  <div class="version-number" id="version">v1.0</div>
+  
   <header>
     <h1 id="site-title">Loading...</h1>
     <div class="nav" id="navigation">
