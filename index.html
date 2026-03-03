@@ -335,8 +335,8 @@
         return;
       }
       
-      // Close if clicking outside cards or on a different card
-      if (!card || card !== activeCard) {
+      // Close if clicking outside cards, on a different card, or on the same card (but not a button)
+      if (!card || card !== activeCard || (card === activeCard && !button)) {
         activeCard.classList.remove('touch-active');
         activeCard = null;
       }
