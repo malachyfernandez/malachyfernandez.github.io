@@ -217,9 +217,23 @@
     <!-- Content will be populated by JavaScript -->
   </div>
 
+  <!-- Debug log for mobile testing -->
+  <div id="debug-log" style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); color: white; font-family: monospace; font-size: 10px; padding: 5px; max-height: 150px; overflow-y: auto; z-index: 9999;"></div>
+
   <script src="config/site.js"></script>
   <script src="config/projects.js"></script>
   <script>
+    // Debug logging function
+    function debugLog(message) {
+      const debugElement = document.getElementById('debug-log');
+      if (debugElement) {
+        const timestamp = new Date().toLocaleTimeString();
+        debugElement.innerHTML += `[${timestamp}] ${message}<br>`;
+        debugElement.scrollTop = debugElement.scrollHeight;
+      }
+      console.log(message);
+    }
+
     // Touch detection and interaction handling
     let isTouchDevice = false;
     let activeCard = null;
@@ -232,17 +246,23 @@
     // Detect touch device
     function detectTouchDevice() {
       isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+      debugLog(`Touch device detected: ${isTouchDevice}`);
       
       if (isTouchDevice) {
         document.body.classList.add('touch-device');
+        debugLog('Added touch-device class to body');
       }
     }
 
     // Handle touch interactions
     function handleTouchStart(e) {
+      debugLog(`=== TOUCH START ===`);
+      debugLog(`isTouchDevice: ${isTouchDevice}`);
+      
       if (!isTouchDevice) return;
       
       const card = e.target.closest('.project-card');
+      debugLog(`Card found: ${!!card}`);
       if (!card) return;
       
       // Reset scroll detection variables
@@ -251,19 +271,24 @@
       isScrolling = false;
       touchMoved = false;
       
+      debugLog(`Touch start time: ${touchStartTime}, Y: ${touchStartY}`);
+      
       // Clear any existing scroll timeout
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
         scrollTimeout = null;
+        debugLog('Cleared existing scroll timeout');
       }
       
       // If clicking on a button, let it work normally
       if (e.target.closest('.btn')) {
+        debugLog('Touch on button - ignoring');
         return;
       }
       
       // Store which card is being touched for later processing
       activeCard = card;
+      debugLog(`Set activeCard: ${card.querySelector('h3')?.textContent}`);
     }
     
     // Handle touch move to detect scrolling
@@ -273,10 +298,13 @@
       const touchY = e.touches[0].clientY;
       const deltaY = Math.abs(touchY - touchStartY);
       
+      debugLog(`Touch move - deltaY: ${deltaY}`);
+      
       // If moved more than 10px, consider it scrolling
       if (deltaY > 10) {
         isScrolling = true;
         touchMoved = true;
+        debugLog('Detected scrolling - showing card for feedback');
         // Show the card during scrolling for visual feedback
         activeCard.classList.add('touch-active');
       }
@@ -284,24 +312,37 @@
     
     // Handle touch end to determine if it was a tap or scroll
     function handleTouchEnd(e) {
+      debugLog(`=== TOUCH END ===`);
       if (!isTouchDevice || !activeCard) return;
       
       const touchDuration = Date.now() - touchStartTime;
+      const cardName = activeCard.querySelector('h3')?.textContent;
+      const wasActive = activeCard.classList.contains('touch-active');
+      
+      debugLog(`Touch duration: ${touchDuration}ms, touchMoved: ${touchMoved}, wasActive: ${wasActive}`);
       
       // If it was a quick tap (less than 200ms) and didn't move much, treat as toggle
       if (touchDuration < 200 && !touchMoved) {
+        debugLog(`QUICK TAP - toggling card "${cardName}"`);
         // This was a tap, so toggle the card
-        if (activeCard.classList.contains('touch-active')) {
+        if (wasActive) {
           activeCard.classList.remove('touch-active');
+          debugLog(`REMOVED touch-active from "${cardName}"`);
           activeCard = null;
         } else {
           // Remove active class from any other card first
           document.querySelectorAll('.project-card.touch-active').forEach(c => {
-            if (c !== activeCard) c.classList.remove('touch-active');
+            const otherName = c.querySelector('h3')?.textContent;
+            if (c !== activeCard) {
+              c.classList.remove('touch-active');
+              debugLog(`REMOVED touch-active from other card "${otherName}"`);
+            }
           });
           activeCard.classList.add('touch-active');
+          debugLog(`ADDED touch-active to "${cardName}"`);
         }
       } else if (isScrolling) {
+        debugLog(`SCROLLING detected - setting timeout to close "${cardName}"`);
         // This was scrolling, set a timeout to close the card after scrolling stops
         if (scrollTimeout) {
           clearTimeout(scrollTimeout);
@@ -309,15 +350,19 @@
         
         scrollTimeout = setTimeout(() => {
           if (activeCard) {
+            const timeoutCardName = activeCard.querySelector('h3')?.textContent;
             activeCard.classList.remove('touch-active');
+            debugLog(`TIMEOUT: REMOVED touch-active from "${timeoutCardName}"`);
             activeCard = null;
           }
           scrollTimeout = null;
         }, 500); // Close after 500ms of no scrolling
       } else {
+        debugLog(`NOT TAP OR SCROLL - closing "${cardName}"`);
         // Not a tap and not scrolling - close the card
         if (activeCard) {
           activeCard.classList.remove('touch-active');
+          debugLog(`REMOVED touch-active from "${cardName}"`);
           activeCard = null;
         }
       }
@@ -325,20 +370,32 @@
 
     // Handle clicks outside cards to close active card
     function handleDocumentClick(e) {
-      if (!isTouchDevice || !activeCard) return;
+      debugLog(`=== DOCUMENT CLICK ===`);
+      if (!isTouchDevice || !activeCard) {
+        debugLog(`Early return - isTouchDevice: ${isTouchDevice}, activeCard: ${!!activeCard}`);
+        return;
+      }
       
       const card = e.target.closest('.project-card');
       const button = e.target.closest('.btn');
+      const activeCardName = activeCard.querySelector('h3')?.textContent;
+      const clickedCardName = card?.querySelector('h3')?.textContent;
+      
+      debugLog(`Click target - card: "${clickedCardName}", button: ${!!button}, activeCard: "${activeCardName}"`);
       
       // Don't close if clicking on a button inside the active card
       if (card === activeCard && button) {
+        debugLog('Click on button inside active card - NOT closing');
         return;
       }
       
       // Close if clicking outside cards, on a different card, or on the same card (but not a button)
       if (!card || card !== activeCard || (card === activeCard && !button)) {
+        debugLog(`CLOSING active card "${activeCardName}" - condition met`);
         activeCard.classList.remove('touch-active');
         activeCard = null;
+      } else {
+        debugLog(`NOT closing - condition not met`);
       }
     }
 
