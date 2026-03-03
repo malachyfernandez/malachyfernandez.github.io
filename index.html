@@ -136,7 +136,10 @@
       color: rgba(255, 255, 255, 0.8);
     }
     .project-card.has-background-image .card-content .award {
-      color: rgba(255, 255, 255, 0.9);
+      color: #fff;
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
     .project-card.has-background-image .btn {
       background: var(--primary);
@@ -218,10 +221,22 @@
     }
     .card-content .award {
       font-size: 0.8rem;
-      color: var(--award-color);
+      color: #fff;
       margin-top: 0.75rem;
       font-weight: 600;
       white-space: nowrap;
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      padding: 0.4rem 0.8rem;
+      border-radius: 50px;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      transition: transform var(--transition), box-shadow var(--transition);
+      display: inline-block;
+    }
+    .card-content .award:hover {
+      transform: none;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
     }
     .card-actions {
       position: absolute;
