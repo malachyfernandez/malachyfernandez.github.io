@@ -48,6 +48,10 @@
       align-items: center;
       justify-content: center;
       gap: 1rem;
+      view-transition-name: header-title;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
     }
     .profile-photo {
       width: 80px;
@@ -61,6 +65,7 @@
       font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      view-transition-name: header-nav;
     }
     header .nav a,
     header .nav span {
@@ -313,16 +318,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Prevent the blurry crossfade on persistent elements */
-    ::view-transition-old(main-header),
-    ::view-transition-old(profile-photo) {
-      display: none; /* Instantly hide the old snapshot */
-    }
-
-    ::view-transition-new(main-header),
-    ::view-transition-new(profile-photo) {
-      animation: none; /* Prevent the new snapshot from fading in */
-    }
 
     </style>
 </head>
