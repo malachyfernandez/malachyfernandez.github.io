@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malachy Fernandez – About Me</title>
-  <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <title id="page-title">Loading...</title>
+  <!-- Google Fonts -->
+  <link id="google-fonts" rel="stylesheet" />
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <style>
     :root {
-      --primary: #3498db;
-      --text: #333;
-      --bg-start: #f0f4f8;
-      --bg-end: #ffffff;
-      --card: #fff;
+      --primary: var(--primary-color);
+      --text: var(--text-color);
+      --bg-start: var(--bg-start-color);
+      --bg-end: var(--bg-end-color);
+      --card: var(--card-color);
       --radius: 12px;
       --transition: 0.3s ease;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-family), sans-serif;
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       color: var(--text);
       min-height: 100vh;
@@ -30,7 +30,7 @@
     header {
       text-align: center;
       padding: 3rem 1rem;
-      background: linear-gradient(120deg, var(--primary), #8e44ad);
+      background: linear-gradient(120deg, var(--header-start), var(--header-end));
       color: #fff;
     }
     header h1 {
@@ -103,95 +103,179 @@
 </head>
 <body>
   <header>
-    <h1>Malachy Fernandez</h1>
-    <div class="nav">
-      <a href="../index.html">Project Showcase</a>
-      <span class="dot">·</span>
-      <span class="active">About Me</span>
+    <h1 id="site-title">Loading...</h1>
+    <div class="nav" id="navigation">
+      <!-- Navigation will be populated by JavaScript -->
     </div>
   </header>
 
-  <div class="container">
-    <!-- MAIN COLUMN -->
-    <div>
-
-      <!-- Why Teach? -->
-      <div class="section">
-        <h3>Why Teach?</h3>
-        <p>As a teacher, I will mold the minds of future generations. I will rebuild the natural love of learning we are all born with. I will create a lasting impact on the lives of my students and the people they will grow up to be.</p>
-      </div>
-
-      <!-- Work Experience -->
-      <div class="section">
-        <h3>Work Experience</h3>
-
-        <!-- Bakery -->
-        <p class="item-title"><strong>Gluten‑Free & Vegan Bakery — Owner</strong></p>
-        <p class="item-date"><em>Summer 2021</em></p>
-        <p class="item-desc">Launched an at‑home bakery. Led marketing, business development, and day‑to‑day operations.</p>
-        <p class="item-desc">Baked & delivered 9–12 orders weekly, generating $1,500 in revenue.</p>
-
-        <!-- Lifeguard -->
-        <p class="item-title" style="margin-top:1.5rem;"><strong>Aquatic Management Group, Hedingham Pool — Lifeguard</strong></p>
-        <p class="item-date"><em>Summer 2023, Summer 2024</em></p>
-        <p class="item-desc">American Red Cross Certified Lifeguard. Certified in CPR and first aid.</p>
-        <p class="item-desc">Experience swimming and communicating; ensuring patrons’ safety.</p>
-      </div>
-
-      <!-- Activities -->
-      <div class="section">
-        <h3>Activities</h3>
-
-        <!-- Apps -->
-        <p class="item-title"><strong>App Development — Personal Projects</strong></p>
-        <p class="item-desc">Created two apps with 6–12 months of planning & development.</p>
-        <p class="item-desc">Released a Christmas game in December 2020 on the Google Play Store.</p>
-
-        <!-- Choir -->
-        <p class="item-title" style="margin-top:1.5rem;"><strong>Chamber Choir — W G Enloe Choir</strong></p>
-        <p class="item-desc">Invited to sing at Duke Chapel (2022) and to the Athena Project in Nashville, TN (2023).</p>
-        <p class="item-desc">Mentored two beginners to master solfège; organized auditions & new arrangements for Singing Valentines.</p>
-      </div>
-    </div>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="section">
-        <h3>Contact</h3>
-        <a href="mailto:malachyfernandez@gmail.com">
-          <i class="fas fa-envelope"></i>
-          malachyfernandez@gmail.com
-        </a>
-        <a href="https://malachyf.com" target="_blank">
-          <i class="fas fa-globe"></i>
-          malachyf.com
-        </a>
-        <a href="https://linkedin.com/in/malachyf" target="_blank">
-          <i class="fab fa-linkedin"></i>
-          linkedin.com/in/malachyf
-        </a>
-        <a href="https://github.com/malachyfernandez" target="_blank">
-          <i class="fab fa-github"></i>
-          github.com/malachyfernandez
-        </a>
-        <a href="https://devpost.com/malachyfernandez" target="_blank">
-          <i class="fas fa-code"></i>
-          devpost.com/malachyfernandez
-        </a>
-      </div>
-
-      <div class="section">
-        <h3>Education</h3>
-        <p><strong>W G Enloe High School</strong><br />2020–2024</p>
-        <p><strong>NC State University</strong><br />2024–2028</p>
-      </div>
-
-      <div class="section">
-        <h3>Skills</h3>
-        <p><strong>Programming:</strong> JavaScript, HTML, CSS</p>
-        <p><strong>American Red Cross:</strong> CPR & Lifeguard Certified</p>
-      </div>
-    </aside>
+  <div class="container" id="content">
+    <!-- Content will be populated by JavaScript -->
   </div>
+
+  <script src="../config/site.js"></script>
+  <script src="../config/about.js"></script>
+  <script>
+    // Apply configuration to the About Me page
+    function initializeAboutMe() {
+      // Set CSS variables from site config
+      const root = document.documentElement;
+      root.style.setProperty('--primary-color', siteConfig.colors.primary);
+      root.style.setProperty('--text-color', siteConfig.colors.text);
+      root.style.setProperty('--bg-start-color', siteConfig.colors.bgStart);
+      root.style.setProperty('--bg-end-color', siteConfig.colors.bgEnd);
+      root.style.setProperty('--card-color', siteConfig.colors.card);
+      root.style.setProperty('--header-start', siteConfig.headerGradient.start);
+      root.style.setProperty('--header-end', siteConfig.headerGradient.end);
+      root.style.setProperty('--font-family', siteConfig.site.font);
+
+      // Set page title and site title
+      document.getElementById('page-title').textContent = aboutMeConfig.title;
+      document.getElementById('site-title').textContent = siteConfig.site.author;
+
+      // Set Google Fonts
+      document.getElementById('google-fonts').href = 
+        `https://fonts.googleapis.com/css2?family=${siteConfig.site.font}:wght@400;600&display=swap`;
+
+      // Build navigation (reverse of main page)
+      const navContainer = document.getElementById('navigation');
+      siteConfig.navigation.forEach((item, index) => {
+        if (index > 0) {
+          const dot = document.createElement('span');
+          dot.className = 'dot';
+          dot.textContent = '·';
+          navContainer.appendChild(dot);
+        }
+
+        const element = document.createElement(item.link ? 'a' : 'span');
+        // Reverse active state for About Me page
+        if (!item.active) element.className = 'active';
+        if (item.link) {
+          // Adjust link to go back to main page
+          if (item.link === "index.html") {
+            element.href = "../index.html";
+          } else {
+            element.href = item.link;
+          }
+          // Don't set target for internal navigation
+        }
+        element.textContent = item.text;
+        navContainer.appendChild(element);
+      });
+
+      // Build main content sections
+      const contentContainer = document.getElementById('content');
+      const mainColumn = document.createElement('div');
+      const sidebar = document.createElement('aside');
+      sidebar.className = 'sidebar';
+
+      // Add main sections from about config
+      aboutMeConfig.sections.forEach(section => {
+        const sectionElement = document.createElement('div');
+        sectionElement.className = 'section';
+
+        // Section title
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = section.title;
+        sectionElement.appendChild(titleElement);
+
+        // Section content
+        if (section.content) {
+          // Simple content section
+          const contentElement = document.createElement('p');
+          contentElement.textContent = section.content;
+          sectionElement.appendChild(contentElement);
+        } else if (section.items) {
+          // Items section (Work Experience, Activities)
+          section.items.forEach((item, itemIndex) => {
+            // Title
+            const titleElement = document.createElement('p');
+            titleElement.className = 'item-title';
+            if (itemIndex > 0) {
+              titleElement.style.marginTop = '1.5rem';
+            }
+            titleElement.innerHTML = `<strong>${item.title}</strong>`;
+            sectionElement.appendChild(titleElement);
+
+            // Date (if exists)
+            if (item.date) {
+              const dateElement = document.createElement('p');
+              dateElement.className = 'item-date';
+              dateElement.innerHTML = `<em>${item.date}</em>`;
+              sectionElement.appendChild(dateElement);
+            }
+
+            // Descriptions
+            item.descriptions.forEach(desc => {
+              const descElement = document.createElement('p');
+              descElement.className = 'item-desc';
+              descElement.textContent = desc;
+              sectionElement.appendChild(descElement);
+            });
+          });
+        }
+
+        mainColumn.appendChild(sectionElement);
+      });
+
+      // Add sidebar sections from about config
+      // Contact section
+      const contactSection = document.createElement('div');
+      contactSection.className = 'section';
+      const contactTitle = document.createElement('h3');
+      contactTitle.textContent = 'Contact';
+      contactSection.appendChild(contactTitle);
+
+      aboutMeConfig.sidebar.contact.forEach(contact => {
+        const link = document.createElement('a');
+        link.href = contact.link;
+        if (contact.target) {
+          link.target = contact.target;
+        }
+        
+        const icon = document.createElement('i');
+        icon.className = contact.icon;
+        link.appendChild(icon);
+        
+        link.appendChild(document.createTextNode(' ' + contact.text));
+        contactSection.appendChild(link);
+      });
+      sidebar.appendChild(contactSection);
+
+      // Education section
+      const educationSection = document.createElement('div');
+      educationSection.className = 'section';
+      const educationTitle = document.createElement('h3');
+      educationTitle.textContent = 'Education';
+      educationSection.appendChild(educationTitle);
+
+      aboutMeConfig.sidebar.education.forEach(edu => {
+        const eduElement = document.createElement('p');
+        eduElement.innerHTML = `<strong>${edu.school}</strong><br />${edu.years}`;
+        educationSection.appendChild(eduElement);
+      });
+      sidebar.appendChild(educationSection);
+
+      // Skills section
+      const skillsSection = document.createElement('div');
+      skillsSection.className = 'section';
+      const skillsTitle = document.createElement('h3');
+      skillsTitle.textContent = 'Skills';
+      skillsSection.appendChild(skillsTitle);
+
+      aboutMeConfig.sidebar.skills.forEach(skill => {
+        const skillElement = document.createElement('p');
+        skillElement.innerHTML = `<strong>${skill.category}:</strong> ${skill.items.join(', ')}`;
+        skillsSection.appendChild(skillElement);
+      });
+      sidebar.appendChild(skillsSection);
+
+      contentContainer.appendChild(mainColumn);
+      contentContainer.appendChild(sidebar);
+    }
+
+    // Initialize the page when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initializeAboutMe);
+  </script>
 </body>
 </html>

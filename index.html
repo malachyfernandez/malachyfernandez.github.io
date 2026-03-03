@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Malachy Fernandez – Project Showcase</title>
-  <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title id="page-title">Loading...</title>
+  <!-- Google Fonts -->
+  <link id="google-fonts" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     :root {
-      --primary: #3498db;
-      --primary-dark: #2a7cb8;
-      --accent-light: rgba(52,152,219,0.2);
-      --text: #333;
-      --bg-start: #f0f4f8;
-      --bg-end: #ffffff;
-      --card: #fff;
+      --primary: var(--primary-color);
+      --primary-dark: var(--primary-dark-color);
+      --accent-light: var(--accent-light-color);
+      --text: var(--text-color);
+      --bg-start: var(--bg-start-color);
+      --bg-end: var(--bg-end-color);
+      --card: var(--card-color);
       --radius: 12px;
       --transition: 0.3s ease;
-      --award-color: #d4af37;
+      --award-color: var(--award-color);
     }
     * { box-sizing: border-box; margin:0; padding:0; }
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-family), sans-serif;
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       color: var(--text);
       min-height: 100vh;
@@ -31,14 +31,13 @@
     header {
       text-align: center;
       padding: 3rem 1rem;
-      background: linear-gradient(120deg, var(--primary), #8e44ad);
+      background: linear-gradient(120deg, var(--header-start), var(--header-end));
       color: #fff;
     }
     header h1 {
       font-size: 2.75rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      /* allow wrapping on narrow screens */
       white-space: normal;
       overflow-wrap: break-word;
     }
@@ -84,7 +83,6 @@
     .projects {
       display: grid;
       gap: 2rem;
-      /* lock each card at least 360px wide */
       grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
       justify-content: center;
     }
@@ -166,9 +164,15 @@
       justify-content: center;
       opacity: 0;
       transition: opacity var(--transition);
+      pointer-events: none;
     }
-    .project-card:hover .card-actions {
+    .project-card:hover .card-actions,
+    .project-card.touch-active .card-actions {
       opacity: 1;
+      pointer-events: auto;
+    }
+    .project-card.touch-active .card-content {
+      opacity: 0.2;
     }
     .btn {
       background: var(--primary);
@@ -191,140 +195,219 @@
 </head>
 <body>
   <header>
-    <h1>Malachy Fernandez</h1>
-    <div class="nav">
-      <span class="active">Project Showcase</span>
-      <span class="dot">·</span>
-      <a href="AboutMe/index.html">About Me</a>
+    <h1 id="site-title">Loading...</h1>
+    <div class="nav" id="navigation">
+      <!-- Navigation will be populated by JavaScript -->
     </div>
   </header>
 
-  <div class="container">
-
-    <!-- personal projects -->
-    <section class="projects-section">
-      <h2>Personal Projects</h2>
-      <p class="section-subtext">
-        These are some of my small side projects that I tinker with in my free time.
-      </p>
-      <div class="projects">
-
-        <!-- Minecraft Gradient -->
-        <div class="project-card">
-          <div class="card-content">
-            <i class="fas fa-th-large"></i>
-            <h3>Minecraft Gradient</h3>
-            <div class="type-label">Web App</div>
-            <p class="desc">A highly customizable, visually interactive Minecraft block gradient generator.</p>
-          </div>
-          <div class="card-actions">
-            <a href="https://github.com/malachyfernandez/MinecraftGradient" target="_blank">
-              <button class="btn"><i class="fab fa-github"></i> GitHub</button>
-            </a>
-            <a href="https://malachyfernandez.github.io/minecraftGradient/" target="_blank">
-              <button class="btn"><i class="fas fa-external-link-alt"></i> Demo</button>
-            </a>
-          </div>
-        </div>
-
-        <!-- Gerrymander The Game -->
-        <div class="project-card">
-          <div class="card-content">
-            <i class="fas fa-map"></i>
-            <h3>Gerrymander The Game</h3>
-            <div class="type-label">Puzzle Game</div>
-            <p class="desc">Redraw district lines to win elections with a minority in this puzzle.</p>
-          </div>
-          <div class="card-actions">
-            <a href="https://github.com/malachyfernandez/GerrymanderTheGame" target="_blank">
-              <button class="btn"><i class="fab fa-github"></i> GitHub</button>
-            </a>
-            <a href="https://malachyfernandez.github.io/GerrymanderTheGame/" target="_blank">
-              <button class="btn"><i class="fas fa-external-link-alt"></i> Demo</button>
-            </a>
-          </div>
-        </div>
-
-        <!-- SkipScroll -->
-        <div class="project-card">
-          <div class="card-content">
-            <i class="fas fa-mouse-pointer"></i>
-            <h3>SkipScroll</h3>
-            <div class="type-label">Chrome Extension</div>
-            <p class="desc">Instantly jump to real Google search results using just your keyboard.</p>
-          </div>
-          <div class="card-actions">
-            <a href="https://github.com/malachyfernandez/SkipScroll" target="_blank">
-              <button class="btn"><i class="fab fa-github"></i> GitHub</button>
-            </a>
-            <a href="https://chrome.google.com/webstore/detail/skipscroll-navigate-googl/feocoenjkpofbmnoiglchhmiofogkgbn" target="_blank">
-              <button class="btn"><i class="fab fa-chrome"></i> Web Store</button>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- hackathon projects -->
-    <section class="projects-section">
-      <h2>Hackathon Projects</h2>
-      <p class="section-subtext">
-        Built in 24 hours or less at various hackathons—fast, fun, and furious.
-      </p>
-      <div class="projects">
-
-        <!-- Biasly -->
-        <div class="project-card">
-          <div class="card-content">
-            <i class="fas fa-brain"></i>
-            <h3>Biasly</h3>
-            <div class="type-label">Chrome Extension</div>
-            <p class="desc">AI‑powered bias detection for articles—think Grammarly for ideological slants.</p>
-            <div class="award">🏆 Hack@UNCP 2025 Best Education Project</div>
-          </div>
-          <div class="card-actions">
-            <a href="https://github.com/dmavendano/biasly" target="_blank">
-              <button class="btn"><i class="fab fa-github"></i> GitHub</button>
-            </a>
-          </div>
-        </div>
-
-        <!-- InstaChef -->
-        <div class="project-card">
-          <div class="card-content">
-            <i class="fas fa-utensils"></i>
-            <h3>InstaChef</h3>
-            <div class="type-label">Web App</div>
-            <p class="desc">A minimal recipe platform focusing on step‑by‑step guidance over fluff.</p>
-            <div class="award">🏆 Hack@Davidson 2025 Best AI Project</div>
-          </div>
-          <div class="card-actions">
-            <a href="https://github.com/ZaraTek/InstaChef" target="_blank">
-              <button class="btn"><i class="fab fa-github"></i> GitHub</button>
-            </a>
-          </div>
-        </div>
-
-        <!-- LocalVoice -->
-        <div class="project-card">
-          <div class="card-content">
-            <i class="fas fa-bullhorn"></i>
-            <h3>LocalVoice</h3>
-            <div class="type-label">Web App</div>
-            <p class="desc">Enter your address to find local election candidates with basic info & photos.</p>
-            <div class="award">🥈 Hack NC 2nd Place Beginner Project</div>
-          </div>
-          <div class="card-actions">
-            <a href="https://github.com/ZaraTek/LocalVoice" target="_blank">
-              <button class="btn"><i class="fab fa-github"></i> GitHub</button>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
+  <div class="container" id="content">
+    <!-- Content will be populated by JavaScript -->
   </div>
+
+  <script src="config/site.js"></script>
+  <script src="config/projects.js"></script>
+  <script>
+    // Touch detection and interaction handling
+    let isTouchDevice = false;
+    let activeCard = null;
+
+    // Detect touch device
+    function detectTouchDevice() {
+      isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+      
+      if (isTouchDevice) {
+        document.body.classList.add('touch-device');
+      }
+    }
+
+    // Handle touch interactions
+    function handleTouchStart(e) {
+      if (!isTouchDevice) return;
+      
+      const card = e.target.closest('.project-card');
+      if (!card) return;
+      
+      e.preventDefault();
+      
+      // If clicking on a button, let it work normally
+      if (e.target.closest('.btn')) {
+        return;
+      }
+      
+      // Toggle the current card
+      if (activeCard === card) {
+        card.classList.remove('touch-active');
+        activeCard = null;
+      } else {
+        // Remove active class from previous card
+        if (activeCard) {
+          activeCard.classList.remove('touch-active');
+        }
+        
+        // Add active class to new card
+        card.classList.add('touch-active');
+        activeCard = card;
+      }
+    }
+
+    // Handle clicks outside cards to close active card
+    function handleDocumentClick(e) {
+      if (!isTouchDevice || !activeCard) return;
+      
+      const card = e.target.closest('.project-card');
+      if (!card) {
+        activeCard.classList.remove('touch-active');
+        activeCard = null;
+      }
+    }
+
+    // Apply configuration to the page
+    function initializeSite() {
+      // Detect touch device first
+      detectTouchDevice();
+
+      // Set CSS variables from site config
+      const root = document.documentElement;
+      root.style.setProperty('--primary-color', siteConfig.colors.primary);
+      root.style.setProperty('--primary-dark-color', siteConfig.colors.primaryDark);
+      root.style.setProperty('--accent-light-color', siteConfig.colors.accentLight);
+      root.style.setProperty('--text-color', siteConfig.colors.text);
+      root.style.setProperty('--bg-start-color', siteConfig.colors.bgStart);
+      root.style.setProperty('--bg-end-color', siteConfig.colors.bgEnd);
+      root.style.setProperty('--card-color', siteConfig.colors.card);
+      root.style.setProperty('--award-color', siteConfig.colors.awardColor);
+      root.style.setProperty('--header-start', siteConfig.headerGradient.start);
+      root.style.setProperty('--header-end', siteConfig.headerGradient.end);
+      root.style.setProperty('--font-family', siteConfig.site.font);
+
+      // Set page title and site title
+      document.getElementById('page-title').textContent = siteConfig.site.title;
+      document.getElementById('site-title').textContent = siteConfig.site.author;
+
+      // Set Google Fonts
+      document.getElementById('google-fonts').href = 
+        `https://fonts.googleapis.com/css2?family=${siteConfig.site.font}:wght@400;600&display=swap`;
+
+      // Build navigation
+      const navContainer = document.getElementById('navigation');
+      siteConfig.navigation.forEach((item, index) => {
+        if (index > 0) {
+          const dot = document.createElement('span');
+          dot.className = 'dot';
+          dot.textContent = '·';
+          navContainer.appendChild(dot);
+        }
+
+        const element = document.createElement(item.link ? 'a' : 'span');
+        if (item.active) element.className = 'active';
+        if (item.link) {
+          element.href = item.link;
+          // Don't set target for internal navigation
+        }
+        element.textContent = item.text;
+        navContainer.appendChild(element);
+      });
+
+      // Build project sections from project config
+      const contentContainer = document.getElementById('content');
+      projectShowcaseConfig.sections.forEach(section => {
+        const sectionElement = document.createElement('section');
+        sectionElement.className = 'projects-section';
+
+        // Section title
+        const titleElement = document.createElement('h2');
+        titleElement.textContent = section.title;
+        sectionElement.appendChild(titleElement);
+
+        // Section subtext
+        const subtextElement = document.createElement('p');
+        subtextElement.className = 'section-subtext';
+        subtextElement.textContent = section.subtext;
+        sectionElement.appendChild(subtextElement);
+
+        // Projects grid
+        const projectsGrid = document.createElement('div');
+        projectsGrid.className = 'projects';
+
+        section.projects.forEach(project => {
+          const card = document.createElement('div');
+          card.className = 'project-card';
+
+          // Card content
+          const cardContent = document.createElement('div');
+          cardContent.className = 'card-content';
+
+          // Icon
+          const icon = document.createElement('i');
+          icon.className = project.icon;
+          cardContent.appendChild(icon);
+
+          // Project name
+          const name = document.createElement('h3');
+          name.textContent = project.name;
+          cardContent.appendChild(name);
+
+          // Type label
+          const typeLabel = document.createElement('div');
+          typeLabel.className = 'type-label';
+          typeLabel.textContent = project.type;
+          cardContent.appendChild(typeLabel);
+
+          // Description
+          const desc = document.createElement('p');
+          desc.className = 'desc';
+          desc.textContent = project.description;
+          cardContent.appendChild(desc);
+
+          // Award (if exists)
+          if (project.award) {
+            const award = document.createElement('div');
+            award.className = 'award';
+            award.textContent = project.award;
+            cardContent.appendChild(award);
+          }
+
+          card.appendChild(cardContent);
+
+          // Card actions
+          const cardActions = document.createElement('div');
+          cardActions.className = 'card-actions';
+
+          project.buttons.forEach(button => {
+            const link = document.createElement('a');
+            link.href = button.link;
+            link.target = button.target || '_blank';
+            
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            
+            const icon = document.createElement('i');
+            icon.className = button.icon;
+            btn.appendChild(icon);
+            
+            btn.appendChild(document.createTextNode(' ' + button.text));
+            link.appendChild(btn);
+            cardActions.appendChild(link);
+          });
+
+          card.appendChild(cardActions);
+          projectsGrid.appendChild(card);
+        });
+
+        sectionElement.appendChild(projectsGrid);
+        contentContainer.appendChild(sectionElement);
+      });
+
+      // Add touch event listeners if touch device
+      if (isTouchDevice) {
+        document.addEventListener('touchstart', handleTouchStart, { passive: false });
+        document.addEventListener('click', handleDocumentClick);
+      }
+    }
+
+    // Initialize the site when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initializeSite);
+  </script>
 </body>
 </html>
