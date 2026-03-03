@@ -117,24 +117,6 @@
       border-radius: 50%;
       transition: top var(--transition), right var(--transition);
     }
-    /* Disable hover effects on touch devices */
-    body.touch-device .project-card:hover .card-actions {
-      opacity: 0;
-      pointer-events: none;
-    }
-    body.touch-device .project-card:hover {
-      transform: none;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-    body.touch-device .project-card:hover .card-content {
-      opacity: 1;
-    }
-    body.touch-device .project-card:hover::before {
-      top: -40px; right: -40px;
-    }
-    body.touch-device .project-card:hover .card-content i {
-      color: var(--primary);
-    }
     
     .project-card:hover {
       transform: translateY(-6px) rotate(1deg) scale(1.02);
@@ -197,11 +179,6 @@
       transition: opacity var(--transition);
       pointer-events: none;
     }
-    /* Disable hover effects on touch devices */
-    body.touch-device .project-card:hover .card-actions {
-      opacity: 0;
-      pointer-events: none;
-    }
     
     .project-card:hover .card-actions,
     .project-card.touch-active .card-actions {
@@ -228,6 +205,26 @@
       background: var(--primary-dark);
     }
     a { text-decoration: none; }
+    
+    /* Disable hover effects on touch devices */
+    body.touch-device .project-card:hover .card-actions {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    body.touch-device .project-card:hover {
+      transform: none !important;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
+    }
+    body.touch-device .project-card:hover .card-content {
+      opacity: 1 !important;
+    }
+    body.touch-device .project-card:hover::before {
+      top: -40px !important;
+      right: -40px !important;
+    }
+    body.touch-device .project-card:hover .card-content i {
+      color: var(--primary) !important;
+    }
   </style>
 </head>
 <body>
@@ -245,36 +242,13 @@
   <script src="config/site.js"></script>
   <script src="config/projects.js"></script>
   <script>
-    // Simple mobile card toggle
-    function initializeMobileToggle() {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      
-      if (isTouchDevice) {
-        document.body.classList.add('touch-device');
-        
-        document.querySelectorAll('.project-card').forEach(card => {
-          card.addEventListener('click', function(e) {
-            // Don't toggle if clicking on a button
-            if (e.target.closest('.btn')) return;
-            
-            // Toggle this card
-            this.classList.toggle('touch-active');
-            
-            // Close other cards
-            document.querySelectorAll('.project-card').forEach(otherCard => {
-              if (otherCard !== this) {
-                otherCard.classList.remove('touch-active');
-              }
-            });
-          });
-        });
-      }
-    }
-
     // Apply configuration to the page
     function initializeSite() {
-      // Initialize mobile toggle first
-      initializeMobileToggle();
+      // Detect touch device and add class
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouchDevice) {
+        document.body.classList.add('touch-device');
+      }
 
       // Set CSS variables from site config
       const root = document.documentElement;
@@ -417,6 +391,17 @@
 
           card.appendChild(cardActions);
           projectsGrid.appendChild(card);
+          
+          // Add click listener for mobile toggle
+          if (isTouchDevice) {
+            card.addEventListener('click', function(e) {
+              if (e.target.closest('.btn')) return;
+              this.classList.toggle('touch-active');
+              document.querySelectorAll('.project-card').forEach(c => {
+                if (c !== this) c.classList.remove('touch-active');
+              });
+            });
+          }
         });
 
         sectionElement.appendChild(projectsGrid);
