@@ -223,6 +223,11 @@
     // Touch detection and interaction handling
     let isTouchDevice = false;
     let activeCard = null;
+    let touchStartTime = 0;
+    let touchStartY = 0;
+    let isScrolling = false;
+    let scrollTimeout = null;
+    let touchMoved = false;
 
     // Detect touch device
     function detectTouchDevice() {
@@ -240,18 +245,25 @@
       const card = e.target.closest('.project-card');
       if (!card) return;
       
-      e.preventDefault();
+      // Reset scroll detection variables
+      touchStartTime = Date.now();
+      touchStartY = e.touches[0].clientY;
+      isScrolling = false;
+      touchMoved = false;
+      
+      // Clear any existing scroll timeout
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = null;
+      }
       
       // If clicking on a button, let it work normally
       if (e.target.closest('.btn')) {
         return;
       }
       
-      // Toggle the current card
-      if (activeCard === card) {
-        card.classList.remove('touch-active');
-        activeCard = null;
-      } else {
+      // Show the card actions immediately for visual feedback during scroll
+      if (activeCard !== card) {
         // Remove active class from previous card
         if (activeCard) {
           activeCard.classList.remove('touch-active');
@@ -262,13 +274,64 @@
         activeCard = card;
       }
     }
+    
+    // Handle touch move to detect scrolling
+    function handleTouchMove(e) {
+      if (!isTouchDevice || !activeCard) return;
+      
+      const touchY = e.touches[0].clientY;
+      const deltaY = Math.abs(touchY - touchStartY);
+      
+      // If moved more than 10px, consider it scrolling
+      if (deltaY > 10) {
+        isScrolling = true;
+        touchMoved = true;
+      }
+    }
+    
+    // Handle touch end to determine if it was a tap or scroll
+    function handleTouchEnd(e) {
+      if (!isTouchDevice || !activeCard) return;
+      
+      const touchDuration = Date.now() - touchStartTime;
+      
+      // If it was a quick tap (less than 200ms) and didn't move much, treat as toggle
+      if (touchDuration < 200 && !touchMoved) {
+        // This was a tap, so toggle the card
+        if (activeCard.classList.contains('touch-active')) {
+          activeCard.classList.remove('touch-active');
+          activeCard = null;
+        }
+      } else if (isScrolling) {
+        // This was scrolling, set a timeout to close the card after scrolling stops
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+        
+        scrollTimeout = setTimeout(() => {
+          if (activeCard) {
+            activeCard.classList.remove('touch-active');
+            activeCard = null;
+          }
+          scrollTimeout = null;
+        }, 500); // Close after 500ms of no scrolling
+      }
+    }
 
     // Handle clicks outside cards to close active card
     function handleDocumentClick(e) {
       if (!isTouchDevice || !activeCard) return;
       
       const card = e.target.closest('.project-card');
-      if (!card) {
+      const button = e.target.closest('.btn');
+      
+      // Don't close if clicking on a button inside the active card
+      if (card === activeCard && button) {
+        return;
+      }
+      
+      // Close if clicking outside cards or on a different card
+      if (!card || card !== activeCard) {
         activeCard.classList.remove('touch-active');
         activeCard = null;
       }
@@ -428,7 +491,9 @@
 
       // Add touch event listeners if touch device
       if (isTouchDevice) {
-        document.addEventListener('touchstart', handleTouchStart, { passive: false });
+        document.addEventListener('touchstart', handleTouchStart, { passive: true });
+        document.addEventListener('touchmove', handleTouchMove, { passive: true });
+        document.addEventListener('touchend', handleTouchEnd, { passive: true });
         document.addEventListener('click', handleDocumentClick);
       }
     }
