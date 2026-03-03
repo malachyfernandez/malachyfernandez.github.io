@@ -117,6 +117,25 @@
       border-radius: 50%;
       transition: top var(--transition), right var(--transition);
     }
+    /* Disable hover effects on touch devices */
+    body.touch-device .project-card:hover .card-actions {
+      opacity: 0;
+      pointer-events: none;
+    }
+    body.touch-device .project-card:hover {
+      transform: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    body.touch-device .project-card:hover .card-content {
+      opacity: 1;
+    }
+    body.touch-device .project-card:hover::before {
+      top: -40px; right: -40px;
+    }
+    body.touch-device .project-card:hover .card-content i {
+      color: var(--primary);
+    }
+    
     .project-card:hover {
       transform: translateY(-6px) rotate(1deg) scale(1.02);
       box-shadow: 0 12px 20px rgba(0,0,0,0.15);
@@ -178,6 +197,12 @@
       transition: opacity var(--transition);
       pointer-events: none;
     }
+    /* Disable hover effects on touch devices */
+    body.touch-device .project-card:hover .card-actions {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
     .project-card:hover .card-actions,
     .project-card.touch-active .card-actions {
       opacity: 1;
