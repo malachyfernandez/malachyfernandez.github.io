@@ -19,7 +19,7 @@ const aboutMeConfig = {
         },
         {
           title: "Aquatic Management Group, Hedingham Pool — Lifeguard",
-          date: "Summer 2023, Summer 2024",
+          date: "Summer 2023, 2024, and 2025",
           descriptions: [
             "American Red Cross Certified Lifeguard. Certified in CPR and first aid.",
             "Experience swimming and communicating; ensuring patrons' safety."
@@ -31,17 +31,39 @@ const aboutMeConfig = {
       title: "Activities",
       items: [
         {
-          title: "App Development — Personal Projects",
+          title: "Programming — Personal Projects — Interactive Portfolio: malachyf.com",
           descriptions: [
-            "Created two apps with 6–12 months of planning & development.",
-            "Released a Christmas game in December 2020 on the Google Play Store."
+            "Started with a Christmas game at the height of lockdown, released on the Google Play Store. Building projects to solve unique day-to-day micro problems brings me joy. Check out my interactive portfolio!"
           ]
         },
         {
-          title: "Chamber Choir — W G Enloe Choir",
+          title: "Chamber Choir — W G Enloe Choir",
           descriptions: [
-            "Invited to sing at Duke Chapel (2022) and to the Athena Project in Nashville, TN (2023).",
-            "Mentored two beginners to master solfège; organized auditions & new arrangements for Singing Valentines."
+            "The esteemed Enloe Chamber Choir was 1 of 3 choirs invited to sing at Duke Chapel (2022) and 1 of 4 choirs invited to the Athena Project in Nashville, TN (2023).",
+            "Mentored 2 beginning students to master solfège. Organized auditions & collaborated on new arrangements for the Singing Valentines fundraiser."
+          ]
+        }
+      ]
+    },
+    {
+      title: "Awards",
+      items: [
+        {
+          title: "Biasly",
+          descriptions: [
+            "🏆 Hack@UNCP 2025 Best Edu Project — AI‑powered bias detection for articles. think Grammarly for ideological slants."
+          ]
+        },
+        {
+          title: "InstaChef", 
+          descriptions: [
+            "🏆 Hack@Davidson 2025 Best AI Project — A minimal recipe platform focusing on step‑by‑step guidance over fluff."
+          ]
+        },
+        {
+          title: "LocalVoice",
+          descriptions: [
+            "🥈 HackNC 2024 2nd Place Beginner — Draft emails to your local candidates about the issues that matter to you."
           ]
         }
       ]
@@ -55,6 +77,11 @@ const aboutMeConfig = {
         link: "mailto:malachyfernandez@gmail.com"
       },
       {
+        icon: "fas fa-phone",
+        text: "(919) 896-4052",
+        link: "tel:+19198964052"
+      },
+      {
         icon: "fas fa-globe",
         text: "malachyf.com",
         link: "https://malachyf.com",
@@ -65,28 +92,16 @@ const aboutMeConfig = {
         text: "linkedin.com/in/malachyf",
         link: "https://linkedin.com/in/malachyf",
         target: "_blank"
-      },
-      {
-        icon: "fab fa-github",
-        text: "github.com/malachyfernandez",
-        link: "https://github.com/malachyfernandez",
-        target: "_blank"
-      },
-      {
-        icon: "fas fa-code",
-        text: "devpost.com/malachyfernandez",
-        link: "https://devpost.com/malachyfernandez",
-        target: "_blank"
       }
     ],
     education: [
       {
-        school: "W G Enloe High School",
-        years: "2020–2024"
+        school: "NC State University",
+        years: "2024–2028 (Planned)"
       },
       {
-        school: "NC State University",
-        years: "2024–2028"
+        school: "W G Enloe High School",
+        years: "2020–2024"
       }
     ],
     skills: [
@@ -96,7 +111,7 @@ const aboutMeConfig = {
       },
       {
         category: "American Red Cross",
-        items: ["CPR & Lifeguard Certified"]
+        items: ["CPR and Lifeguard Certified"]
       }
     ]
   }

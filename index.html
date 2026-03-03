@@ -40,6 +40,18 @@
       margin-bottom: 0.5rem;
       white-space: normal;
       overflow-wrap: break-word;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .profile-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     header .nav {
       font-size: 1rem;
@@ -283,7 +295,22 @@
 
       // Set page title and site title
       document.getElementById('page-title').textContent = siteConfig.site.title;
-      document.getElementById('site-title').textContent = siteConfig.site.author;
+      
+      // Create header content with photo
+      const siteTitleElement = document.getElementById('site-title');
+      siteTitleElement.innerHTML = '';
+      
+      // Add photo
+      const photo = document.createElement('img');
+      photo.src = 'goated photo.png';
+      photo.alt = 'Malachy Fernandez';
+      photo.className = 'profile-photo';
+      siteTitleElement.appendChild(photo);
+      
+      // Add name
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = siteConfig.site.author;
+      siteTitleElement.appendChild(nameSpan);
 
       // Set Google Fonts
       document.getElementById('google-fonts').href = 
