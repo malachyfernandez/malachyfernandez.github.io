@@ -113,29 +113,14 @@
       background-position: center;
       background-repeat: no-repeat;
     }
-    .project-card.has-background-image::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1;
-    }
-    .project-card.has-background-image .card-content,
-    .project-card.has-background-image .card-actions {
-      position: relative;
-      z-index: 2;
-    }
     .project-card.has-background-image .card-content {
       color: #fff;
     }
     .project-card.has-background-image .card-content i {
-      color: #fff;
+      color: var(--primary);
     }
     .project-card.has-background-image .card-content .type-label {
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--primary);
     }
     .project-card.has-background-image .card-content p.desc {
       color: rgba(255, 255, 255, 0.8);
@@ -144,11 +129,11 @@
       color: rgba(255, 255, 255, 0.9);
     }
     .project-card.has-background-image .btn {
-      background: rgba(255, 255, 255, 0.9);
-      color: #000;
+      background: var(--primary);
+      color: #fff;
     }
     .project-card.has-background-image .btn:hover {
-      background: #fff;
+      background: var(--primary-dark);
     }
     .project-card::before {
       content: '';
@@ -158,6 +143,7 @@
       background: var(--accent-light);
       border-radius: 50%;
       transition: top var(--transition), right var(--transition);
+      z-index: 3;
     }
     
     /* --- Touch / Mobile Click Styles --- */
@@ -369,7 +355,8 @@
           // Apply background image if specified
           if (project.backgroundImage) {
             card.classList.add('has-background-image');
-            card.style.backgroundImage = `url('${project.backgroundImage}')`;
+            // Use a linear-gradient to darken the image, freeing up the ::before element!
+            card.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${project.backgroundImage}')`;
           }
 
           // Card content
