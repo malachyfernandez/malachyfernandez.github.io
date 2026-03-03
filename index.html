@@ -118,28 +118,44 @@
       transition: top var(--transition), right var(--transition);
     }
     
-    .project-card:hover {
-      transform: translateY(-6px) rotate(1deg) scale(1.02);
-      box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+    /* --- Touch / Mobile Click Styles --- */
+    .project-card.touch-active .card-content {
+      opacity: 0.2;
     }
-    .project-card:hover::before {
-      top: -20px; right: -20px;
+    .project-card.touch-active .card-actions {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* --- Mouse Hover Styles (Only applies to devices with a mouse) --- */
+    @media (hover: hover) {
+      .project-card:hover {
+        transform: translateY(-6px) rotate(1deg) scale(1.02);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+      }
+      .project-card:hover::before {
+        top: -20px; right: -20px;
+      }
+      .project-card:hover .card-content {
+        opacity: 0.2;
+      }
+      .project-card:hover .card-content i {
+        color: #fff;
+      }
+      .project-card:hover .card-actions {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
     .card-content {
       text-align: center;
       transition: opacity var(--transition);
-    }
-    .project-card:hover .card-content {
-      opacity: 0.2;
     }
     .card-content i {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: var(--primary);
       transition: color var(--transition);
-    }
-    .project-card:hover .card-content i {
-      color: #fff;
     }
     .card-content h3 {
       font-size: 1.4rem;
@@ -179,15 +195,6 @@
       transition: opacity var(--transition);
       pointer-events: none;
     }
-    
-    .project-card:hover .card-actions,
-    .project-card.touch-active .card-actions {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .project-card.touch-active .card-content {
-      opacity: 0.2;
-    }
     .btn {
       background: var(--primary);
       color: #fff;
@@ -214,30 +221,10 @@
       color: rgba(255,255,255,0.5);
       z-index: 1000;
     }
-    
-    /* Disable hover effects on touch devices when in touch mode */
-    body.touch-mode .project-card:hover .card-actions {
-      opacity: 0 !important;
-      pointer-events: none !important;
-    }
-    body.touch-mode .project-card:hover {
-      transform: none !important;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
-    }
-    body.touch-mode .project-card:hover .card-content {
-      opacity: 1 !important;
-    }
-    body.touch-mode .project-card:hover::before {
-      top: -40px !important;
-      right: -40px !important;
-    }
-    body.touch-mode .project-card:hover .card-content i {
-      color: var(--primary) !important;
-    }
   </style>
 </head>
 <body>
-  <div class="version-number" id="version">v1.2</div>
+  <div class="version-number" id="version">v1.3</div>
   
   <header>
     <h1 id="site-title">Loading...</h1>
@@ -255,28 +242,6 @@
   <script>
     // Apply configuration to the page
     function initializeSite() {
-      // Detect touch device and add class
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      let isTouchMode = false;
-      
-      if (isTouchDevice) {
-        document.body.classList.add('touch-device');
-        
-        // Track input method
-        document.addEventListener('touchstart', () => {
-          isTouchMode = true;
-          document.body.classList.add('touch-mode');
-          document.body.classList.remove('mouse-mode');
-        }, { passive: true });
-        
-        document.addEventListener('mouseenter', () => {
-          if (!isTouchMode) {
-            document.body.classList.add('mouse-mode');
-            document.body.classList.remove('touch-mode');
-          }
-        });
-      }
- 
       // Set CSS variables from site config
       const root = document.documentElement;
       root.style.setProperty('--primary-color', siteConfig.colors.primary);
@@ -420,16 +385,14 @@
           projectsGrid.appendChild(card);
           
           // Add click listener for mobile toggle
-          if (isTouchDevice) {
-            card.addEventListener('click', function(e) {
-              // Don't toggle if clicking on a button link
-              if (e.target.closest('a')) return;
-              this.classList.toggle('touch-active');
-              document.querySelectorAll('.project-card').forEach(c => {
-                if (c !== this) c.classList.remove('touch-active');
-              });
+          card.addEventListener('click', function(e) {
+            // Don't toggle if clicking on a button link
+            if (e.target.closest('a')) return;
+            this.classList.toggle('touch-active');
+            document.querySelectorAll('.project-card').forEach(c => {
+              if (c !== this) c.classList.remove('touch-active');
             });
-          }
+          });
         });
 
         sectionElement.appendChild(projectsGrid);
