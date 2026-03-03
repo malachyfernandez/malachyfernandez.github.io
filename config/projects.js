@@ -130,7 +130,7 @@ const projectShowcaseConfig = {
             {
               text: "Play Game",
               icon: "fas fa-gamepad",
-              link: "https://malachyfernandez.github.io/ED204-game/",
+              link: "https://ed204.malachyf.com/",
               target: "_blank"
             }
           ]
