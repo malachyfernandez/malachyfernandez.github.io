@@ -80,6 +80,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A highly customizable, visually interactive Minecraft block gradient generator.",
           icon: "fas fa-th-large",
+          backgroundImage: "minecraftGradient/cover-img.png",
           buttons: [
             {
               text: "GitHub",
@@ -131,6 +132,46 @@ const projectShowcaseConfig = {
               text: "Play Game",
               icon: "fas fa-gamepad",
               link: "https://ed204.malachyf.com/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
+          name: "AI Photo Editor",
+          type: "Web App",
+          description: "A powerful, browser-based photo editor with layer-based editing and AI-powered transformations using Google Gemini.",
+          icon: "fas fa-image",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/ImageEditor",
+              target: "_blank"
+            },
+            {
+              text: "Try It Live",
+              icon: "fas fa-external-link-alt",
+              link: "https://image-editor-five-beta.vercel.app/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
+          name: "Bedrock Schematic Maker",
+          type: "Web App",
+          description: "A powerful web-based tool for creating Minecraft Bedrock Edition schematics with smart shape generation and real-time preview.",
+          icon: "fas fa-cube",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/Bedrock-Schematic-Maker",
+              target: "_blank"
+            },
+            {
+              text: "Try It Live",
+              icon: "fas fa-external-link-alt",
+              link: "https://malachyfernandez.github.io/Bedrock-Schematic-Maker/",
               target: "_blank"
             }
           ]

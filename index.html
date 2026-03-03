@@ -108,6 +108,48 @@
       overflow: hidden;
       transition: transform var(--transition), box-shadow var(--transition);
     }
+    .project-card.has-background-image {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .project-card.has-background-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+    .project-card.has-background-image .card-content,
+    .project-card.has-background-image .card-actions {
+      position: relative;
+      z-index: 2;
+    }
+    .project-card.has-background-image .card-content {
+      color: #fff;
+    }
+    .project-card.has-background-image .card-content i {
+      color: #fff;
+    }
+    .project-card.has-background-image .card-content .type-label {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .project-card.has-background-image .card-content p.desc {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .project-card.has-background-image .card-content .award {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .project-card.has-background-image .btn {
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
+    }
+    .project-card.has-background-image .btn:hover {
+      background: #fff;
+    }
     .project-card::before {
       content: '';
       position: absolute;
@@ -323,6 +365,12 @@
         section.projects.forEach(project => {
           const card = document.createElement('div');
           card.className = 'project-card';
+
+          // Apply background image if specified
+          if (project.backgroundImage) {
+            card.classList.add('has-background-image');
+            card.style.backgroundImage = `url('${project.backgroundImage}')`;
+          }
 
           // Card content
           const cardContent = document.createElement('div');
