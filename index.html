@@ -245,136 +245,36 @@
   <script src="config/site.js"></script>
   <script src="config/projects.js"></script>
   <script>
-    // Touch detection and interaction handling
-    let isTouchDevice = false;
-    let activeCard = null;
-    let touchStartTime = 0;
-    let touchStartY = 0;
-    let isScrolling = false;
-    let scrollTimeout = null;
-    let touchMoved = false;
-
-    // Detect touch device
-    function detectTouchDevice() {
-      isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+    // Simple mobile card toggle
+    function initializeMobileToggle() {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       
       if (isTouchDevice) {
         document.body.classList.add('touch-device');
-      }
-    }
-
-    // Handle touch interactions
-    function handleTouchStart(e) {
-      if (!isTouchDevice) return;
-      
-      const card = e.target.closest('.project-card');
-      if (!card) return;
-      
-      // Reset scroll detection variables
-      touchStartTime = Date.now();
-      touchStartY = e.touches[0].clientY;
-      isScrolling = false;
-      touchMoved = false;
-      
-      // Clear any existing scroll timeout
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = null;
-      }
-      
-      // If clicking on a button, let it work normally
-      if (e.target.closest('.btn')) {
-        return;
-      }
-      
-      // Store which card is being touched for later processing
-      activeCard = card;
-    }
-    
-    // Handle touch move to detect scrolling
-    function handleTouchMove(e) {
-      if (!isTouchDevice || !activeCard) return;
-      
-      const touchY = e.touches[0].clientY;
-      const deltaY = Math.abs(touchY - touchStartY);
-      
-      // If moved more than 10px, consider it scrolling
-      if (deltaY > 10) {
-        isScrolling = true;
-        touchMoved = true;
-        // Show the card during scrolling for visual feedback
-        activeCard.classList.add('touch-active');
-      }
-    }
-    
-    // Handle touch end to determine if it was a tap or scroll
-    function handleTouchEnd(e) {
-      if (!isTouchDevice || !activeCard) return;
-      
-      const touchDuration = Date.now() - touchStartTime;
-      const cardName = activeCard.querySelector('h3')?.textContent;
-      const wasActive = activeCard.classList.contains('touch-active');
-      
-      // If it was a quick tap (less than 200ms) and didn't move much, treat as toggle
-      if (touchDuration < 200 && !touchMoved) {
-        // This was a tap, so toggle the card
-        if (wasActive) {
-          activeCard.classList.remove('touch-active');
-          // Don't set activeCard to null immediately - let the click handler deal with it
-        } else {
-          // Remove active class from any other card first
-          document.querySelectorAll('.project-card.touch-active').forEach(c => {
-            if (c !== activeCard) {
-              c.classList.remove('touch-active');
-            }
-          });
-          activeCard.classList.add('touch-active');
-        }
-      } else if (isScrolling) {
-        // This was scrolling, set a timeout to close the card after scrolling stops
-        if (scrollTimeout) {
-          clearTimeout(scrollTimeout);
-        }
         
-        scrollTimeout = setTimeout(() => {
-          if (activeCard) {
-            activeCard.classList.remove('touch-active');
-            activeCard = null;
-          }
-          scrollTimeout = null;
-        }, 500); // Close after 500ms of no scrolling
-      } else {
-        // Not a tap and not scrolling - close the card
-        if (activeCard) {
-          activeCard.classList.remove('touch-active');
-          activeCard = null;
-        }
-      }
-    }
-
-    // Handle clicks outside cards to close active card
-    function handleDocumentClick(e) {
-      if (!isTouchDevice || !activeCard) return;
-      
-      const card = e.target.closest('.project-card');
-      const button = e.target.closest('.btn');
-      
-      // Don't close if clicking on a button inside the active card
-      if (card === activeCard && button) {
-        return;
-      }
-      
-      // Close if clicking outside cards, on a different card, or on the same card (but not a button)
-      if (!card || card !== activeCard || (card === activeCard && !button)) {
-        activeCard.classList.remove('touch-active');
-        activeCard = null;
+        document.querySelectorAll('.project-card').forEach(card => {
+          card.addEventListener('click', function(e) {
+            // Don't toggle if clicking on a button
+            if (e.target.closest('.btn')) return;
+            
+            // Toggle this card
+            this.classList.toggle('touch-active');
+            
+            // Close other cards
+            document.querySelectorAll('.project-card').forEach(otherCard => {
+              if (otherCard !== this) {
+                otherCard.classList.remove('touch-active');
+              }
+            });
+          });
+        });
       }
     }
 
     // Apply configuration to the page
     function initializeSite() {
-      // Detect touch device first
-      detectTouchDevice();
+      // Initialize mobile toggle first
+      initializeMobileToggle();
 
       // Set CSS variables from site config
       const root = document.documentElement;
@@ -522,14 +422,6 @@
         sectionElement.appendChild(projectsGrid);
         contentContainer.appendChild(sectionElement);
       });
-
-      // Add touch event listeners if touch device
-      if (isTouchDevice) {
-        document.addEventListener('touchstart', handleTouchStart, { passive: true });
-        document.addEventListener('touchmove', handleTouchMove, { passive: true });
-        document.addEventListener('touchend', handleTouchEnd, { passive: true });
-        document.addEventListener('click', handleDocumentClick);
-      }
     }
 
     // Initialize the site when DOM is loaded
@@ -537,4 +429,3 @@
   </script>
 </body>
 </html>
-// Force rebuild Tue Mar  3 11:46:40 EST 2026
