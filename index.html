@@ -215,29 +215,29 @@
       z-index: 1000;
     }
     
-    /* Disable hover effects on touch devices */
-    body.touch-device .project-card:hover .card-actions {
+    /* Disable hover effects on touch devices when in touch mode */
+    body.touch-mode .project-card:hover .card-actions {
       opacity: 0 !important;
       pointer-events: none !important;
     }
-    body.touch-device .project-card:hover {
+    body.touch-mode .project-card:hover {
       transform: none !important;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
     }
-    body.touch-device .project-card:hover .card-content {
+    body.touch-mode .project-card:hover .card-content {
       opacity: 1 !important;
     }
-    body.touch-device .project-card:hover::before {
+    body.touch-mode .project-card:hover::before {
       top: -40px !important;
       right: -40px !important;
     }
-    body.touch-device .project-card:hover .card-content i {
+    body.touch-mode .project-card:hover .card-content i {
       color: var(--primary) !important;
     }
   </style>
 </head>
 <body>
-  <div class="version-number" id="version">v1.1</div>
+  <div class="version-number" id="version">v1.2</div>
   
   <header>
     <h1 id="site-title">Loading...</h1>
@@ -257,8 +257,24 @@
     function initializeSite() {
       // Detect touch device and add class
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      let isTouchMode = false;
+      
       if (isTouchDevice) {
         document.body.classList.add('touch-device');
+        
+        // Track input method
+        document.addEventListener('touchstart', () => {
+          isTouchMode = true;
+          document.body.classList.add('touch-mode');
+          document.body.classList.remove('mouse-mode');
+        }, { passive: true });
+        
+        document.addEventListener('mouseenter', () => {
+          if (!isTouchMode) {
+            document.body.classList.add('mouse-mode');
+            document.body.classList.remove('touch-mode');
+          }
+        });
       }
  
       // Set CSS variables from site config
