@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title id="page-title">Loading...</title>
-  <!-- Google Fonts -->
-  <link id="google-fonts" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <style>
@@ -13,13 +14,16 @@
       navigation: auto;
     }
     :root {
-      --primary: var(--primary-color);
-      --text: var(--text-color);
-      --bg-start: var(--bg-start-color);
-      --bg-end: var(--bg-end-color);
-      --card: var(--card-color);
+      --primary: #3498db;
+      --text: #333;
+      --bg-start: #f0f4f8;
+      --bg-end: #ffffff;
+      --card: #fff;
+      --header-start: #3498db;
+      --header-end: #8e44ad;
       --radius: 12px;
       --transition: 0.3s ease;
+      --font-family: 'Poppins';
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -160,10 +164,12 @@
 </head>
 <body>
   <header>
-    <h1 id="site-title">Loading...</h1>
+    <h1 id="site-title">
+      <img src="../goated photo.png" alt="Malachy Fernandez" class="profile-photo">
+      <span>Malachy Fernandez</span>
+    </h1>
     <div class="nav" id="navigation">
-      <!-- Navigation will be populated by JavaScript -->
-    </div>
+      </div>
   </header>
 
   <div class="container" id="content">
@@ -188,26 +194,6 @@
 
       // Set page title and site title
       document.getElementById('page-title').textContent = aboutMeConfig.title;
-      
-      // Create header content with photo
-      const siteTitleElement = document.getElementById('site-title');
-      siteTitleElement.innerHTML = '';
-      
-      // Add photo
-      const photo = document.createElement('img');
-      photo.src = '../goated photo.png';
-      photo.alt = 'Malachy Fernandez';
-      photo.className = 'profile-photo';
-      siteTitleElement.appendChild(photo);
-      
-      // Add name
-      const nameSpan = document.createElement('span');
-      nameSpan.textContent = siteConfig.site.author;
-      siteTitleElement.appendChild(nameSpan);
-
-      // Set Google Fonts
-      document.getElementById('google-fonts').href = 
-        `https://fonts.googleapis.com/css2?family=${siteConfig.site.font}:wght@400;600&display=swap`;
 
       // Build navigation (reverse of main page)
       const navContainer = document.getElementById('navigation');
