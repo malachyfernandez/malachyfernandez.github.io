@@ -262,17 +262,8 @@
         return;
       }
       
-      // Show the card actions immediately for visual feedback during scroll
-      if (activeCard !== card) {
-        // Remove active class from previous card
-        if (activeCard) {
-          activeCard.classList.remove('touch-active');
-        }
-        
-        // Add active class to new card
-        card.classList.add('touch-active');
-        activeCard = card;
-      }
+      // Store which card is being touched for later processing
+      activeCard = card;
     }
     
     // Handle touch move to detect scrolling
@@ -286,6 +277,8 @@
       if (deltaY > 10) {
         isScrolling = true;
         touchMoved = true;
+        // Show the card during scrolling for visual feedback
+        activeCard.classList.add('touch-active');
       }
     }
     
@@ -301,6 +294,12 @@
         if (activeCard.classList.contains('touch-active')) {
           activeCard.classList.remove('touch-active');
           activeCard = null;
+        } else {
+          // Remove active class from any other card first
+          document.querySelectorAll('.project-card.touch-active').forEach(c => {
+            if (c !== activeCard) c.classList.remove('touch-active');
+          });
+          activeCard.classList.add('touch-active');
         }
       } else if (isScrolling) {
         // This was scrolling, set a timeout to close the card after scrolling stops
@@ -315,6 +314,12 @@
           }
           scrollTimeout = null;
         }, 500); // Close after 500ms of no scrolling
+      } else {
+        // Not a tap and not scrolling - close the card
+        if (activeCard) {
+          activeCard.classList.remove('touch-active');
+          activeCard = null;
+        }
       }
     }
 
