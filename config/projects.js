@@ -7,7 +7,7 @@ const projectShowcaseConfig = {
       subtext: "Built in 24 hours or less at various hackathons—fast, fun, and furious.",
       projects: [
         {
-          name: "Biasly",
+          name: "Baisly",
           type: "Chrome Extension",
           description: "AI‑powered bias detection for articles—think Grammarly for ideological slants.",
           icon: "fas fa-brain",
@@ -23,7 +23,7 @@ const projectShowcaseConfig = {
             {
               text: "DevPost",
               icon: "fas fa-code",
-              link: "https://devpost.com/software/biasly",
+              link: "https://devpost.com/software/baisly",
               target: "_blank"
             }
           ]
