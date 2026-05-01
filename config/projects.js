@@ -23,7 +23,7 @@ const projectShowcaseConfig = {
             {
               text: "DevPost",
               icon: "fas fa-code",
-              link: "https://devpost.com/software/biasly",
+              link: "https://devpost.com/software/baisly",
               target: "_blank"
             }
           ]
