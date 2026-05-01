@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Imposter - Mega Edition</title>
+    <title>Blend In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #121212;
@@ -17,7 +19,7 @@
             margin: 0;
             background-color: var(--bg);
             color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: 'Outfit', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -27,33 +29,54 @@
         }
         #app {
             width: 100%;
-            max-width: 500px;
-            padding: 15px;
+            max-width: 600px;
+            padding: 10px 15px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             height: 100vh;
+            gap: 10px;
         }
-        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        #top-half {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        #bottom-half {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 10px;
+        }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 0; }
+        #bottom-half .screen { width: 100%; }
         .screen.active { display: flex; animation: fadeIn 0.3s; }
         
         /* 16 Words Grid */
         #reference-grid {
-            display: none;
+            display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
+            gap: 6px;
             width: 100%;
-            margin-bottom: 20px;
-            margin-top: 10px;
+            flex: 1;
+            min-height: 0;
         }
         .grid-item {
             background-color: var(--surface);
-            padding: 10px 2px;
-            border-radius: 4px;
-            font-size: 0.70rem;
-            font-weight: bold;
+            border-radius: 10px;
+            font-size: clamp(0.7rem, 2.5vw, 1rem);
+            font-weight: 600;
             border: 1px solid #333;
             word-wrap: break-word;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            line-height: 1.1;
         }
         
         /* Controls */
@@ -72,14 +95,47 @@
             background-color: var(--primary);
             color: #000;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 800;
             border-radius: 30px;
             cursor: pointer;
             width: 100%;
             max-width: 300px;
-            margin-top: 15px;
+            margin-top: 10px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .title {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 800;
+            margin: 5px 0;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--primary), #03dac6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .category-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .refresh-btn {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            margin-top: 0;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        .refresh-btn:hover {
+            background: var(--primary);
+            color: #000;
         }
         .category-badge {
             background-color: #333;
@@ -92,8 +148,25 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        .imposter-text { color: var(--danger); font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 20px 0;}
-        .word-text { color: var(--primary); font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 20px 0;}
+        .role-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 30px 20px;
+            margin: 15px 0;
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 340px;
+        }
+        .role-label {
+            font-size: 0.9rem;
+            color: var(--text-sec);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        .imposter-text { color: var(--danger); font-size: clamp(2rem, 7vw, 3rem); font-weight: 800; margin: 0; }
+        .word-text { color: var(--primary); font-size: clamp(2rem, 7vw, 3rem); font-weight: 800; margin: 0; }
+        .hint-text { color: var(--text-sec); font-size: 1rem; margin-top: 10px; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -101,33 +174,40 @@
 <body>
 
 <div id="app">
-    <div id="reference-grid"></div>
-
-    <div id="setup-screen" class="screen active">
-        <h1>Imposter</h1>
-        <div id="category-title" class="category-badge">Loading Category...</div>
-        <p>How many players?</p>
-        <input type="number" id="player-count" value="4" min="3" max="20">
-        <button onclick="startGame()">Start Game</button>
+    <div id="top-half">
+        <div id="reference-grid"></div>
     </div>
 
-    <div id="pass-screen" class="screen">
-        <div style="font-size: 4rem;">📱</div>
-        <h1 id="pass-title">Player 1</h1>
-        <p>Pass the phone to this player. Keep it hidden!</p>
-        <button onclick="reveal()">Reveal Role</button>
-    </div>
+    <div id="bottom-half">
+        <div id="setup-screen" class="screen active">
+            <h1 class="title">Blend In</h1>
+            <div class="category-row">
+                <div id="category-title" class="category-badge">Loading Category...</div>
+                <button class="refresh-btn" onclick="refreshCategory()" title="New Category">↻</button>
+            </div>
+            <p>How many players?</p>
+            <input type="number" id="player-count" value="4" min="3" max="20">
+            <button onclick="startGame()">Start Game</button>
+        </div>
 
-    <div id="reveal-screen" class="screen">
-        <h2>You are...</h2>
-        <div id="secret-display"></div>
-        <button id="next-btn" onclick="nextPlayer()"></button>
-    </div>
-    
-    <div id="end-screen" class="screen">
-        <h1>Let the game begin!</h1>
-        <p>Ask questions. Find the imposter.</p>
-        <button onclick="location.reload()">New Game (New Category)</button>
+        <div id="pass-screen" class="screen">
+            <div style="font-size: 3.5rem;">�</div>
+            <h2 id="pass-title">Player 1</h2>
+            <p style="color: var(--text-sec); font-size: 0.95rem;">Pass the phone. Keep it hidden!</p>
+            <button onclick="reveal()">Reveal Role</button>
+        </div>
+
+        <div id="reveal-screen" class="screen">
+            <div id="secret-display"></div>
+            <button id="next-btn" onclick="nextPlayer()"></button>
+        </div>
+        
+        <div id="end-screen" class="screen">
+            <div style="font-size: 3rem;">🕵️</div>
+            <h2>Let the game begin!</h2>
+            <p style="color: var(--text-sec);">Ask questions. Find the imposter.</p>
+            <button onclick="location.reload()">New Game</button>
+        </div>
     </div>
 </div>
 
@@ -183,6 +263,27 @@
         document.getElementById(id).classList.add('active');
     }
 
+    function refreshCategory() {
+        const categoryNames = Object.keys(categories);
+        let newCat = categoryNames[Math.floor(Math.random() * categoryNames.length)];
+        // Avoid same category if possible
+        const currentCat = document.getElementById('category-title').innerText;
+        if (categoryNames.length > 1 && newCat === currentCat) {
+            const others = categoryNames.filter(c => c !== currentCat);
+            newCat = others[Math.floor(Math.random() * others.length)];
+        }
+        currentWords = categories[newCat];
+        document.getElementById('category-title').innerText = newCat;
+
+        gridEl.innerHTML = '';
+        currentWords.forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'grid-item';
+            div.innerText = w;
+            gridEl.appendChild(div);
+        });
+    }
+
     function startGame() {
         totalPlayers = parseInt(document.getElementById('player-count').value);
         if(totalPlayers < 3) { alert("Need at least 3 players!"); return; }
@@ -191,7 +292,6 @@
         secretWord = currentWords[Math.floor(Math.random() * currentWords.length)];
         
         currentPlayer = 1;
-        gridEl.style.display = 'grid'; // Show the grid
         updatePassScreen();
     }
 
@@ -203,16 +303,25 @@
     function reveal() {
         const display = document.getElementById('secret-display');
         if (currentPlayer === imposterIndex) {
-            display.innerHTML = `<div class="imposter-text">THE IMPOSTER</div><p>Try to blend in!</p>`;
+            display.innerHTML = `
+                <div class="role-card">
+                    <div class="role-label">You are</div>
+                    <div class="imposter-text">The Imposter</div>
+                    <div class="hint-text">Try to blend in...</div>
+                </div>`;
         } else {
-            display.innerHTML = `<p>The word is:</p><div class="word-text">${secretWord}</div>`;
+            display.innerHTML = `
+                <div class="role-card">
+                    <div class="role-label">The word is</div>
+                    <div class="word-text">${secretWord}</div>
+                </div>`;
         }
 
         const nextBtn = document.getElementById('next-btn');
         if (currentPlayer < totalPlayers) {
             nextBtn.innerText = "Hide & Pass";
         } else {
-            nextBtn.innerText = "Finish";
+            nextBtn.innerText = "Start Game";
         }
         
         showScreen('reveal-screen');
