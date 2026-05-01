@@ -11,7 +11,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "AI‑powered bias detection for articles—think Grammarly for ideological slants.",
           icon: "fas fa-brain",
-          backgroundImage: "cover-images/biasly.png",
+          backgroundImage: "cover-images/biasly.jpg",
           award: "🏆 Hack@UNCP 2025 Best Education Project",
           buttons: [
             {
@@ -33,7 +33,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A minimal recipe platform focusing on step‑by‑step guidance over fluff.",
           icon: "fas fa-utensils",
-          backgroundImage: "cover-images/instant-chef.png",
+          backgroundImage: "cover-images/instant-chef.jpg",
           award: "🏆 Hack@Davidson 2025 Best AI Project",
           buttons: [
             {
@@ -55,7 +55,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "Enter your address to find local election candidates with basic info & photos.",
           icon: "fas fa-bullhorn",
-          backgroundImage: "cover-images/local-voice.png",
+          backgroundImage: "cover-images/local-voice.jpg",
           award: "🥈 Hack NC 2nd Place Beginner Project",
           buttons: [
             {
@@ -83,7 +83,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A highly customizable, visually interactive Minecraft block gradient generator.",
           icon: "fas fa-th-large",
-          backgroundImage: "cover-images/mc-gradient-cover-img.png",
+          backgroundImage: "cover-images/mc-gradient-cover-img.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -104,7 +104,7 @@ const projectShowcaseConfig = {
           type: "Puzzle Game",
           description: "Redraw district lines to win elections with a minority in this puzzle.",
           icon: "fas fa-map",
-          backgroundImage: "cover-images/Gerrymander.png",
+          backgroundImage: "cover-images/Gerrymander.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -121,11 +121,11 @@ const projectShowcaseConfig = {
           ]
         },
         {
-          name: "Imposter",
+          name: "Blend In",
           type: "Web Party Game",
-          description: "Inspired by the board game The Chameleon. Everyone knows the secret word except the Imposter. Try to blend in, or catch the liar out.",
-          icon: "fas fa-map",
-          backgroundImage: "cover-images/chameleon.png",
+          description: "Inspired by Chameleon. Everyone knows the secret word except the Imposter. Try to blend in.",
+          icon: "fas fa-user-secret",
+          backgroundImage: "cover-images/chameleon.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -136,7 +136,7 @@ const projectShowcaseConfig = {
             {
               text: "Play Game",
               icon: "fas fa-gamepad",
-              link: "https://malachyfernandez.github.io/Chameleon/index.html/",
+              link: "https://malachyfernandez.github.io/Chameleon/",
               target: "_blank"
             }
           ]
@@ -146,7 +146,7 @@ const projectShowcaseConfig = {
           type: "Game for ED204",
           description: "A text-based game created for ED204 that explores implicit bias in education through a metaphorical hunting experience.",
           icon: "fas fa-graduation-cap",
-          backgroundImage: "cover-images/the-hunt.png",
+          backgroundImage: "cover-images/the-hunt.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -167,7 +167,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A powerful, browser-based photo editor with layer-based editing and AI-powered transformations using Google Gemini.",
           icon: "fas fa-image",
-          backgroundImage: "cover-images/photo-editor.png",
+          backgroundImage: "cover-images/photo-editor.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -188,7 +188,7 @@ const projectShowcaseConfig = {
           type: "Web App",
           description: "A powerful web-based tool for creating Minecraft Bedrock Edition schematics with smart shape generation and real-time preview.",
           icon: "fas fa-cube",
-          backgroundImage: "cover-images/mc-schematic.png",
+          backgroundImage: "cover-images/mc-schematic.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -215,7 +215,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "Instantly jump to real Google search results using just your keyboard.",
           icon: "fas fa-mouse-pointer",
-          backgroundImage: "cover-images/skip-scroll.png",
+          backgroundImage: "cover-images/skip-scroll.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -236,7 +236,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "A Chrome extension that strips away inline source citations on Google Gemini for a cleaner reading experience.",
           icon: "fas fa-magic",
-          backgroundImage: "cover-images/gemini-strip.png",
+          backgroundImage: "cover-images/gemini-strip.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -257,7 +257,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "Bypass News & Observer ad-blocker detection screens to read articles without disabling your ad blocker.",
           icon: "fas fa-newspaper",
-          backgroundImage: "cover-images/news-breaker.png",
+          backgroundImage: "cover-images/news-breaker.jpg",
           buttons: [
             {
               text: "GitHub",
@@ -278,7 +278,7 @@ const projectShowcaseConfig = {
           type: "Chrome Extension",
           description: "A powerful Chrome extension that lets you download TikTok videos instantly with one click.",
           icon: "fab fa-tiktok",
-          backgroundImage: "cover-images/tiktok-grab.png",
+          backgroundImage: "cover-images/tiktok-grab.jpg",
           buttons: [
             {
               text: "GitHub",
