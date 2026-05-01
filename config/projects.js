@@ -121,9 +121,9 @@ const projectShowcaseConfig = {
           ]
         },
         {
-          name: "Chameleon",
-          type: "Browser Game",
-          description: "It's chameleon but in the browser",
+          name: "Imposter",
+          type: "Web Party Game",
+          description: "Inspired by the board game The Chameleon. Everyone knows the secret word except the Imposter. Try to blend in, or catch the liar out.",
           icon: "fas fa-map",
           backgroundImage: "cover-images/chameleon.png",
           buttons: [
