@@ -121,6 +121,27 @@ const projectShowcaseConfig = {
           ]
         },
         {
+          name: "Chameleon",
+          type: "Browser Game",
+          description: "It's chameleon but in the browser",
+          icon: "fas fa-map",
+          backgroundImage: "cover-images/chameleon.png",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/Chameleon",
+              target: "_blank"
+            },
+            {
+              text: "Play Game",
+              icon: "fas fa-gamepad",
+              link: "https://malachyfernandez.github.io/Chameleon/index.html/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
           name: "THE HUNT: An Educator's Amygdala",
           type: "Game for ED204",
           description: "A text-based game created for ED204 that explores implicit bias in education through a metaphorical hunting experience.",
