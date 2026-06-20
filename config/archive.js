@@ -32,8 +32,7 @@ const archiveConfig = {
       icon: "fas fa-archive",
       children: [
         { name: "THE HUNT (build)", description: "ED204 game, local copy", link: "ed204/game.html" },
-        { name: "Certificate", description: "Saved certificate page", link: "Testing/test2.html" },
-        { name: "Lifeguard Cert", description: "Saved record page", link: "Testing/test.html" }
+        { name: "Certificate", description: "Saved certificate page", link: "Testing/test2.html" }
       ]
     }
   ]
