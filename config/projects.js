@@ -94,7 +94,7 @@ const projectShowcaseConfig = {
             {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
-              link: "https://malachyfernandez.github.io/minecraftGradient/",
+              link: "https://malachyfernandez.github.io/MinecraftGradient/",
               target: "_blank"
             }
           ]
@@ -199,7 +199,7 @@ const projectShowcaseConfig = {
             {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
-              link: "https://malachyfernandez.github.io/MinecraftSchematicMaker/index.html",
+              link: "https://malachyfernandez.github.io/Bedrock-Schematic-Maker/",
               target: "_blank"
             }
           ]
