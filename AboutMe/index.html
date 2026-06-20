@@ -210,9 +210,11 @@
         // Reverse active state for About Me page
         if (!item.active) element.className = 'active';
         if (item.link) {
-          // Adjust link to go back to main page
+          // Adjust links relative to the AboutMe folder
           if (item.link === "index.html") {
             element.href = "../index.html";
+          } else if (item.link === "AboutMe/index.html") {
+            element.href = "index.html";
           } else {
             element.href = item.link;
           }
