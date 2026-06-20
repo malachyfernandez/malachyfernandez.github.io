@@ -319,7 +319,157 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-
+    /* --- ARCHIVE --- */
+    .archive-footer {
+      text-align: center;
+      padding: 1rem 1rem 4rem;
+    }
+    .archive-btn {
+      background: linear-gradient(120deg, var(--header-start), var(--header-end));
+      color: #fff;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 50px;
+      font-family: var(--font-family), sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .archive-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+    }
+    .archive-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      z-index: 2000;
+    }
+    .archive-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .archive-modal {
+      background: var(--card);
+      width: 100%;
+      max-width: 560px;
+      max-height: 85vh;
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      transform: translateY(20px) scale(0.98);
+      transition: transform var(--transition);
+    }
+    .archive-overlay.open .archive-modal {
+      transform: translateY(0) scale(1);
+    }
+    .archive-modal-header {
+      background: linear-gradient(120deg, var(--header-start), var(--header-end));
+      color: #fff;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .archive-modal-header h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .archive-modal-header .archive-sub {
+      font-size: 0.8rem;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 0.25rem;
+    }
+    .archive-close {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background var(--transition);
+    }
+    .archive-close:hover { background: rgba(255,255,255,0.3); }
+    .archive-body {
+      padding: 0.75rem 1.25rem 1.5rem;
+      overflow-y: auto;
+    }
+    .archive-folder { border-bottom: 1px solid #eee; }
+    .archive-folder:last-child { border-bottom: none; }
+    .archive-folder > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 0.25rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .archive-folder > summary::-webkit-details-marker { display: none; }
+    .archive-folder > summary .folder-icon {
+      color: var(--primary);
+      width: 1.2rem;
+      text-align: center;
+    }
+    .archive-folder > summary .folder-desc {
+      font-weight: 400;
+      font-size: 0.75rem;
+      color: #888;
+    }
+    .archive-folder > summary .chevron {
+      margin-left: auto;
+      color: var(--primary);
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+    .archive-folder[open] > summary .chevron { transform: rotate(90deg); }
+    .archive-children { padding-left: 1.6rem; padding-bottom: 0.5rem; }
+    .archive-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem;
+      border-radius: 8px;
+      color: var(--text);
+      transition: background var(--transition);
+    }
+    .archive-link:hover { background: rgba(52,152,219,0.12); }
+    .archive-link .link-text { display: flex; flex-direction: column; min-width: 0; }
+    .archive-link .link-name { font-weight: 600; font-size: 0.95rem; }
+    .archive-link .link-desc { font-size: 0.75rem; color: #888; }
+    .archive-link .ext-icon {
+      margin-left: auto;
+      color: var(--primary);
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
     </style>
 </head>
 <body>
@@ -340,6 +490,7 @@
 
   <script src="config/site.js"></script>
   <script src="config/projects.js"></script>
+  <script src="config/archive.js"></script>
   <script>
     // Apply configuration to the page
     function initializeSite() {
@@ -490,8 +641,129 @@
       });
     }
 
+    // Build a single archive tree node (folder if it has children, else a link)
+    function buildArchiveNode(node) {
+      if (node.children) {
+        const details = document.createElement('details');
+        details.className = 'archive-folder';
+
+        const summary = document.createElement('summary');
+        if (node.icon) {
+          const folderIcon = document.createElement('i');
+          folderIcon.className = node.icon + ' folder-icon';
+          summary.appendChild(folderIcon);
+        }
+        const label = document.createElement('span');
+        label.textContent = node.name;
+        summary.appendChild(label);
+        if (node.description) {
+          const folderDesc = document.createElement('span');
+          folderDesc.className = 'folder-desc';
+          folderDesc.textContent = '· ' + node.description;
+          summary.appendChild(folderDesc);
+        }
+        const chevron = document.createElement('i');
+        chevron.className = 'fas fa-chevron-right chevron';
+        summary.appendChild(chevron);
+        details.appendChild(summary);
+
+        const children = document.createElement('div');
+        children.className = 'archive-children';
+        node.children.forEach(child => children.appendChild(buildArchiveNode(child)));
+        details.appendChild(children);
+        return details;
+      }
+
+      const link = document.createElement('a');
+      link.className = 'archive-link';
+      link.href = node.link;
+      link.target = '_blank';
+
+      const text = document.createElement('span');
+      text.className = 'link-text';
+      const name = document.createElement('span');
+      name.className = 'link-name';
+      name.textContent = node.name;
+      text.appendChild(name);
+      if (node.description) {
+        const desc = document.createElement('span');
+        desc.className = 'link-desc';
+        desc.textContent = node.description;
+        text.appendChild(desc);
+      }
+      link.appendChild(text);
+
+      const extIcon = document.createElement('i');
+      extIcon.className = 'fas fa-external-link-alt ext-icon';
+      link.appendChild(extIcon);
+      return link;
+    }
+
+    // Append the archive button + modal to the bottom of the page
+    function renderArchive() {
+      if (typeof archiveConfig === 'undefined') return;
+
+      const footer = document.createElement('div');
+      footer.className = 'archive-footer';
+      const openBtn = document.createElement('button');
+      openBtn.className = 'archive-btn';
+      const btnIcon = document.createElement('i');
+      btnIcon.className = 'fas fa-archive';
+      openBtn.appendChild(btnIcon);
+      openBtn.appendChild(document.createTextNode(' ' + archiveConfig.title));
+      footer.appendChild(openBtn);
+      document.body.appendChild(footer);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'archive-overlay';
+
+      const modal = document.createElement('div');
+      modal.className = 'archive-modal';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('aria-label', archiveConfig.title);
+
+      const modalHeader = document.createElement('div');
+      modalHeader.className = 'archive-modal-header';
+      const headingWrap = document.createElement('div');
+      const heading = document.createElement('h2');
+      heading.textContent = archiveConfig.title;
+      headingWrap.appendChild(heading);
+      if (archiveConfig.subtext) {
+        const sub = document.createElement('div');
+        sub.className = 'archive-sub';
+        sub.textContent = archiveConfig.subtext;
+        headingWrap.appendChild(sub);
+      }
+      modalHeader.appendChild(headingWrap);
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'archive-close';
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.innerHTML = '&times;';
+      modalHeader.appendChild(closeBtn);
+      modal.appendChild(modalHeader);
+
+      const body = document.createElement('div');
+      body.className = 'archive-body';
+      archiveConfig.tree.forEach(node => body.appendChild(buildArchiveNode(node)));
+      modal.appendChild(body);
+
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const open = () => overlay.classList.add('open');
+      const close = () => overlay.classList.remove('open');
+      openBtn.addEventListener('click', open);
+      closeBtn.addEventListener('click', close);
+      overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') close();
+      });
+    }
+
     // Initialize the site immediately so View Transition can see it
     initializeSite();
+    renderArchive();
   </script>
 </body>
 </html>
