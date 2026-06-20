@@ -204,6 +204,27 @@ const projectShowcaseConfig = {
             }
           ]
         }
+        // {
+        //   name: "Lingo Max",
+        //   type: "Web App",
+        //   description: "AI-powered language tutor with an expressive talking SVG face. Bring your own OpenRouter key.",
+        //   icon: "fas fa-language",
+        //   backgroundImage: "cover-images/lingo-max.jpg",
+        //   buttons: [
+        //     {
+        //       text: "GitHub",
+        //       icon: "fab fa-github",
+        //       link: "https://github.com/malachyfernandez/Ai-Duolingo-Max",
+        //       target: "_blank"
+        //     },
+        //     {
+        //       text: "Try It Live",
+        //       icon: "fas fa-external-link-alt",
+        //       link: "https://malachyfernandez.github.io/Ai-Duolingo-Max/",
+        //       target: "_blank"
+        //     }
+        //   ]
+        // }
       ]
     },
     {

@@ -6,6 +6,14 @@ const archiveConfig = {
   subtext: "Older experiments, tools, and one-off pages — the full back catalog.",
   tree: [
     {
+      name: "AI & Learning",
+      icon: "fas fa-robot",
+      description: "AI-powered experiments",
+      children: [
+        { name: "Lingo Max", description: "AI language tutor with expressive SVG face", link: "https://malachyfernandez.github.io/Ai-Duolingo-Max/" }
+      ]
+    },
+    {
       name: "Text Tools",
       icon: "fas fa-font",
       description: "Work with text",
