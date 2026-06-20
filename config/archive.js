@@ -6,14 +6,29 @@ const archiveConfig = {
   subtext: "Older experiments, tools, and one-off pages — the full back catalog.",
   tree: [
     {
-      name: "Tools & Experiments",
-      icon: "fas fa-wrench",
+      name: "Text Tools",
+      icon: "fas fa-font",
+      description: "Work with text",
       children: [
-        { name: "DOCX Date Editor", description: "Rewrite a doc's dates", link: "ChangeFileDate/index.html" },
         { name: "Text Humanizer", description: "Humanize / detect AI text", link: "Humanizer/index.html" },
-        { name: "Knitting Architect", description: "Plan knit patterns", link: "KittingArchitect/index.html" },
-        { name: "Minimal Partitioner", description: "Split long text", link: "TextSplitter/index.html" },
-        { name: "MC Command Generator", description: "Build Minecraft commands", link: "commandGenerator/generator.html" }
+        { name: "Minimal Partitioner", description: "Split long text", link: "TextSplitter/index.html" }
+      ]
+    },
+    {
+      name: "Generators",
+      icon: "fas fa-magic",
+      description: "Make things automatically",
+      children: [
+        { name: "MC Command Generator", description: "Build Minecraft commands", link: "commandGenerator/generator.html" },
+        { name: "Knitting Architect", description: "Plan knit patterns", link: "KittingArchitect/index.html" }
+      ]
+    },
+    {
+      name: "File Utilities",
+      icon: "fas fa-file-alt",
+      description: "Tweak documents",
+      children: [
+        { name: "DOCX Date Editor", description: "Rewrite a doc's dates", link: "ChangeFileDate/index.html" }
       ]
     },
     {
@@ -25,14 +40,6 @@ const archiveConfig = {
         { name: "Southbound", description: "Southbound departures", link: "NCByTrain/southbound.html" },
         { name: "Schedule Component", description: "Reusable widget", link: "NCByTrain/schedulecomponent.html" },
         { name: "Schedule Test", description: "Component test page", link: "NCByTrain/test.html" }
-      ]
-    },
-    {
-      name: "Odds & Ends",
-      icon: "fas fa-archive",
-      children: [
-        { name: "THE HUNT (build)", description: "ED204 game, local copy", link: "ed204/game.html" },
-        { name: "Certificate", description: "Saved certificate page", link: "Testing/test2.html" }
       ]
     }
   ]
