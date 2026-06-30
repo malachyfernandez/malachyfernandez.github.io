@@ -10,14 +10,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Poppins',sans-serif; background:#f5f0e8; color:#1a1a1a; }
     :root {
-      --bg:#f5f0e8; --inner-bg:#faf8f4; --text:#1a1a1a; --subtext:#6b7280;
-      --accent:#2d5a2d; --accent-light:rgba(45,90,45,0.1); --border:#d1c9b8;
-      --subtle-border:#e5ddd0; --red:#dc2626; --blue:#3b82f6; --yellow:#eab308;
+      --bg:#f1ede3; --inner-bg:#fffdf7; --text:#15201a; --subtext:#6b7670;
+      --accent:#1f5d3a; --accent-2:#2e8b57; --accent-grad:linear-gradient(135deg,#1f5d3a 0%,#2e8b57 100%);
+      --accent-light:rgba(46,139,87,0.12); --gold:#c9a24b; --gold-light:rgba(201,162,75,0.14);
+      --border:#e4ddcd; --subtle-border:#ece6d8; --red:#d6453b; --blue:#3b82f6; --yellow:#e0a92e;
+      --shadow:0 10px 30px -12px rgba(31,93,58,0.28); --shadow-sm:0 4px 14px -6px rgba(20,32,26,0.18);
     }
-    #root { max-width:430px; margin:0 auto; min-height:100vh; background:var(--bg); position:relative; overflow:hidden; }
+    html { -webkit-font-smoothing:antialiased; }
+    body { font-family:'Poppins',sans-serif; color:var(--text);
+      background:
+        radial-gradient(900px 520px at 18% -8%, rgba(46,139,87,0.16), transparent 60%),
+        radial-gradient(760px 520px at 108% 12%, rgba(201,162,75,0.16), transparent 55%),
+        var(--bg);
+      background-attachment:fixed; }
+    #root { max-width:430px; margin:0 auto; min-height:100vh; position:relative; overflow:hidden;
+      box-shadow:0 0 60px -10px rgba(20,32,26,0.18); }
     .screen { min-height:100vh; }
+    /* screen + stagger entrance */
+    @keyframes screenIn { from{opacity:0; transform:translateY(14px) scale(.99);} to{opacity:1; transform:none;} }
+    .screen-anim { animation:screenIn .42s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes riseIn { from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:none;} }
+    .screen-anim .scrollable > .col > *, .screen-anim > .col > .col > * { animation:riseIn .5s cubic-bezier(.22,1,.36,1) both; }
+    .screen-anim .scrollable > .col > *:nth-child(1){animation-delay:.02s}
+    .screen-anim .scrollable > .col > *:nth-child(2){animation-delay:.07s}
+    .screen-anim .scrollable > .col > *:nth-child(3){animation-delay:.12s}
+    .screen-anim .scrollable > .col > *:nth-child(4){animation-delay:.17s}
+    .screen-anim .scrollable > .col > *:nth-child(5){animation-delay:.22s}
+    .screen-anim .scrollable > .col > *:nth-child(6){animation-delay:.27s}
+    .screen-anim .scrollable > .col > *:nth-child(7){animation-delay:.32s}
+    .screen-anim .scrollable > .col > *:nth-child(n+8){animation-delay:.36s}
+    @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
     .p-4 { padding:16px; }
     .gap-1 { gap:4px; } .gap-2 { gap:8px; } .gap-3 { gap:12px; } .gap-4 { gap:16px; } .gap-6 { gap:24px; }
     .col { display:flex; flex-direction:column; }
@@ -36,40 +59,49 @@
     .text-white { color:#fff; }
     .text-red { color:var(--red); }
 
-    .card { background:var(--inner-bg); border:2px solid var(--border); border-radius:8px; padding:16px; }
-    .card-accent { background:var(--accent-light); border:2px solid var(--accent); border-radius:8px; padding:16px; }
-    .info-box { background:var(--accent-light); border-radius:8px; padding:12px; }
+    .card { background:var(--inner-bg); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:var(--shadow-sm); transition:transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s; }
+    .card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+    .card-accent { background:linear-gradient(135deg, var(--accent-light), rgba(201,162,75,0.10)); border:1px solid rgba(46,139,87,0.35); border-radius:16px; padding:16px; box-shadow:var(--shadow-sm); }
+    .info-box { background:var(--gold-light); border:1px solid rgba(201,162,75,0.3); border-radius:14px; padding:12px; }
     .divider { height:1px; background:var(--subtle-border); width:100%; }
 
-    .btn { display:flex; align-items:center; justify-content:center; border-radius:8px; padding:12px 20px; cursor:pointer; border:2px solid var(--border); background:transparent; font-family:'Poppins'; font-size:14px; font-weight:500; transition:all .15s; }
-    .btn:hover { opacity:.85; }
-    .btn-green { background:var(--accent); color:#fff; border-color:var(--accent); }
-    .btn-black { background:var(--text); color:#fff; border-color:var(--text); }
-    .btn-red { background:transparent; color:var(--red); border-color:var(--red); }
-    .btn-outline { background:transparent; color:var(--text); }
-    .btn-grey { background:#9ca3af; color:#fff; border-color:#9ca3af; }
-    .btn-sm { padding:6px 12px; font-size:12px; }
+    .btn { display:flex; align-items:center; justify-content:center; border-radius:14px; padding:12px 20px; cursor:pointer; border:1.5px solid var(--border); background:var(--inner-bg); font-family:'Poppins'; font-size:14px; font-weight:600; transition:transform .12s cubic-bezier(.22,1,.36,1), box-shadow .2s, opacity .2s; }
+    .btn:hover { transform:translateY(-1px); }
+    .btn:active { transform:translateY(0) scale(.97); }
+    .btn-green { background:var(--accent-grad); color:#fff; border-color:transparent; box-shadow:0 8px 20px -8px rgba(31,93,58,0.6); }
+    .btn-black { background:linear-gradient(135deg,#1b2620,#2c3a31); color:#fff; border-color:transparent; box-shadow:0 8px 20px -8px rgba(20,32,26,0.5); }
+    .btn-red { background:transparent; color:var(--red); border-color:rgba(214,69,59,0.5); }
+    .btn-outline { background:var(--inner-bg); color:var(--text); }
+    .btn-grey { background:#aab2ac; color:#fff; border-color:transparent; }
+    .btn-sm { padding:6px 12px; font-size:12px; border-radius:10px; }
     .btn-lg { padding:16px 20px; font-size:16px; }
     .btn-full { width:100%; }
 
-    .avatar { border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .avatar { border-radius:50%; background:var(--accent-grad); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; box-shadow:0 6px 16px -8px rgba(31,93,58,0.6); }
 
-    .map-placeholder { background:#e8e0d0; border:2px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; }
-    .map-circle { width:48px; height:48px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
+    .map-placeholder { position:relative; overflow:hidden; background:linear-gradient(135deg,#dfe7df,#eef0e2); border:1px solid var(--border); border-radius:16px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; box-shadow:var(--shadow-sm); }
+    .map-placeholder::before { content:''; position:absolute; inset:-40%; background:
+      repeating-linear-gradient(115deg, rgba(46,139,87,0.07) 0 2px, transparent 2px 26px),
+      repeating-linear-gradient(25deg, rgba(46,139,87,0.07) 0 2px, transparent 2px 26px);
+      animation:mapPan 18s linear infinite; }
+    @keyframes mapPan { from{transform:translate(0,0);} to{transform:translate(26px,26px);} }
+    .map-circle { position:relative; z-index:1; width:48px; height:48px; border-radius:50%; background:var(--accent-grad); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; box-shadow:0 0 0 0 rgba(46,139,87,0.5); animation:pinPulse 2.2s ease-out infinite; }
+    @keyframes pinPulse { 0%{box-shadow:0 0 0 0 rgba(46,139,87,0.45);} 70%{box-shadow:0 0 0 18px rgba(46,139,87,0);} 100%{box-shadow:0 0 0 0 rgba(46,139,87,0);} }
 
     .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-    .dot-green { background:var(--accent); }
+    .dot-green { background:var(--accent-2); box-shadow:0 0 0 3px rgba(46,139,87,0.18); }
     .dot-red { background:var(--red); }
     .dot-blue { background:var(--blue); }
     .dot-yellow { background:var(--yellow); }
     .dot-sm { width:8px; height:8px; }
 
     .star { width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:12px; cursor:pointer; }
-    .star-filled { background:var(--accent); color:#fff; }
+    .star-filled { background:var(--gold); color:#fff; box-shadow:0 4px 10px -4px rgba(201,162,75,0.7); }
     .star-empty { background:var(--subtle-border); color:var(--subtext); }
     .star-lg { width:36px; height:36px; font-size:16px; }
 
-    .stat-card { flex:1; background:var(--inner-bg); border:2px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+    .stat-card { flex:1; background:var(--inner-bg); border:1px solid var(--border); border-radius:14px; padding:12px; text-align:center; box-shadow:var(--shadow-sm); transition:transform .2s; }
+    .stat-card:hover { transform:translateY(-2px); }
     .stat-value { font-size:20px; font-weight:700; }
     .stat-label { font-size:12px; color:var(--subtext); font-weight:500; }
 
@@ -82,30 +114,37 @@
     .nav-tab-active { border-bottom:2px solid var(--accent); font-weight:500; }
     .nav-tab-inactive { opacity:.6; }
 
-    .ride-type-card { flex:1; border:2px solid var(--border); border-radius:8px; padding:12px; text-align:center; cursor:pointer; transition:all .15s; }
-    .ride-type-card.selected { border-color:var(--accent); background:var(--accent-light); }
+    .ride-type-card { flex:1; background:var(--inner-bg); border:1.5px solid var(--border); border-radius:14px; padding:12px; text-align:center; cursor:pointer; transition:transform .18s cubic-bezier(.22,1,.36,1), border-color .2s, box-shadow .2s; box-shadow:var(--shadow-sm); }
+    .ride-type-card:hover { transform:translateY(-2px); }
+    .ride-type-card.selected { border-color:var(--accent-2); background:var(--accent-light); transform:translateY(-3px) scale(1.02); box-shadow:var(--shadow); }
 
-    .payment-card { border:2px solid var(--border); border-radius:8px; padding:12px; cursor:pointer; }
-    .payment-card.selected { border-color:var(--accent); background:var(--accent-light); }
+    .payment-card { background:var(--inner-bg); border:1.5px solid var(--border); border-radius:14px; padding:12px; cursor:pointer; transition:transform .18s, border-color .2s; box-shadow:var(--shadow-sm); }
+    .payment-card:hover { transform:translateY(-2px); }
+    .payment-card.selected { border-color:var(--accent-2); background:var(--accent-light); }
 
-    .badge { background:var(--accent); color:#fff; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:500; }
-    .badge-bg { background:var(--text); }
+    .badge { background:var(--accent-grad); color:#fff; padding:2px 8px; border-radius:8px; font-size:10px; font-weight:600; }
+    .badge-bg { background:linear-gradient(135deg,#1b2620,#2c3a31); }
 
-    .earnings-hero { background:var(--accent); border-radius:8px; padding:24px; text-align:center; color:#fff; }
-    .complete-icon { width:64px; height:64px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; }
+    .earnings-hero { position:relative; overflow:hidden; background:var(--accent-grad); border-radius:18px; padding:24px; text-align:center; color:#fff; box-shadow:var(--shadow); }
+    .earnings-hero::after { content:''; position:absolute; top:-60%; left:-30%; width:80%; height:200%; background:linear-gradient(115deg, transparent, rgba(255,255,255,0.18), transparent); transform:skewX(-18deg); animation:sheen 3.4s ease-in-out infinite; }
+    @keyframes sheen { 0%{left:-40%;} 55%,100%{left:130%;} }
+    .complete-icon { width:64px; height:64px; border-radius:50%; background:var(--accent-grad); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px -8px rgba(31,93,58,0.7); animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes popIn { from{transform:scale(0); opacity:0;} to{transform:scale(1); opacity:1;} }
 
     .phase-bar { border-radius:8px; padding:12px; text-align:center; color:#fff; font-weight:700; }
     .phase-blue { background:var(--blue); }
     .phase-yellow { background:var(--yellow); color:var(--text); }
     .phase-green { background:var(--accent); }
 
-    .eta-circle { width:64px; height:64px; border-radius:50%; border:4px solid var(--accent); display:flex; align-items:center; justify-content:center; }
+    .eta-circle { width:64px; height:64px; border-radius:50%; border:4px solid var(--accent-2); display:flex; align-items:center; justify-content:center; }
 
-    .timer-circle { width:48px; height:48px; border-radius:50%; border:4px solid var(--accent); display:flex; align-items:center; justify-content:center; }
+    .timer-circle { position:relative; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--inner-bg); }
+    .timer-circle::before { content:''; position:absolute; inset:-4px; border-radius:50%; background:conic-gradient(var(--accent-2) 0turn, var(--accent-2) 1turn); -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px)); mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px)); animation:spinSweep 1.4s linear infinite; }
+    @keyframes spinSweep { to{transform:rotate(1turn);} }
 
     .scrollable { overflow-y:auto; max-height:calc(100vh - 48px); }
 
-    .logo-circle { width:80px; height:80px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:28px; }
+    .logo-circle { width:80px; height:80px; border-radius:50%; background:var(--accent-grad); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:28px; box-shadow:0 14px 34px -10px rgba(31,93,58,0.7); animation:popIn .55s cubic-bezier(.34,1.56,.64,1) both; }
     .logo-sm { width:32px; height:32px; font-size:10px; }
 
     .dashed-line { border-left:2px dashed var(--subtle-border); height:16px; margin-left:5px; }
@@ -113,7 +152,19 @@
     .fare-row { display:flex; justify-content:space-between; align-items:center; width:100%; }
 
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-    .animate-pulse { animation:pulse 2s infinite; }
+    .animate-pulse { animation:pulse 1.6s infinite; }
+    /* concentric search rings */
+    .search-rings { position:relative; width:84px; height:84px; display:flex; align-items:center; justify-content:center; }
+    .search-rings span { position:absolute; border-radius:50%; border:2px solid var(--accent-2); opacity:0; animation:ring 2s ease-out infinite; }
+    .search-rings span:nth-child(1){ width:28px; height:28px; }
+    .search-rings span:nth-child(2){ width:28px; height:28px; animation-delay:.66s; }
+    .search-rings span:nth-child(3){ width:28px; height:28px; animation-delay:1.33s; }
+    @keyframes ring { 0%{transform:scale(.5); opacity:.8;} 100%{transform:scale(3); opacity:0;} }
+    .search-core { width:30px; height:30px; border-radius:50%; background:var(--accent-grad); z-index:1; box-shadow:0 6px 16px -6px rgba(31,93,58,0.7); }
+    /* online glow toggle */
+    .btn-green.glow { animation:glowPulse 2s ease-in-out infinite; }
+    @keyframes glowPulse { 0%,100%{box-shadow:0 8px 20px -8px rgba(31,93,58,0.6);} 50%{box-shadow:0 8px 30px -4px rgba(46,139,87,0.9);} }
+    .nav-tab-active { position:relative; }
   </style>
 </head>
 <body>
@@ -246,8 +297,8 @@ const RideRequest = ({nav}) => {
     </div></div>
     <FareCard fare={FARE}/>
     {searching ? <div className="col gap-3 center">
-      <div className="timer-circle"><span className="font-bold" style={{fontSize:18}}>{secs}s</span></div>
-      <span className="font-medium">Searching for drivers...</span>
+      <div className="search-rings"><span/><span/><span/><div className="search-core"/></div>
+      <span className="font-medium">Searching for drivers… {secs}s</span>
       <span className="text-sub">Looking for the nearest available driver</span>
       <button className="btn btn-red btn-full" onClick={()=>{setSearching(false);setSecs(0);}}>Cancel Request</button>
     </div> : <button className="btn btn-green btn-lg btn-full" onClick={()=>{setSearching(true);setSecs(0);}}>Confirm & Request Ride</button>}
@@ -350,7 +401,7 @@ const DriverDashboard = ({nav}) => {
   useEffect(()=>{if(!simulating)return;const t=setTimeout(()=>{setSimulating(false);nav('offer');},2000);return()=>clearTimeout(t);},[simulating]);
   return <div className="scrollable p-4"><div className="col gap-4">
     <div className="row gap-3 items-center"><Avatar name="Demo Driver" size={48}/><div className="col flex-1"><span className="font-medium">Demo Driver</span><Stars rating={4.8} size="sm"/></div><button className="btn btn-outline btn-sm" onClick={()=>nav('d_profile')}>⚙</button></div>
-    <button className={`btn ${online?'btn-green':'btn-grey'} btn-lg btn-full`} onClick={()=>setOnline(!online)}><div className="col center"><span className="font-bold text-white">{online?'ONLINE':'OFFLINE'}</span><span className="text-xs text-white" style={{opacity:.8}}>{online?'Tap to go offline':'Tap to go online'}</span></div></button>
+    <button className={`btn ${online?'btn-green glow':'btn-grey'} btn-lg btn-full`} onClick={()=>setOnline(!online)}><div className="col center"><span className="font-bold text-white">{online?'ONLINE':'OFFLINE'}</span><span className="text-xs text-white" style={{opacity:.8}}>{online?'Tap to go offline':'Tap to go online'}</span></div></button>
     <MapBox height={160}/>
     <span className="font-bold" style={{fontSize:18}}>Today</span>
     <div className="row gap-2"><StatCard label="Earnings" value="$87.50"/><StatCard label="Rides" value="5"/><StatCard label="$/hr" value="$25.00"/></div>
@@ -455,19 +506,19 @@ const App = () => {
   const riderNav = useCallback((s) => setRiderScreen(s), []);
   const driverNav = useCallback((s) => setDriverScreen(s), []);
 
-  if (mode === 'role_select') return <RoleSelect onSelect={(r)=>{setMode(r);if(r==='rider')setRiderScreen('home');else setDriverScreen('d_dashboard');}}/>;
+  if (mode === 'role_select') return <div key="role" className="screen-anim"><RoleSelect onSelect={(r)=>{setMode(r);if(r==='rider')setRiderScreen('home');else setDriverScreen('d_dashboard');}}/></div>;
 
   const RiderNavBar = () => <div className="navbar"><div className="logo-sm avatar" style={{width:32,height:32,fontSize:10}}>FR</div><div className="row gap-1">{[['Home','home'],['History','history'],['Payment','payment'],['Profile','profile']].map(([l,v])=><button key={v} className={`nav-tab ${riderScreen===v?'nav-tab-active':'nav-tab-inactive'}`} onClick={()=>riderNav(v)}>{l}</button>)}</div></div>;
   const DriverNavBar = () => <div className="navbar"><div style={{width:32,height:32,fontSize:10,borderRadius:16,background:'var(--text)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700}}>FR</div><div className="row gap-1">{[['Dashboard','d_dashboard'],['Earnings','earnings'],['Profile','d_profile']].map(([l,v])=><button key={v} className={`nav-tab ${driverScreen===v?'nav-tab-active':'nav-tab-inactive'}`} onClick={()=>driverNav(v)}>{l}</button>)}</div></div>;
 
   if (mode === 'rider') {
     const screens = {home:<RiderHome nav={riderNav}/>,request:<RideRequest nav={riderNav}/>,tracking:<RideTracking nav={riderNav}/>,complete:<RideComplete nav={riderNav}/>,history:<RiderHistory nav={riderNav}/>,payment:<RiderPayment nav={riderNav}/>,profile:<RiderProfile nav={riderNav} onSwitch={()=>{setMode('driver');setDriverScreen('d_dashboard');}}/>};
-    return <div><RiderNavBar/>{screens[riderScreen]||<RiderHome nav={riderNav}/>}</div>;
+    return <div><RiderNavBar/><div key={riderScreen} className="screen-anim">{screens[riderScreen]||<RiderHome nav={riderNav}/>}</div></div>;
   }
 
   if (mode === 'driver') {
     const screens = {d_dashboard:<DriverDashboard nav={driverNav}/>,offer:<RideOffer nav={driverNav}/>,active_ride:<ActiveRide nav={driverNav}/>,d_complete:<DriverComplete nav={driverNav}/>,earnings:<DriverEarnings nav={driverNav}/>,d_profile:<DriverProfile nav={driverNav} onSwitch={()=>{setMode('rider');setRiderScreen('home');}}/>};
-    return <div><DriverNavBar/>{screens[driverScreen]||<DriverDashboard nav={driverNav}/>}</div>;
+    return <div><DriverNavBar/><div key={driverScreen} className="screen-anim">{screens[driverScreen]||<DriverDashboard nav={driverNav}/>}</div></div>;
   }
 };
 
