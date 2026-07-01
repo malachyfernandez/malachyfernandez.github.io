@@ -241,7 +241,7 @@ const projectShowcaseConfig = {
             {
               text: "GitHub",
               icon: "fab fa-github",
-              link: "https://github.com/malachyfernandez/Paper/tree/main/app/components/receipts",
+              link: "https://github.com/malachyfernandez/ReceiptVault",
               target: "_blank"
             },
             {
@@ -262,7 +262,7 @@ const projectShowcaseConfig = {
             {
               text: "GitHub",
               icon: "fab fa-github",
-              link: "https://github.com/malachyfernandez/Paper/tree/main/app/components/fairride",
+              link: "https://github.com/malachyfernandez/FairRide",
               target: "_blank"
             },
             {
