@@ -228,6 +228,54 @@ const projectShowcaseConfig = {
       ]
     },
     {
+      title: "Full-Stack React Native Apps",
+      subtext: "Cross-platform apps built on a shared real-time userVariables system (Expo + Convex + Clerk). Fair, transparent products with native-feeling, animated UIs.",
+      projects: [
+        {
+          name: "ReceiptVault",
+          type: "React Native App",
+          description: "Snap a receipt and AI auto-fills the details. Organize spend into trips/groups with live multi-currency conversion—built for travel. Bring your own OpenRouter key.",
+          icon: "fas fa-receipt",
+          backgroundImage: "cover-images/receiptvault.png",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/Paper/tree/main/app/components/receipts",
+              target: "_blank"
+            },
+            {
+              text: "Try It Live",
+              icon: "fas fa-external-link-alt",
+              link: "https://malachyfernandez.github.io/ReceiptVault/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
+          name: "FairRide",
+          type: "React Native App",
+          description: "A budget ride-share that keeps pricing honest: 8% platform fee, 92% to drivers, demand capped at 1.3×—all the features of Uber without the markup.",
+          icon: "fas fa-car-side",
+          backgroundImage: "cover-images/fairride.png",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/Paper/tree/main/app/components/fairride",
+              target: "_blank"
+            },
+            {
+              text: "Try It Live",
+              icon: "fas fa-external-link-alt",
+              link: "https://malachyfernandez.github.io/FairRide/",
+              target: "_blank"
+            }
+          ]
+        }
+      ]
+    },
+    {
       title: "Chrome Extensions",
       subtext: "Browser extensions I've built to solve everyday problems and enhance productivity.",
       projects: [

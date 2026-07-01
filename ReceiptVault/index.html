@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReceiptVault — Snap. Scan. Convert.</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+    :root{
+      --bg:#f3ede1; --surface:#fbf8f2; --surface-2:#f6f0e6;
+      --ink:#1d1c18; --sub:#6f6a5f; --faint:#9a9486;
+      --green:#1f4d2e; --green-2:#2f6b41; --green-soft:rgba(31,77,46,.08);
+      --gold:#c79a3a; --gold-soft:rgba(199,154,58,.14);
+      --border:#e4dccc; --border-2:#d6ccb8;
+      --red:#b3402f; --blue:#23527a;
+      --shadow:0 18px 40px -22px rgba(40,32,12,.45);
+      --shadow-sm:0 8px 22px -14px rgba(40,32,12,.4);
+    }
+    body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--ink);
+      background-image:radial-gradient(1200px 500px at 100% -10%, rgba(199,154,58,.12), transparent 60%),radial-gradient(900px 500px at -10% 110%, rgba(31,77,46,.10), transparent 55%);
+      background-attachment:fixed;min-height:100vh;}
+    .serif{font-family:'Fraunces',Georgia,serif;}
+    button{font-family:inherit;cursor:pointer;}
+    input,textarea,select{font-family:inherit;}
+
+    /* ---------- App shell (responsive) ---------- */
+    #root{min-height:100vh;}
+    .shell{display:flex;min-height:100vh;max-width:1180px;margin:0 auto;}
+    .sidebar{width:248px;flex-shrink:0;padding:26px 18px;display:flex;flex-direction:column;gap:8px;
+      border-right:1px solid var(--border);position:sticky;top:0;height:100vh;}
+    .brand{display:flex;align-items:center;gap:12px;padding:0 8px 14px;}
+    .brand-badge{width:42px;height:42px;border-radius:13px;background:linear-gradient(150deg,var(--green),#143821);
+      display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:var(--shadow-sm);position:relative;}
+    .brand-badge:after{content:"✦";position:absolute;top:-5px;right:-5px;font-size:13px;color:var(--gold);}
+    .brand-name{font-size:21px;font-weight:600;letter-spacing:-.01em;}
+    .brand-tag{font-size:10.5px;color:var(--faint);letter-spacing:.16em;text-transform:uppercase;margin-top:1px;}
+    .nav-item{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:13px;border:none;background:transparent;
+      font-size:14.5px;font-weight:500;color:var(--sub);width:100%;text-align:left;transition:.18s;}
+    .nav-item:hover{background:var(--green-soft);color:var(--green);}
+    .nav-item.active{background:linear-gradient(150deg,var(--green),#163a23);color:#fff;box-shadow:var(--shadow-sm);}
+    .nav-ico{font-size:17px;width:20px;text-align:center;}
+    .sidebar-foot{margin-top:auto;font-size:11px;color:var(--faint);padding:0 10px;line-height:1.6;}
+
+    .main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+    .topbar{display:none;}
+    .scroll{flex:1;overflow-y:auto;scroll-behavior:smooth;}
+    .page{max-width:760px;margin:0 auto;padding:30px 26px 80px;display:flex;flex-direction:column;gap:20px;}
+
+    /* ---------- mobile ---------- */
+    @media (max-width:760px){
+      .shell{display:block;}
+      .sidebar{display:none;}
+      .main{height:100vh;}
+      .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
+        background:rgba(251,248,242,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;}
+      .page{padding:18px 15px 110px;gap:16px;}
+      .tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(251,248,242,.92);
+        backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:8px 10px calc(8px + env(safe-area-inset-bottom));z-index:30;}
+      .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;
+        font-size:10.5px;font-weight:600;color:var(--faint);padding:5px;border-radius:12px;}
+      .tab.active{color:var(--green);}
+      .tab.active .tab-ico{transform:translateY(-1px) scale(1.12);}
+      .tab-ico{font-size:19px;transition:.2s;}
+      .grid-2{grid-template-columns:1fr !important;}
+    }
+    @media (min-width:761px){ .tabbar{display:none;} }
+
+    /* ---------- primitives ---------- */
+    .h1{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1;}
+    .h2{font-size:18px;font-weight:600;letter-spacing:-.01em;}
+    .sub{color:var(--sub);font-size:13.5px;line-height:1.5;}
+    .faint{color:var(--faint);}
+    .xs{font-size:11.5px;} .sm{font-size:13px;} .md{font-size:14.5px;}
+    .b{font-weight:600;} .bb{font-weight:700;}
+    .row{display:flex;flex-direction:row;} .col{display:flex;flex-direction:column;}
+    .ac{align-items:center;} .jb{justify-content:space-between;} .jc{justify-content:center;}
+    .g1{gap:4px;}.g2{gap:8px;}.g3{gap:12px;}.g4{gap:16px;}.g5{gap:20px;}
+    .wrap{flex-wrap:wrap;}.f1{flex:1;}.w{width:100%;}.tr{text-align:right;}.tc{text-align:center;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow);}
+    .card-tight{padding:15px;border-radius:16px;}
+    .glass{background:rgba(251,248,242,.7);backdrop-filter:blur(12px);}
+    .divider{height:1px;background:var(--border);width:100%;}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border-2);background:var(--surface);
+      border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:500;transition:.16s;}
+    .chip.sel{border-color:var(--green);background:var(--green-soft);color:var(--green);font-weight:600;}
+    .pill-gold{background:var(--gold-soft);color:#8a6a1f;border:1px solid rgba(199,154,58,.4);border-radius:999px;
+      padding:5px 12px;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:13px 20px;
+      font-size:14.5px;font-weight:600;border:1px solid var(--border-2);background:var(--surface);color:var(--ink);
+      transition:transform .12s cubic-bezier(.2,.8,.2,1),box-shadow .2s,opacity .2s,background .2s;}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);}
+    .btn:active{transform:translateY(0) scale(.97);}
+    .btn-green{background:linear-gradient(140deg,var(--green-2),var(--green));color:#fff;border-color:transparent;box-shadow:0 12px 24px -14px rgba(31,77,46,.9);}
+    .btn-gold{background:linear-gradient(135deg,#e0b855,#c79a3a);color:#3a2c08;border-color:transparent;box-shadow:0 12px 26px -12px rgba(199,154,58,.85);}
+    .btn-ghost{background:transparent;}
+    .btn-red{background:transparent;color:var(--red);border-color:rgba(179,64,47,.5);}
+    .btn-full{width:100%;} .btn-sm{padding:8px 14px;font-size:12.5px;border-radius:11px;}
+    .btn-lg{padding:15px 22px;font-size:15.5px;}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+    .ico-btn{width:42px;height:42px;padding:0;border-radius:13px;flex-shrink:0;}
+
+    .input{border:1px solid var(--border-2);border-radius:13px;background:var(--surface);padding:12px 14px;font-size:14.5px;width:100%;
+      outline:none;transition:.16s;color:var(--ink);}
+    .input:focus{border-color:var(--green);box-shadow:0 0 0 4px var(--green-soft);}
+    .label{font-size:12.5px;font-weight:600;color:var(--sub);margin-bottom:6px;letter-spacing:.01em;}
+
+    .stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:15px;text-align:center;box-shadow:var(--shadow-sm);}
+    .stat-v{font-size:21px;font-weight:700;letter-spacing:-.02em;}
+    .stat-l{font-size:11px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+
+    .group-card{position:relative;overflow:hidden;border-radius:20px;padding:18px;cursor:pointer;color:#fff;
+      box-shadow:var(--shadow);transition:transform .16s cubic-bezier(.2,.8,.2,1),box-shadow .2s;}
+    .group-card:hover{transform:translateY(-3px);box-shadow:0 24px 46px -20px rgba(40,32,12,.55);}
+    .group-card:active{transform:translateY(-1px) scale(.99);}
+    .group-emoji{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;
+      background:rgba(255,255,255,.22);backdrop-filter:blur(4px);}
+    .group-glow{position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.16);}
+
+    .receipt-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:13px;cursor:pointer;
+      transition:transform .14s,box-shadow .2s,border-color .2s;}
+    .receipt-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--border-2);}
+    .thumb{width:52px;height:52px;border-radius:12px;object-fit:cover;flex-shrink:0;}
+    .thumb-ph{width:52px;height:52px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+
+    .cur-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;-ms-overflow-style:none;scrollbar-width:none;}
+    .cur-scroll::-webkit-scrollbar{display:none;}
+    .cur-chip{border:1px solid var(--border-2);background:var(--surface);border-radius:13px;padding:9px 14px;font-size:14px;
+      white-space:nowrap;font-weight:500;transition:.16s;}
+    .cur-chip.sel{border-color:var(--green);background:var(--green-soft);color:var(--green);font-weight:700;}
+
+    .bar-track{height:9px;width:100%;background:var(--surface-2);border-radius:999px;overflow:hidden;}
+    .bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green-2),var(--green));transition:width .9s cubic-bezier(.2,.8,.2,1);}
+
+    /* ---------- photo / AI scan ---------- */
+    .photo-zone{position:relative;border-radius:18px;overflow:hidden;}
+    .photo-drop{height:200px;border:2px dashed var(--border-2);background:var(--surface-2);border-radius:18px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.18s;}
+    .photo-drop:hover{border-color:var(--green);background:var(--green-soft);}
+    .photo-img{width:100%;max-height:340px;object-fit:cover;display:block;border-radius:18px;}
+    .detail-img{width:100%;max-height:300px;object-fit:cover;border-radius:18px;}
+
+    .scan-overlay{position:absolute;inset:0;background:rgba(14,28,18,.62);backdrop-filter:blur(2px);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;border-radius:18px;overflow:hidden;}
+    .scan-line{position:absolute;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,transparent,#7ff0a8,#e8c66a,transparent);
+      box-shadow:0 0 22px 6px rgba(127,240,168,.55);animation:scanmove 1.9s ease-in-out infinite;}
+    @keyframes scanmove{0%{top:6%}50%{top:94%}100%{top:6%}}
+    .scan-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(127,240,168,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(127,240,168,.10) 1px,transparent 1px);background-size:26px 26px;animation:gridpulse 2.4s ease-in-out infinite;}
+    @keyframes gridpulse{0%,100%{opacity:.25}50%{opacity:.55}}
+    .scan-ring{width:54px;height:54px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#7ff0a8;border-right-color:#e8c66a;animation:spin .9s linear infinite;z-index:2;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .scan-status{font-weight:600;font-size:14.5px;z-index:2;letter-spacing:.01em;}
+    .scan-sub{font-size:11.5px;opacity:.8;z-index:2;}
+    .dots:after{content:"";animation:dots 1.4s steps(4,end) infinite;}
+    @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}100%{content:""}}
+
+    .ai-cta{position:relative;overflow:hidden;}
+    .ai-cta:before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:sheen 3.2s ease-in-out infinite;}
+    @keyframes sheen{0%{left:-60%}55%{left:140%}100%{left:140%}}
+
+    .filled-flash{animation:flash 1.1s ease;}
+    @keyframes flash{0%{background:var(--gold-soft);box-shadow:0 0 0 4px var(--gold-soft);}100%{background:var(--surface);box-shadow:none;}}
+
+    /* entrance */
+    @keyframes riseIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+    .rise{animation:riseIn .5s cubic-bezier(.2,.8,.2,1) both;}
+    @keyframes pageIn{from{opacity:0;transform:translateY(8px) scale(.995);}to{opacity:1;transform:none;}}
+    .page-anim{animation:pageIn .34s cubic-bezier(.2,.8,.2,1);}
+
+    /* toast */
+    .toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center;}
+    .toast{background:linear-gradient(140deg,var(--green-2),var(--green));color:#fff;padding:12px 20px;border-radius:14px;
+      font-size:13.5px;font-weight:600;box-shadow:var(--shadow);animation:toastIn .4s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;gap:9px;}
+    @keyframes toastIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+
+    /* modal */
+    .modal-bg{position:fixed;inset:0;background:rgba(20,16,8,.5);backdrop-filter:blur(4px);z-index:60;
+      display:flex;align-items:center;justify-content:center;padding:20px;animation:pageIn .25s;}
+    .modal{background:var(--surface);border-radius:22px;padding:24px;max-width:420px;width:100%;box-shadow:var(--shadow);animation:riseIn .35s both;}
+    @media (max-width:760px){.toast-wrap{bottom:90px;}}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script id="app-source" type="text/plain">
+const { useState, useMemo, useEffect, useRef } = React;
+const h = React.createElement;
+
+/* ===================== model ===================== */
+const CURRENCIES = [
+  { code:'USD', symbol:'$', name:'US Dollar' },
+  { code:'JPY', symbol:'¥', name:'Japanese Yen' },
+  { code:'EUR', symbol:'€', name:'Euro' },
+  { code:'GBP', symbol:'£', name:'British Pound' },
+  { code:'KRW', symbol:'₩', name:'South Korean Won' },
+  { code:'THB', symbol:'฿', name:'Thai Baht' },
+];
+const CAT = {
+  food:{label:'Food & Dining', icon:'🍜'}, transport:{label:'Transport', icon:'🚆'},
+  lodging:{label:'Lodging', icon:'🏨'}, shopping:{label:'Shopping', icon:'🛍️'},
+  entertainment:{label:'Entertainment', icon:'🎬'}, groceries:{label:'Groceries', icon:'🛒'},
+  health:{label:'Health', icon:'💊'}, business:{label:'Business', icon:'💼'}, other:{label:'Other', icon:'📄'},
+};
+const CAT_KEYS = Object.keys(CAT);
+function curInfo(code){ for(let i=0;i<CURRENCIES.length;i++){ if(CURRENCIES[i].code===code) return CURRENCIES[i]; } return {code:code,symbol:code,name:code}; }
+function noDec(c){ return c==='JPY'||c==='KRW'; }
+function fmt(a,c){ const s=curInfo(c).symbol; const v=noDec(c)?Math.round(a).toLocaleString('en-US'):a.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); return s+v; }
+function fmtPlain(a,c){ return noDec(c)?Math.round(a).toLocaleString('en-US'):a.toFixed(2); }
+function toHome(a,from,home,rates){ if(from===home) return a; const r=rates[from]; if(!r||r<=0) return a; return a/r; }
+
+/* ===================== seed ===================== */
+const SEED_GROUPS = [
+  { id:'g1', name:'Japan 2026', description:'Tokyo + Kyoto trip', defaultCurrency:'JPY', color:'#b91c1c', grad:'linear-gradient(140deg,#d4493a,#8f1f17)', emoji:'🗾', createdAt:Date.now()-700000000 },
+  { id:'g2', name:'Work Expenses', description:'Reimbursable', defaultCurrency:'USD', color:'#1d4ed8', grad:'linear-gradient(140deg,#3066d6,#15347e)', emoji:'💼', createdAt:Date.now()-500000000 },
+  { id:'g3', name:'Groceries', description:'Monthly', defaultCurrency:'USD', color:'#2d5a2d', grad:'linear-gradient(140deg,#2f6b41,#163a23)', emoji:'🛒', createdAt:Date.now()-300000000 },
+];
+const SEED_RECEIPTS = [
+  { id:'r1', groupId:'g1', merchant:'Ichiran Ramen', purpose:'Lunch in Shibuya', category:'food', amount:1980, currency:'JPY', notes:'Tonkotsu, extra egg', purchaseDate:'2026-05-12', createdAt:Date.now()-690000000 },
+  { id:'r2', groupId:'g1', merchant:'JR East', purpose:'Shinkansen Tokyo→Kyoto', category:'transport', amount:13320, currency:'JPY', notes:'Reserved seat', purchaseDate:'2026-05-13', createdAt:Date.now()-680000000 },
+  { id:'r3', groupId:'g1', merchant:'Hotel Granvia Kyoto', purpose:'2 nights', category:'lodging', amount:42000, currency:'JPY', notes:'', purchaseDate:'2026-05-13', createdAt:Date.now()-679000000 },
+  { id:'r4', groupId:'g1', merchant:'Don Quijote', purpose:'Souvenirs & snacks', category:'shopping', amount:6480, currency:'JPY', notes:'Kit-Kats', purchaseDate:'2026-05-14', createdAt:Date.now()-670000000 },
+  { id:'r5', groupId:'g2', merchant:'AWS', purpose:'Cloud hosting', category:'business', amount:142.30, currency:'USD', notes:'May invoice', purchaseDate:'2026-05-01', createdAt:Date.now()-500000000 },
+  { id:'r6', groupId:'g2', merchant:'Delta Airlines', purpose:'Client visit flight', category:'transport', amount:318.40, currency:'USD', notes:'', purchaseDate:'2026-05-04', createdAt:Date.now()-490000000 },
+  { id:'r7', groupId:'g3', merchant:'Whole Foods', purpose:'Weekly shop', category:'groceries', amount:86.12, currency:'USD', notes:'', purchaseDate:'2026-05-18', createdAt:Date.now()-300000000 },
+  { id:'r8', groupId:'g3', merchant:"Trader Joe's", purpose:'Snacks', category:'groceries', amount:34.55, currency:'USD', notes:'', purchaseDate:'2026-05-20', createdAt:Date.now()-280000000 },
+];
+const SEED_SETTINGS = { homeCurrency:'USD', exchangeRates:{ USD:1, JPY:157.2, EUR:0.92, GBP:0.79, KRW:1370, THB:36.5 } };
+const GROUP_GRADS = ['linear-gradient(140deg,#2f6b41,#163a23)','linear-gradient(140deg,#d4493a,#8f1f17)','linear-gradient(140deg,#3066d6,#15347e)','linear-gradient(140deg,#b8862c,#7a5613)','linear-gradient(140deg,#7c3aed,#4a1e95)','linear-gradient(140deg,#0f766e,#0a4742)'];
+const GROUP_EMOJIS = ['🗾','🏝️','💼','🏠','🎒','🍣','🚗','🎁'];
+let idc=100; function newId(p){ idc+=1; return p+idc; }
+
+const DEMO_RECEIPT_IMG = './demo-receipt.jpg';
+/* the AI "answer" for the bundled demo receipt */
+const DEMO_AI_RESULT = {
+  merchant:'Ichiran Ramen', amount:1980, currency:'JPY', category:'food',
+  purchaseDate:'2026-05-12', purpose:'Tonkotsu ramen lunch in Shibuya',
+  notes:'Tonkotsu Ramen, Extra Chashu, Hanjuku Egg, Gyoza (5pc), Green Tea',
+};
+
+/* ===================== AI extraction (client-side OpenRouter) ===================== */
+const SCAN_PROMPT = 'You are a receipt parser. Read this receipt image and return ONLY a compact JSON object with keys: merchant (string), amount (number, the grand total), currency (ISO 4217 code like USD/JPY/EUR), category (one of food, transport, lodging, shopping, entertainment, groceries, health, business, other), purchaseDate (YYYY-MM-DD), purpose (short human description), notes (key line items). No markdown, no prose, JSON only.';
+
+function extractJson(text){
+  if(!text) return null;
+  let t=text.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+  const s=t.indexOf('{'), e=t.lastIndexOf('}');
+  if(s>=0&&e>s) t=t.slice(s,e+1);
+  try{ return JSON.parse(t); }catch(err){ return null; }
+}
+
+/* Real call — used when a key is provided. Returns parsed fields. */
+async function openRouterScan(imageDataUrl, apiKey, model){
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions',{
+    method:'POST',
+    headers:{ 'Authorization':'Bearer '+apiKey, 'Content-Type':'application/json' },
+    body:JSON.stringify({
+      model: model || 'google/gemini-2.0-flash-001',
+      messages:[{ role:'user', content:[
+        { type:'text', text:SCAN_PROMPT },
+        { type:'image_url', image_url:{ url:imageDataUrl } },
+      ]}],
+    }),
+  });
+  if(!res.ok){ const t=await res.text(); throw new Error('OpenRouter '+res.status+': '+t.slice(0,160)); }
+  const data = await res.json();
+  const content = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+  const parsed = extractJson(content);
+  if(!parsed) throw new Error('Could not parse model output');
+  return parsed;
+}
+
+/* Demo simulation — deliberate delay so the scanning animation is visible. */
+function demoScan(){ return new Promise(function(r){ setTimeout(function(){ r(DEMO_AI_RESULT); }, 2900); }); }
+
+/* ===================== small UI ===================== */
+function Stat(p){ return h('div',{className:'stat rise',style:p.style},
+  h('div',{className:'stat-v'},p.value), h('div',{className:'stat-l'},p.label)); }
+function Bar(p){ const pct=p.max>0?Math.max(.05,p.amount/p.max):0;
+  return h('div',{className:'col g1 w'},
+    h('div',{className:'row w jb ac'}, h('span',{className:'sm'},(p.icon?p.icon+' ':'')+p.label), h('span',{className:'sm b'},fmt(p.amount,p.home))),
+    h('div',{className:'bar-track'}, h('div',{className:'bar-fill',style:{width:(pct*100)+'%',background:p.color||undefined}}))); }
+function CurrencyPicker(p){ return h('div',{className:'cur-scroll'},
+  CURRENCIES.map(function(c){ const sel=c.code===p.selected;
+    return h('button',{key:c.code,className:'cur-chip'+(sel?' sel':''),onClick:function(){p.onSelect(c.code);}}, c.symbol+' '+c.code); })); }
+
+/* count-up hook for hero numbers */
+function useCountUp(target,dur){ const [v,setV]=useState(0); const ref=useRef();
+  useEffect(function(){ const start=performance.now(); const from=0;
+    function tick(now){ const t=Math.min(1,(now-start)/(dur||800)); const e=1-Math.pow(1-t,3); setV(from+(target-from)*e); if(t<1) ref.current=requestAnimationFrame(tick); }
+    ref.current=requestAnimationFrame(tick); return function(){ cancelAnimationFrame(ref.current); }; },[target]); return v; }
+
+/* ===================== App ===================== */
+function App(){
+  const [groups,setGroups]=useState(SEED_GROUPS);
+  const [receipts,setReceipts]=useState(SEED_RECEIPTS);
+  const [settings,setSettings]=useState(SEED_SETTINGS);
+  const [apiKey,setApiKey]=useState('');           // OpenRouter key (BYOK), empty => demo mode
+  const [screen,setScreen]=useState('groups');
+  const [activeGroup,setActiveGroup]=useState('');
+  const [activeReceipt,setActiveReceipt]=useState('');
+  const [editReceipt,setEditReceipt]=useState('');
+  const [toasts,setToasts]=useState([]);
+
+  const home=settings.homeCurrency, rates=settings.exchangeRates;
+  function toast(msg){ const id=Math.random(); setToasts(function(t){return t.concat([{id:id,msg:msg}]);});
+    setTimeout(function(){ setToasts(function(t){return t.filter(function(x){return x.id!==id;});}); },2600); }
+  function groupTotal(gid){ return receipts.filter(function(r){return r.groupId===gid;}).reduce(function(s,r){return s+toHome(r.amount,r.currency,home,rates);},0); }
+  function groupCount(gid){ return receipts.filter(function(r){return r.groupId===gid;}).length; }
+  function saveReceipt(rec){ setReceipts(function(prev){ const ex=prev.some(function(r){return r.id===rec.id;}); return ex?prev.map(function(r){return r.id===rec.id?rec:r;}):prev.concat([rec]); }); }
+  function deleteReceipt(id){ setReceipts(function(prev){return prev.filter(function(r){return r.id!==id;});}); }
+  function addGroup(g){ setGroups(function(prev){return prev.concat([g]);}); }
+
+  const nav = (screen==='groups'||screen==='group_detail'||screen==='add_receipt'||screen==='receipt_detail')?'groups':screen;
+  function go(s){ setScreen(s); }
+
+  let body;
+  if(screen==='groups') body=h(GroupsScreen,{groups:groups,home:home,rates:rates,receipts:receipts,groupTotal:groupTotal,groupCount:groupCount,addGroup:addGroup,toast:toast,open:function(id){setActiveGroup(id);go('group_detail');}});
+  else if(screen==='group_detail') body=h(GroupDetailScreen,{groupId:activeGroup,groups:groups,receipts:receipts,home:home,rates:rates,back:function(){go('groups');},openReceipt:function(id){setActiveReceipt(id);go('receipt_detail');},add:function(){setEditReceipt('');go('add_receipt');}});
+  else if(screen==='add_receipt') body=h(AddReceiptScreen,{groupId:activeGroup,groups:groups,receipts:receipts,editId:editReceipt,home:home,rates:rates,apiKey:apiKey,setApiKey:setApiKey,toast:toast,save:saveReceipt,done:function(){go(activeGroup?'group_detail':'groups');}});
+  else if(screen==='receipt_detail') body=h(ReceiptDetailScreen,{receiptId:activeReceipt,receipts:receipts,home:home,rates:rates,back:function(){go('group_detail');},edit:function(g,r){setActiveGroup(g);setEditReceipt(r);go('add_receipt');},del:function(id){deleteReceipt(id);go('group_detail');}});
+  else if(screen==='insights') body=h(InsightsScreen,{groups:groups,receipts:receipts,home:home,rates:rates});
+  else if(screen==='settings') body=h(SettingsScreen,{settings:settings,setSettings:setSettings,apiKey:apiKey,setApiKey:setApiKey,toast:toast});
+
+  const navItems=[['groups','🧾','Groups'],['insights','📊','Insights'],['settings','⚙️','Settings']];
+
+  return h('div',{className:'shell'},
+    /* sidebar (desktop) */
+    h('div',{className:'sidebar'},
+      h('div',{className:'brand'},
+        h('div',{className:'brand-badge'},'🧾'),
+        h('div',{className:'col'}, h('div',{className:'brand-name serif'},'ReceiptVault'), h('div',{className:'brand-tag'},'Snap · Scan · Convert'))),
+      navItems.map(function(n){ return h('button',{key:n[0],className:'nav-item'+(nav===n[0]?' active':''),onClick:function(){go(n[0]);}}, h('span',{className:'nav-ico'},n[1]), n[2]); }),
+      h('div',{className:'sidebar-foot'}, 'Saved per user via Paper userVariables.', h('br'), apiKey?'🔑 OpenRouter key active':'✨ AI demo mode')),
+    /* main */
+    h('div',{className:'main'},
+      h('div',{className:'topbar'},
+        h('div',{className:'row ac g2'}, h('div',{className:'brand-badge',style:{width:'34px',height:'34px',fontSize:'17px',borderRadius:'11px'}},'🧾'), h('div',{className:'brand-name serif',style:{fontSize:'18px'}},'ReceiptVault')),
+        h('div',{className:'pill-gold'}, apiKey?'🔑 Key on':'✨ AI demo')),
+      h('div',{className:'scroll'}, h('div',{className:'page page-anim',key:screen}, body)),
+      /* tabbar (mobile) */
+      h('div',{className:'tabbar'},
+        navItems.map(function(n){ return h('button',{key:n[0],className:'tab'+(nav===n[0]?' active':''),onClick:function(){go(n[0]);}}, h('span',{className:'tab-ico'},n[1]), n[2]); }))),
+    /* toasts */
+    h('div',{className:'toast-wrap'}, toasts.map(function(t){ return h('div',{key:t.id,className:'toast'}, h('span',null,'✨'), t.msg); })));
+}
+
+/* ===================== Groups ===================== */
+function GroupsScreen(p){
+  const [showCreate,setShowCreate]=useState(false);
+  const [name,setName]=useState(''),[desc,setDesc]=useState(''),[cur,setCur]=useState(p.home);
+  const grand=p.receipts.reduce(function(s,r){return s+toHome(r.amount,r.currency,p.home,p.rates);},0);
+  const grandAnim=useCountUp(grand,900);
+  function create(){ if(!name.trim())return; const i=p.groups.length;
+    p.addGroup({id:newId('g'),name:name.trim(),description:desc.trim(),defaultCurrency:cur,grad:GROUP_GRADS[i%GROUP_GRADS.length],color:'#2d5a2d',emoji:GROUP_EMOJIS[i%GROUP_EMOJIS.length],createdAt:Date.now()});
+    setName('');setDesc('');setShowCreate(false);p.toast('Group created'); }
+  return h('div',{className:'col g5'},
+    h('div',{className:'col g1 rise'},
+      h('div',{className:'h1 serif'},'Your receipts, sorted.'),
+      h('div',{className:'sub'},'Snap a receipt, let AI read it, and every total converts to '+p.home+' automatically.')),
+    h('div',{className:'grid-3 rise',style:{animationDelay:'.05s'}},
+      h(Stat,{label:'Groups',value:String(p.groups.length)}),
+      h(Stat,{label:'Receipts',value:String(p.receipts.length)}),
+      h(Stat,{label:'Total · '+p.home,value:fmt(grandAnim,p.home)})),
+    h('div',{className:'row w jb ac'}, h('div',{className:'h2'},'Groups'),
+      h('button',{className:'btn btn-green btn-sm',onClick:function(){setShowCreate(!showCreate);}}, showCreate?'Cancel':'+ New group')),
+    showCreate?h('div',{className:'card col g3 rise'},
+      h('div',{className:'b'},'Create a group'),
+      h('input',{className:'input',placeholder:'Name (e.g. Japan 2026)',value:name,onChange:function(e){setName(e.target.value);}}),
+      h('input',{className:'input',placeholder:'Description (optional)',value:desc,onChange:function(e){setDesc(e.target.value);}}),
+      h('div',{className:'label'},'Default currency'), h(CurrencyPicker,{selected:cur,onSelect:setCur}),
+      h('button',{className:'btn btn-green btn-full',onClick:create},'Create group')):null,
+    h('div',{className:'grid-2'},
+      p.groups.map(function(g,i){ return h('div',{key:g.id,className:'group-card rise',style:{background:g.grad||g.color,animationDelay:(.06*i)+'s'},onClick:function(){p.open(g.id);}},
+        h('div',{className:'group-glow'}),
+        h('div',{className:'row g3 ac',style:{position:'relative'}},
+          h('div',{className:'group-emoji'},g.emoji),
+          h('div',{className:'col f1'}, h('div',{className:'b',style:{fontSize:'16px'}},g.name), h('div',{style:{opacity:.82,fontSize:'12.5px'}}, p.groupCount(g.id)+' receipts'+(g.description?' · '+g.description:''))) ),
+        h('div',{className:'row w jb ac',style:{marginTop:'16px',position:'relative'}},
+          h('div',{className:'col'}, h('div',{style:{opacity:.78,fontSize:'11px',textTransform:'uppercase',letterSpacing:'.08em'}},'Total · '+p.home), h('div',{className:'serif',style:{fontSize:'24px',fontWeight:600}},fmt(p.groupTotal(g.id),p.home))),
+          h('div',{style:{fontSize:'20px',opacity:.7}},'→'))); })),
+    h('div',{className:'card row w jb ac',style:{background:'linear-gradient(140deg,var(--green-2),var(--green))',color:'#fff',border:'none'}},
+      h('div',{className:'col'}, h('div',{style:{opacity:.85,fontSize:'12px'}},'Everything converted to '+p.home), h('div',{className:'sm',style:{opacity:.7}},'Across all groups')),
+      h('div',{className:'serif',style:{fontSize:'26px',fontWeight:600}},fmt(grand,p.home))));
+}
+
+/* ===================== Group detail ===================== */
+function GroupDetailScreen(p){
+  let group=null; for(let i=0;i<p.groups.length;i++){ if(p.groups[i].id===p.groupId) group=p.groups[i]; }
+  const list=p.receipts.filter(function(r){return r.groupId===p.groupId;}).sort(function(a,b){return b.createdAt-a.createdAt;});
+  const total=list.reduce(function(s,r){return s+toHome(r.amount,r.currency,p.home,p.rates);},0);
+  const byCat={}; list.forEach(function(r){byCat[r.category]=(byCat[r.category]||0)+toHome(r.amount,r.currency,p.home,p.rates);});
+  const cats=Object.keys(byCat).map(function(k){return [k,byCat[k]];}).sort(function(a,b){return b[1]-a[1];});
+  const maxCat=cats.length?cats[0][1]:0;
+  return h('div',{className:'col g5'},
+    h('div',{className:'row g3 ac'},
+      h('button',{className:'btn btn-ghost ico-btn',onClick:p.back},'←'),
+      h('div',{className:'group-emoji',style:{background:group?group.grad:'#ccc',color:'#fff'}},group?group.emoji:'📁'),
+      h('div',{className:'col f1'}, h('div',{className:'h2 serif',style:{fontSize:'22px'}},group?group.name:'Group'), group&&group.description?h('div',{className:'sub'},group.description):null)),
+    h('div',{className:'grid-3'},
+      h(Stat,{label:'Receipts',value:String(list.length)}),
+      h(Stat,{label:'Total · '+p.home,value:fmtPlain(total,p.home)}),
+      h(Stat,{label:'Default',value:group?group.defaultCurrency:p.home})),
+    cats.length?h('div',{className:'card col g3'},
+      h('div',{className:'b'},'Spending by category'),
+      cats.map(function(c){return h(Bar,{key:c[0],label:CAT[c[0]].label,icon:CAT[c[0]].icon,amount:c[1],max:maxCat,home:p.home});})):null,
+    h('button',{className:'btn btn-green btn-lg btn-full',onClick:p.add},'+ Add receipt'),
+    list.length===0?h('div',{className:'col ac g2',style:{padding:'40px 0'}},h('div',{style:{fontSize:'40px'}},'🧾'),h('div',{className:'sub'},'No receipts yet.'))
+      :h('div',{className:'col g2'}, list.map(function(r,i){return h(ReceiptRow,{key:r.id,r:r,home:p.home,rates:p.rates,i:i,onClick:function(){p.openReceipt(r.id);}});})));
+}
+function ReceiptRow(p){ const r=p.r; const ha=toHome(r.amount,r.currency,p.home,p.rates); const fg=r.currency!==p.home;
+  return h('div',{className:'receipt-card rise',style:{animationDelay:(.04*p.i)+'s'},onClick:p.onClick},
+    h('div',{className:'row g3 ac w'},
+      r.image?h('img',{className:'thumb',src:r.image}):h('div',{className:'thumb-ph'},CAT[r.category].icon),
+      h('div',{className:'col f1'}, h('div',{className:'b'},r.merchant), h('div',{className:'sub sm'},r.purpose||'No purpose noted'), h('div',{className:'xs faint'},r.purchaseDate)),
+      h('div',{className:'col',style:{alignItems:'flex-end'}}, h('div',{className:'b',style:{fontSize:'15px'}},fmt(r.amount,r.currency)), fg?h('div',{className:'xs faint'},'≈ '+fmtPlain(ha,p.home)+' '+p.home):null)));
+}
+
+/* ===================== Add / edit (with AI scan) ===================== */
+function AddReceiptScreen(p){
+  let group=null; for(let i=0;i<p.groups.length;i++){ if(p.groups[i].id===p.groupId) group=p.groups[i]; }
+  let editing=null; if(p.editId){ for(let i=0;i<p.receipts.length;i++){ if(p.receipts[i].id===p.editId) editing=p.receipts[i]; } }
+  const initCur=editing?editing.currency:(group?group.defaultCurrency:p.home);
+  const [image,setImage]=useState(editing?editing.image:null);
+  const [merchant,setMerchant]=useState(editing?editing.merchant:'');
+  const [purpose,setPurpose]=useState(editing?editing.purpose:'');
+  const [amount,setAmount]=useState(editing?String(editing.amount):'');
+  const [currency,setCurrency]=useState(initCur);
+  const [category,setCategory]=useState(editing?editing.category:'food');
+  const [notes,setNotes]=useState(editing?editing.notes:'');
+  const [date,setDate]=useState(editing?editing.purchaseDate:new Date().toISOString().slice(0,10));
+  const [scanning,setScanning]=useState(false);
+  const [scanMsg,setScanMsg]=useState('');
+  const [flash,setFlash]=useState({});
+  const [showKey,setShowKey]=useState(false);
+  const [keyDraft,setKeyDraft]=useState('');
+
+  const num=parseFloat(amount)||0;
+  const homeAmt=toHome(num,currency,p.home,p.rates);
+  const showConv=currency!==p.home&&num>0;
+  const canSave=merchant.trim().length>0&&num>0;
+
+  function onFile(e){ const f=e.target.files&&e.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=function(ev){setImage(ev.target.result);}; rd.readAsDataURL(f); }
+  function useDemoPhoto(){ setImage(DEMO_RECEIPT_IMG); p.toast('Demo receipt loaded'); }
+
+  function flashField(k){ setFlash(function(s){const n=Object.assign({},s);n[k]=Math.random();return n;}); }
+  function applyResult(res){
+    /* stagger the autofill so each field visibly pops in */
+    const steps=[
+      ['merchant',function(){ if(res.merchant){setMerchant(String(res.merchant));flashField('merchant');} }],
+      ['amount',function(){ if(res.amount!=null){setAmount(String(res.amount));flashField('amount');} }],
+      ['currency',function(){ if(res.currency&&curInfo(res.currency)){setCurrency(res.currency);flashField('currency');} }],
+      ['category',function(){ if(res.category&&CAT[res.category]){setCategory(res.category);flashField('category');} }],
+      ['date',function(){ if(res.purchaseDate){setDate(res.purchaseDate);flashField('date');} }],
+      ['purpose',function(){ if(res.purpose){setPurpose(String(res.purpose));flashField('purpose');} }],
+      ['notes',function(){ if(res.notes){setNotes(String(res.notes));flashField('notes');} }],
+    ];
+    steps.forEach(function(st,i){ setTimeout(st[1], 220*i); });
+  }
+
+  async function runScan(){
+    if(!image){ p.toast('Add a photo first'); return; }
+    if(!p.apiKey){
+      /* demo mode by default; offer to add a key */
+      setScanning(true);
+      const msgs=['Uploading image','Reading receipt','Detecting merchant & total','Extracting fields'];
+      let mi=0; setScanMsg(msgs[0]); const iv=setInterval(function(){ mi=(mi+1)%msgs.length; setScanMsg(msgs[mi]); },720);
+      try{ const res=await demoScan(); clearInterval(iv); setScanning(false); applyResult(res); p.toast('Autofilled by AI'); }
+      catch(err){ clearInterval(iv); setScanning(false); p.toast('Scan failed'); }
+      return;
+    }
+    /* real client-side OpenRouter call */
+    setScanning(true); setScanMsg('Sending to OpenRouter');
+    const msgs=['Sending to OpenRouter','Model reading receipt','Extracting fields'];
+    let mi=0; const iv=setInterval(function(){ mi=(mi+1)%msgs.length; setScanMsg(msgs[mi]); },900);
+    try{
+      let dataUrl=image;
+      if(typeof dataUrl==='string'&&dataUrl.indexOf('data:')!==0){
+        /* convert relative demo path to data URL */
+        const r=await fetch(image); const b=await r.blob(); dataUrl=await new Promise(function(res){const fr=new FileReader();fr.onload=function(){res(fr.result);};fr.readAsDataURL(b);});
+      }
+      const res=await openRouterScan(dataUrl,p.apiKey); clearInterval(iv); setScanning(false); applyResult(res); p.toast('Autofilled by AI');
+    }catch(err){ clearInterval(iv); setScanning(false); p.toast('AI error — check key'); }
+  }
+
+  function save(){ if(!canSave)return; const id=editing?editing.id:newId('r');
+    p.save({id:id,groupId:p.groupId,merchant:merchant.trim(),purpose:purpose.trim(),category:category,amount:num,currency:currency,image:image,notes:notes.trim(),purchaseDate:date,createdAt:editing?editing.createdAt:Date.now(),updatedAt:Date.now()});
+    p.toast(editing?'Receipt updated':'Receipt saved'); p.done(); }
+
+  function fStyle(k){ return flash[k]?{}:{}; }
+  function fClass(k){ return flash[k]?' filled-flash':''; }
+
+  return h('div',{className:'col g4'},
+    h('div',{className:'row g3 ac'}, h('button',{className:'btn btn-ghost ico-btn',onClick:p.done},'←'), h('div',{className:'h2 serif',style:{fontSize:'22px'}},editing?'Edit receipt':'Add receipt')),
+
+    /* photo + scan overlay */
+    h('div',{className:'photo-zone'+fClass('image'),key:'img'},
+      image?h('img',{className:'photo-img',src:image}):h('label',{htmlFor:'photo-input'},h('div',{className:'photo-drop'},
+        h('div',{style:{fontSize:'34px'}},'📷'), h('div',{className:'b'},'Add receipt photo'), h('div',{className:'xs faint'},'Tap to choose from your library'))),
+      scanning?h('div',{className:'scan-overlay'},
+        h('div',{className:'scan-grid'}), h('div',{className:'scan-line'}),
+        h('div',{className:'scan-ring'}),
+        h('div',{className:'scan-status'}, h('span',null,scanMsg), h('span',{className:'dots'})),
+        h('div',{className:'scan-sub'}, p.apiKey?'via OpenRouter · on-device':'AI demo · simulated response')):null),
+    h('input',{id:'photo-input',type:'file',accept:'image/*',style:{display:'none'},onChange:onFile}),
+
+    /* AI action row */
+    h('div',{className:'row g2 w wrap'},
+      h('button',{className:'btn btn-gold f1 ai-cta',disabled:scanning||!image,onClick:runScan}, scanning?'Scanning…':'✨ Scan with AI'),
+      !image?h('button',{className:'btn btn-ghost',onClick:useDemoPhoto},'Use demo receipt'):h('label',{className:'btn btn-ghost',htmlFor:'photo-input'},'Replace'),
+      h('button',{className:'btn btn-ghost btn-sm',onClick:function(){setKeyDraft(p.apiKey);setShowKey(true);}}, p.apiKey?'🔑 Key':'🔑 Add key')),
+    h('div',{className:'pill-gold'}, p.apiKey?'Using your OpenRouter key — request runs in your browser':'AI demo mode — add a key to scan real photos'),
+
+    /* fields */
+    h('div',{className:'col g1'+fClass('merchant')}, h('div',{className:'label'},'Merchant'),
+      h('input',{className:'input',placeholder:'e.g. Ichiran Ramen',value:merchant,onChange:function(e){setMerchant(e.target.value);}})),
+    h('div',{className:'col g1'+fClass('purpose')}, h('div',{className:'label'},'Purpose'),
+      h('input',{className:'input',placeholder:'What was this for?',value:purpose,onChange:function(e){setPurpose(e.target.value);}})),
+    h('div',{className:'grid-2'},
+      h('div',{className:'col g1'+fClass('amount')}, h('div',{className:'label'},'Amount'),
+        h('input',{className:'input',placeholder:'0.00',value:amount,onChange:function(e){setAmount(e.target.value);}})),
+      h('div',{className:'col g1'+fClass('date')}, h('div',{className:'label'},'Purchase date'),
+        h('input',{className:'input',placeholder:'YYYY-MM-DD',value:date,onChange:function(e){setDate(e.target.value);}}))),
+    h('div',{className:'col g1'+fClass('currency')}, h('div',{className:'label'},'Currency'), h(CurrencyPicker,{selected:currency,onSelect:setCurrency})),
+    showConv?h('div',{className:'card card-tight col g1',style:{background:'var(--green-soft)',borderColor:'rgba(31,77,46,.2)'}},
+      h('div',{className:'row w jb ac'}, h('span',{className:'sm'},fmt(num,currency)+' converts to'), h('span',{className:'b',style:{fontSize:'17px'}},fmt(homeAmt,p.home))),
+      h('div',{className:'xs faint'},'Rate: 1 '+p.home+' = '+(p.rates[currency]||1)+' '+currency)):null,
+    h('div',{className:'col g2'+fClass('category')}, h('div',{className:'label'},'Category'),
+      h('div',{className:'row wrap g2'}, CAT_KEYS.map(function(k){ return h('button',{key:k,className:'chip'+(category===k?' sel':''),onClick:function(){setCategory(k);}}, h('span',null,CAT[k].icon), h('span',null,CAT[k].label)); }))),
+    h('div',{className:'col g1'+fClass('notes')}, h('div',{className:'label'},'Notes'),
+      h('textarea',{className:'input',rows:2,placeholder:'Optional notes / line items',value:notes,onChange:function(e){setNotes(e.target.value);}})),
+    h('button',{className:'btn btn-lg btn-full '+(canSave?'btn-green':''),disabled:!canSave,onClick:save},editing?'Save changes':'Save receipt'),
+
+    showKey?h('div',{className:'modal-bg',onClick:function(){setShowKey(false);}},
+      h('div',{className:'modal',onClick:function(e){e.stopPropagation();}},
+        h('div',{className:'h2 serif',style:{marginBottom:'6px'}},'Bring your own AI key'),
+        h('div',{className:'sub',style:{marginBottom:'14px'}},'Paste an OpenRouter API key to scan real receipts. The request runs entirely in your browser — the key is never sent to any ReceiptVault server.'),
+        h('input',{className:'input',placeholder:'sk-or-v1-…',value:keyDraft,onChange:function(e){setKeyDraft(e.target.value);}}),
+        h('div',{className:'row g2',style:{marginTop:'14px'}},
+          h('button',{className:'btn btn-ghost f1',onClick:function(){p.setApiKey('');setShowKey(false);p.toast('Using AI demo mode');}},'Use demo mode'),
+          h('button',{className:'btn btn-green f1',onClick:function(){p.setApiKey(keyDraft.trim());setShowKey(false);p.toast(keyDraft.trim()?'Key saved':'Cleared');}},'Save key')),
+        h('div',{className:'xs faint',style:{marginTop:'12px'}},'Get a key at openrouter.ai/keys · default model google/gemini-2.0-flash-001'))):null);
+}
+
+/* ===================== Receipt detail ===================== */
+function ReceiptDetailScreen(p){
+  const [confirm,setConfirm]=useState(false);
+  let r=null; for(let i=0;i<p.receipts.length;i++){ if(p.receipts[i].id===p.receiptId) r=p.receipts[i]; }
+  if(!r) return h('div',{className:'col ac g3'},h('div',{className:'sub'},'Receipt not found.'),h('button',{className:'btn btn-ghost',onClick:p.back},'← Back'));
+  const ha=toHome(r.amount,r.currency,p.home,p.rates); const fg=r.currency!==p.home;
+  function info(l,v){ return h('div',{className:'row w jb ac'},h('span',{className:'sub sm'},l),h('span',{className:'b sm'},v)); }
+  return h('div',{className:'col g4'},
+    h('div',{className:'row w jb ac'},
+      h('div',{className:'row g3 ac f1'}, h('button',{className:'btn btn-ghost ico-btn',onClick:p.back},'←'), h('div',{className:'h2 serif',style:{fontSize:'22px'}},'Receipt')),
+      h('button',{className:'btn btn-ghost btn-sm',onClick:function(){p.edit(r.groupId,r.id);}},'Edit')),
+    r.image?h('img',{className:'detail-img',src:r.image}):h('div',{className:'photo-drop'},h('div',{style:{fontSize:'30px'}},'🧾'),h('div',{className:'sub sm'},'No photo attached')),
+    h('div',{className:'col ac g1'}, h('div',{className:'serif b',style:{fontSize:'24px'}},r.merchant),
+      h('div',{className:'serif',style:{fontSize:'32px',fontWeight:600}},fmt(r.amount,r.currency)),
+      fg?h('div',{className:'sub'},'≈ '+fmt(ha,p.home)+' ('+p.home+')'):null),
+    h('div',{className:'jc row'}, h('div',{className:'chip sel'}, h('span',null,CAT[r.category].icon), h('span',null,CAT[r.category].label))),
+    h('div',{className:'card col g2'},
+      info('Purpose',r.purpose||'—'), h('div',{className:'divider'}),
+      info('Purchase date',r.purchaseDate), h('div',{className:'divider'}),
+      info('Original amount',fmt(r.amount,r.currency)),
+      fg?h('div',{className:'divider'}):null, fg?info('Converted ('+p.home+')',fmt(ha,p.home)):null,
+      fg?h('div',{className:'divider'}):null, fg?info('Exchange rate','1 '+p.home+' = '+(p.rates[r.currency]||1)+' '+r.currency):null),
+    r.notes?h('div',{className:'card col g1'},h('div',{className:'label'},'Notes / line items'),h('div',{className:'sm'},r.notes)):null,
+    confirm?h('div',{className:'row g2 w'}, h('button',{className:'btn btn-ghost f1',onClick:function(){setConfirm(false);}},'Cancel'), h('button',{className:'btn btn-red f1',onClick:function(){p.del(r.id);}},'Confirm delete'))
+      :h('button',{className:'btn btn-red btn-full',onClick:function(){setConfirm(true);}},'Delete receipt'));
+}
+
+/* ===================== Insights ===================== */
+function InsightsScreen(p){
+  const total=p.receipts.reduce(function(s,r){return s+toHome(r.amount,r.currency,p.home,p.rates);},0);
+  const tAnim=useCountUp(total,900);
+  const byCat={},byCur={},byGroup={};
+  p.receipts.forEach(function(r){ const ha=toHome(r.amount,r.currency,p.home,p.rates); byCat[r.category]=(byCat[r.category]||0)+ha; byCur[r.currency]=(byCur[r.currency]||0)+ha; byGroup[r.groupId]=(byGroup[r.groupId]||0)+ha; });
+  function se(o){ return Object.keys(o).map(function(k){return [k,o[k]];}).sort(function(a,b){return b[1]-a[1];}); }
+  const cats=se(byCat),curs=se(byCur),grps=se(byGroup);
+  const maxCat=cats.length?cats[0][1]:0,maxGrp=grps.length?grps[0][1]:0;
+  const avg=p.receipts.length?total/p.receipts.length:0;
+  function gName(id){ for(let i=0;i<p.groups.length;i++){ if(p.groups[i].id===id) return p.groups[i].emoji+' '+p.groups[i].name; } return '—'; }
+  return h('div',{className:'col g5'},
+    h('div',{className:'col g1 rise'}, h('div',{className:'h1 serif'},'Insights'), h('div',{className:'sub'},'All amounts converted to '+p.home)),
+    h('div',{className:'grid-3 rise'},
+      h(Stat,{label:'Total · '+p.home,value:fmt(tAnim,p.home)}), h(Stat,{label:'Receipts',value:String(p.receipts.length)}), h(Stat,{label:'Avg / receipt',value:fmtPlain(avg,p.home)})),
+    h('div',{className:'card col g3'}, h('div',{className:'b'},'By category'),
+      cats.map(function(c){return h(Bar,{key:c[0],label:CAT[c[0]].label,icon:CAT[c[0]].icon,amount:c[1],max:maxCat,home:p.home});})),
+    h('div',{className:'card col g3'}, h('div',{className:'b'},'By group'),
+      grps.map(function(c){return h(Bar,{key:c[0],label:gName(c[0]),amount:c[1],max:maxGrp,home:p.home,color:'linear-gradient(90deg,#3066d6,#15347e)'});})),
+    h('div',{className:'card col g2'}, h('div',{className:'b'},'By currency spent'),
+      curs.map(function(c){return h('div',{key:c[0],className:'row w jb ac'},h('span',{className:'sm'},curInfo(c[0]).symbol+' '+c[0]),h('span',{className:'b sm'},fmt(c[1],p.home)));})));
+}
+
+/* ===================== Settings ===================== */
+function SettingsScreen(p){
+  const home=p.settings.homeCurrency, rates=p.settings.exchangeRates;
+  const [keyDraft,setKeyDraft]=useState(p.apiKey);
+  function setHome(c){ p.setSettings(Object.assign({},p.settings,{homeCurrency:c})); p.toast('Home currency: '+c); }
+  function setRate(c,v){ const n=parseFloat(v); if(isNaN(n)||n<=0)return; const nr=Object.assign({},rates); nr[c]=n; p.setSettings(Object.assign({},p.settings,{exchangeRates:nr})); }
+  return h('div',{className:'col g5'},
+    h('div',{className:'h1 serif rise'},'Settings'),
+    h('div',{className:'card col g3'},
+      h('div',{className:'b'},'🔑 AI receipt scanning'),
+      h('div',{className:'sub'},'Paste an OpenRouter key to scan real receipts. The call runs client-side from your browser; the key is stored only on your device and never hits a ReceiptVault server.'),
+      h('input',{className:'input',placeholder:'sk-or-v1-… (leave blank for demo mode)',value:keyDraft,onChange:function(e){setKeyDraft(e.target.value);}}),
+      h('div',{className:'row g2'},
+        h('button',{className:'btn btn-ghost f1',onClick:function(){setKeyDraft('');p.setApiKey('');p.toast('Demo mode');}},'Clear'),
+        h('button',{className:'btn btn-green f1',onClick:function(){p.setApiKey(keyDraft.trim());p.toast(keyDraft.trim()?'Key saved':'Demo mode');}},'Save key')),
+      h('div',{className:'pill-gold'}, p.apiKey?'🔑 Real AI scanning active':'✨ Demo mode (simulated response)')),
+    h('div',{className:'card col g3'},
+      h('div',{className:'b'},'Home currency'),
+      h('div',{className:'sub'},'All totals convert into this currency.'), h(CurrencyPicker,{selected:home,onSelect:setHome})),
+    h('div',{className:'card col g3'},
+      h('div',{className:'col'}, h('div',{className:'b'},'Exchange rates'), h('div',{className:'sub'},'Units of each currency per 1 '+home+'. Edit to update every total live.')),
+      CURRENCIES.filter(function(c){return c.code!==home;}).map(function(c){ return h('div',{key:c.code,className:'row w jb ac'},
+        h('span',{className:'b sm'},'1 '+home+' ='),
+        h('div',{className:'row g2 ac'}, h('input',{className:'input tr',style:{width:'110px'},defaultValue:String(rates[c.code]||''),onBlur:function(e){setRate(c.code,e.target.value);}}), h('span',{className:'b sm',style:{width:'42px'}},c.code))); }),
+      h('div',{className:'xs faint'},'In production these auto-refresh from an FX API; here you set them manually so conversions stay accurate offline.')),
+    h('div',{className:'card col g1',style:{background:'var(--green-soft)',borderColor:'rgba(31,77,46,.2)'}},
+      h('div',{className:'b'},'How your data is stored'),
+      h('div',{className:'sm sub'},'Every group and receipt is saved per user via Paper’s userVariables system (useUserList / useUserVariable), synced in real time and private to your account.')));
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script>
+<script>
+  var src = document.getElementById('app-source').textContent;
+  var out = Babel.transform(src, { presets: [['react', { runtime: 'classic' }]] });
+  eval(out.code);
+</script>
+</body>
+</html>
