@@ -247,7 +247,7 @@ const projectShowcaseConfig = {
             {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
-              link: "https://malachyfernandez.github.io/ReceiptVault/",
+              link: "https://receiptvault-sepia.vercel.app",
               target: "_blank"
             }
           ]
@@ -268,7 +268,7 @@ const projectShowcaseConfig = {
             {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
-              link: "https://malachyfernandez.github.io/FairRide/",
+              link: "https://fairride-six.vercel.app",
               target: "_blank"
             }
           ]
