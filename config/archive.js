@@ -14,6 +14,15 @@ const archiveConfig = {
       ]
     },
     {
+      name: "React Native Apps",
+      icon: "fas fa-mobile-alt",
+      description: "Cross-platform app demos",
+      children: [
+        { name: "ReceiptVault", description: "AI-assisted receipt and travel expense organizer", link: "ReceiptVault/index.html" },
+        { name: "FairRide", description: "Transparent, driver-first ride-share demo", link: "FairRide/index.html" }
+      ]
+    },
+    {
       name: "Text Tools",
       icon: "fas fa-font",
       description: "Work with text",

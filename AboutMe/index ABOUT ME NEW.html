@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="view-transition" content="same-origin" />
+  <title id="page-title">Loading...</title>
+  <!-- Google Fonts -->
+  <link id="google-fonts" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    :root {
+      --primary: var(--primary-color);
+      --text: var(--text-color);
+      --bg-start: var(--bg-start-color);
+      --bg-end: var(--bg-end-color);
+      --card: var(--card-color);
+      --radius: 12px;
+      --transition: 0.3s ease;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family), sans-serif;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(120deg, var(--header-start), var(--header-end));
+      color: #fff;
+    }
+    header h1 {
+      font-size: 2.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .profile-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    header .nav {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    header .nav a,
+    header .nav span {
+      margin: 0 0.5rem;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    header .nav .active { color: #fff; }
+    header .nav .dot { color: rgba(255,255,255,0.5); cursor: default; }
+
+    /* LAYOUT */
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2rem 1rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3rem;
+    }
+    @media (max-width: 800px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    /* CARD SECTIONS */
+    .section {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    .section h3 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+
+    /* WORK / ACTIVITY SPACING UTILITIES */
+    .item-title  { font-size: 1rem;  margin-bottom: 0;      line-height: 1.4; }
+    .item-date   { font-size: 0.9rem; margin-top: 0; margin-bottom: 0.3rem; color: #666; }
+    .item-desc   { font-size: 0.95rem; margin-bottom: 0.5rem; line-height: 1.55; }
+
+    /* CONTACT LINKS */
+    .sidebar .section a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+    .sidebar .section a:hover { text-decoration: underline; }
+    .sidebar .section a:last-child { margin-bottom: 0; }
+
+    /* --- NATIVE VIEW TRANSITIONS --- */
+    header {
+      view-transition-name: main-header;
+    }
+
+    .profile-photo {
+      view-transition-name: profile-photo;
+    }
+
+    #content {
+      view-transition-name: page-content;
+    }
+
+    ::view-transition-old(page-content) {
+      animation: fade-out 0.2s cubic-bezier(0.4, 0, 1, 1) both;
+    }
+
+    ::view-transition-new(page-content) {
+      animation: slide-up 0.4s cubic-bezier(0, 0, 0.2, 1) both;
+    }
+
+    @keyframes fade-out {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    </style>
+</head>
+<body>
+  <header>
+    <h1 id="site-title">Loading...</h1>
+    <div class="nav" id="navigation">
+      <!-- Navigation will be populated by JavaScript -->
+    </div>
+  </header>
+
+  <div class="container" id="content">
+    <!-- Content will be populated by JavaScript -->
+  </div>
+
+  <script src="../config/site.js"></script>
+  <script src="../config/about.js"></script>
+  <script>
+    // Apply configuration to the About Me page
+    function initializeAboutMe() {
+      // Set CSS variables from site config
+      const root = document.documentElement;
+      root.style.setProperty('--primary-color', siteConfig.colors.primary);
+      root.style.setProperty('--text-color', siteConfig.colors.text);
+      root.style.setProperty('--bg-start-color', siteConfig.colors.bgStart);
+      root.style.setProperty('--bg-end-color', siteConfig.colors.bgEnd);
+      root.style.setProperty('--card-color', siteConfig.colors.card);
+      root.style.setProperty('--header-start', siteConfig.headerGradient.start);
+      root.style.setProperty('--header-end', siteConfig.headerGradient.end);
+      root.style.setProperty('--font-family', siteConfig.site.font);
+
+      // Set page title and site title
+      document.getElementById('page-title').textContent = aboutMeConfig.title;
+      
+      // Create header content with photo
+      const siteTitleElement = document.getElementById('site-title');
+      siteTitleElement.innerHTML = '';
+      
+      // Add photo
+      const photo = document.createElement('img');
+      photo.src = '../goated photo.png';
+      photo.alt = 'Malachy Fernandez';
+      photo.className = 'profile-photo';
+      siteTitleElement.appendChild(photo);
+      
+      // Add name
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = siteConfig.site.author;
+      siteTitleElement.appendChild(nameSpan);
+
+      // Set Google Fonts
+      document.getElementById('google-fonts').href = 
+        `https://fonts.googleapis.com/css2?family=${siteConfig.site.font}:wght@400;600&display=swap`;
+
+      // Build navigation (reverse of main page)
+      const navContainer = document.getElementById('navigation');
+      siteConfig.navigation.forEach((item, index) => {
+        if (index > 0) {
+          const dot = document.createElement('span');
+          dot.className = 'dot';
+          dot.textContent = '·';
+          navContainer.appendChild(dot);
+        }
+
+        const element = document.createElement(item.link ? 'a' : 'span');
+        // Reverse active state for About Me page
+        if (!item.active) element.className = 'active';
+        if (item.link) {
+          // Adjust link to go back to main page
+          if (item.link === "index.html") {
+            element.href = "../index.html";
+          } else {
+            element.href = item.link;
+          }
+        }
+        element.textContent = item.text;
+        navContainer.appendChild(element);
+      });
+
+      // Build main content sections
+      const contentContainer = document.getElementById('content');
+      const mainColumn = document.createElement('div');
+      const sidebar = document.createElement('aside');
+      sidebar.className = 'sidebar';
+
+      // Add main sections from about config
+      aboutMeConfig.sections.forEach(section => {
+        const sectionElement = document.createElement('div');
+        sectionElement.className = 'section';
+
+        // Section title
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = section.title;
+        sectionElement.appendChild(titleElement);
+
+        // Section content
+        if (section.content) {
+          // Simple content section
+          const contentElement = document.createElement('p');
+          contentElement.textContent = section.content;
+          sectionElement.appendChild(contentElement);
+        } else if (section.items) {
+          // Items section (Work Experience, Activities)
+          section.items.forEach((item, itemIndex) => {
+            // Title
+            const titleElement = document.createElement('p');
+            titleElement.className = 'item-title';
+            if (itemIndex > 0) {
+              titleElement.style.marginTop = '1.5rem';
+            }
+            titleElement.innerHTML = `<strong>${item.title}</strong>`;
+            sectionElement.appendChild(titleElement);
+
+            // Date (if exists)
+            if (item.date) {
+              const dateElement = document.createElement('p');
+              dateElement.className = 'item-date';
+              dateElement.innerHTML = `<em>${item.date}</em>`;
+              sectionElement.appendChild(dateElement);
+            }
+
+            // Descriptions
+            item.descriptions.forEach(desc => {
+              const descElement = document.createElement('p');
+              descElement.className = 'item-desc';
+              descElement.textContent = desc;
+              sectionElement.appendChild(descElement);
+            });
+          });
+        }
+
+        mainColumn.appendChild(sectionElement);
+      });
+
+      // Add sidebar sections from about config
+      // Contact section
+      const contactSection = document.createElement('div');
+      contactSection.className = 'section';
+      const contactTitle = document.createElement('h3');
+      contactTitle.textContent = 'Contact';
+      contactSection.appendChild(contactTitle);
+
+      aboutMeConfig.sidebar.contact.forEach(contact => {
+        const link = document.createElement('a');
+        link.href = contact.link;
+        if (contact.target) {
+          link.target = contact.target;
+        }
+        
+        const icon = document.createElement('i');
+        icon.className = contact.icon;
+        link.appendChild(icon);
+        
+        link.appendChild(document.createTextNode(' ' + contact.text));
+        contactSection.appendChild(link);
+      });
+      sidebar.appendChild(contactSection);
+
+      // Education section
+      const educationSection = document.createElement('div');
+      educationSection.className = 'section';
+      const educationTitle = document.createElement('h3');
+      educationTitle.textContent = 'Education';
+      educationSection.appendChild(educationTitle);
+
+      aboutMeConfig.sidebar.education.forEach(edu => {
+        const eduElement = document.createElement('p');
+        eduElement.innerHTML = `<strong>${edu.school}</strong><br />${edu.years}`;
+        educationSection.appendChild(eduElement);
+      });
+      sidebar.appendChild(educationSection);
+
+      // Skills section
+      const skillsSection = document.createElement('div');
+      skillsSection.className = 'section';
+      const skillsTitle = document.createElement('h3');
+      skillsTitle.textContent = 'Skills';
+      skillsSection.appendChild(skillsTitle);
+
+      aboutMeConfig.sidebar.skills.forEach(skill => {
+        const skillElement = document.createElement('p');
+        skillElement.innerHTML = `<strong>${skill.category}:</strong> ${skill.items.join(', ')}`;
+        skillsSection.appendChild(skillElement);
+      });
+      sidebar.appendChild(skillsSection);
+
+      contentContainer.appendChild(mainColumn);
+      contentContainer.appendChild(sidebar);
+    }
+
+    // Initialize the page when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initializeAboutMe);
+  </script>
+</body>
+</html>
