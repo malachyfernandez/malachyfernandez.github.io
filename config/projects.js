@@ -4,7 +4,7 @@ const projectShowcaseConfig = {
   sections: [
     {
       title: "Hackathon Projects",
-      subtext: "Built in 24 hours or less at various hackathons—fast, fun, and furious.",
+      subtext: "Built in 24 hours or less at various hackathons.",
       projects: [
         {
           name: "Biasly",
