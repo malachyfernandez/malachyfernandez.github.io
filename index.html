@@ -254,7 +254,10 @@
     .project-card {
       position: relative;
       padding: 1.3rem 1.2rem 1.6rem;
-      transition: transform var(--transition);
+      transition: transform var(--transition), box-shadow var(--transition);
+      /* soft blurred square behind the torn clipping — the paper edge
+         stays crisp while the shadow blobs loosely around it */
+      box-shadow: 0 10px 26px rgba(30,25,15,0.42);
     }
     .project-card::before {
       content: '';
@@ -262,9 +265,6 @@
       inset: 0;
       background-color: var(--paper-light);
       clip-path: var(--tear);
-      /* drop-shadow follows the torn silhouette, unlike box-shadow */
-      filter: drop-shadow(0 8px 17px rgba(30,25,15,0.36));
-      transition: filter var(--transition);
       z-index: 0;
     }
     .project-card::after {
@@ -372,9 +372,7 @@
     @media (hover: hover) {
       .project-card:hover {
         transform: translateY(-5px) rotate(-0.4deg);
-      }
-      .project-card:hover::before {
-        filter: drop-shadow(0 14px 26px rgba(30,25,15,0.42));
+        box-shadow: 0 16px 34px rgba(30,25,15,0.5);
       }
       .project-card:hover .card-content {
         opacity: 0.18;
@@ -495,7 +493,8 @@
       --sr: var(--r);
       padding: 5px;
       background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
-      /* drop-shadow follows the scooped silhouette (box-shadow would be masked away) */
+      box-shadow: none; /* masked away anyway — shadow comes from drop-shadow below */
+      /* drop-shadow follows the scooped silhouette */
       filter: drop-shadow(0 12px 24px rgba(0,0,0,0.42));
       transition: transform var(--transition), filter var(--transition);
     }
@@ -985,6 +984,8 @@
     .clip {
       position: relative;
       padding: 1.5rem 1.5rem 1.7rem;
+      /* soft blurred square behind the torn clipping */
+      box-shadow: 0 10px 26px rgba(30,25,15,0.42);
     }
     .clip::before {
       content: '';
@@ -992,7 +993,6 @@
       inset: 0;
       background-color: var(--paper-light);
       clip-path: var(--tear);
-      filter: drop-shadow(0 7px 15px rgba(30,25,15,0.32));
       z-index: 0;
     }
     .clip::after {
