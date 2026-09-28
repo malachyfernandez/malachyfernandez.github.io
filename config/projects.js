@@ -320,6 +320,7 @@ const projectShowcaseConfig = {
           type: "Zen Browser Mod",
           description: "Arc-style inbox preview when hovering a pinned Gmail tab. Uses Gmail's Atom feed — no API key needed.",
           icon: "fas fa-inbox",
+          backgroundImage: "cover-images/Gmail-Peak.jpg",
           buttons: [
             {
               text: "GitHub",
