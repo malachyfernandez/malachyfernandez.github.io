@@ -122,6 +122,12 @@
     .sheet-wrap {
       position: relative;
       z-index: 2;
+      /* let clicks fall through the uncovered area to the tabs behind */
+      pointer-events: none;
+    }
+    .sheet-wrap .sheet {
+      /* clip-path limits hit-testing to the actual torn paper shape */
+      pointer-events: auto;
     }
     .sheet-shadow {
       position: absolute;
@@ -191,7 +197,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.55rem 1.15rem 0.7rem;
+      padding: 0.85rem 1.15rem 0.95rem;
       border-radius: 9px 9px 0 0;
       background: #7a7368;
       color: #ddd5c3;
@@ -933,6 +939,118 @@
       transform: rotate(180deg);
     }
 
+    /* --- VIEW SWAPPING: only the sheet's contents change --- */
+    #view-projects[hidden], #view-about[hidden] { display: none; }
+    .sheet.morphing {
+      overflow: hidden;
+      transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* --- ABOUT VIEW: resume clippings pinned to the sheet --- */
+    #view-about {
+      display: grid;
+      grid-template-columns: 1.85fr 1fr;
+      gap: 1.9rem;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      #view-about { grid-template-columns: 1fr; }
+    }
+    .about-main, .about-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.9rem;
+      min-width: 0;
+    }
+    .clip {
+      position: relative;
+      padding: 1.5rem 1.5rem 1.7rem;
+    }
+    .clip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--paper-light);
+      clip-path: var(--tear);
+      filter: drop-shadow(0 7px 15px rgba(30,25,15,0.32));
+      z-index: 0;
+    }
+    .clip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url('assets/paper-texture.jpg'),
+        radial-gradient(ellipse 150% 130% at 50% 50%, transparent 58%, rgba(74,55,30,0.42) 100%);
+      background-repeat: repeat, no-repeat;
+      background-size: 642px 642px, 100% 100%;
+      mix-blend-mode: multiply;
+      opacity: 0.38;
+      clip-path: var(--tear);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .clip > * {
+      position: relative;
+      z-index: 1;
+    }
+    .clip h3 {
+      font-family: var(--font-head);
+      font-size: 1.18rem;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 3px double rgba(26,26,26,0.4);
+    }
+    .clip p {
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+    .item-title {
+      font-family: var(--font-head);
+      font-size: 0.98rem;
+      letter-spacing: 0.5px;
+      color: var(--ink);
+      margin-bottom: 0;
+      line-height: 1.4;
+    }
+    .item-date {
+      font-style: italic;
+      font-size: 0.95rem;
+      margin-top: 0.1rem;
+      margin-bottom: 0.35rem;
+      color: var(--gold);
+    }
+    .item-desc {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+    .item-block + .item-block {
+      margin-top: 1.3rem;
+      padding-top: 1rem;
+      border-top: 1px dashed rgba(26,26,26,0.3);
+    }
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      align-items: stretch;
+    }
+    .contact-list .gb { display: block; }
+    .contact-list .gb-inner {
+      justify-content: flex-start;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .contact-list .gb-inner i { flex-shrink: 0; }
+
     /* --- SMALL DESKS --- */
     @media (max-width: 700px) {
       header { padding: 2.6rem 1rem 2rem; }
@@ -941,7 +1059,7 @@
       .moon { width: 140px; height: 140px; top: -30px; right: 4%; }
       .container { padding: 0 0.6rem; }
       .sheet { padding: 2.2rem 1.1rem 3.4rem; }
-      .ftab-in { padding: 0.5rem 0.8rem 0.65rem; font-size: 0.66rem; letter-spacing: 1px; }
+      .ftab-in { padding: 0.75rem 0.8rem 0.85rem; font-size: 0.66rem; letter-spacing: 1px; }
       .projects-section h2 { font-size: 1.15rem; }
       .highlight-body { padding: 1.3rem 1.2rem; }
     }
@@ -963,7 +1081,7 @@
     </style>
 </head>
 <body>
-  <div class="version-number" id="version">v2.1</div>
+  <div class="version-number" id="version">v2.2</div>
 
   <header>
     <div class="moon"></div>
@@ -980,7 +1098,12 @@
       <div class="sheet-shadow"></div>
       <div class="sheet" id="sheet">
         <div id="content">
-          <!-- Content will be populated by JavaScript -->
+          <div id="view-projects">
+            <!-- Project sections will be populated by JavaScript -->
+          </div>
+          <div id="view-about" hidden>
+            <!-- About Me content will be populated by JavaScript -->
+          </div>
         </div>
       </div>
     </div>
@@ -989,18 +1112,22 @@
   <script src="config/site.js"></script>
   <script src="config/projects.js"></script>
   <script src="config/archive.js"></script>
+  <script src="config/about.js"></script>
   <script>
     // Apply configuration to the page
     function initializeSite() {
       // Set page title and site title
       document.getElementById('page-title').textContent = siteConfig.site.title;
 
-      // Build navigation — manila folder tabs that hang off the sheet's top edge
+      // Build navigation — folder tabs that swap the sheet's contents in place
       const navContainer = document.getElementById('navigation');
+      const VIEW_FOR_LINK = { 'index.html': 'projects', 'AboutMe/index.html': 'about' };
       siteConfig.navigation.forEach(item => {
+        const view = VIEW_FOR_LINK[item.link] || 'projects';
         const tab = document.createElement('a');
         tab.className = 'ftab' + (item.active ? ' active' : '');
-        if (item.link) tab.href = item.link;
+        tab.dataset.view = view;
+        tab.href = '#' + view;
 
         const inner = document.createElement('span');
         inner.className = 'ftab-in';
@@ -1009,11 +1136,15 @@
         inner.appendChild(icon);
         inner.appendChild(document.createTextNode(item.text));
         tab.appendChild(inner);
+        tab.addEventListener('click', e => {
+          e.preventDefault();
+          showView(view);
+        });
         navContainer.appendChild(tab);
       });
 
       // Build project sections from project config
-      const contentContainer = document.getElementById('content');
+      const contentContainer = document.getElementById('view-projects');
       projectShowcaseConfig.sections.forEach(section => {
         const sectionElement = document.createElement('section');
         sectionElement.className = 'projects-section';
@@ -1217,6 +1348,188 @@
         contentContainer.appendChild(sectionElement);
       });
     }
+
+    // --- About Me view: same sheet, different page of the folder ---
+    let clipIndexAbout = 0;
+    const nextClip = () => CLIP_VARIANTS[clipIndexAbout++ % CLIP_VARIANTS.length];
+
+    // One gilded plate — silver for GitHub, gold otherwise
+    function gildedLink(href, icon, text, target) {
+      const isGithub = /github/i.test((href || '') + ' ' + text);
+      const link = document.createElement('a');
+      link.href = href;
+      if (target) link.target = target;
+      link.className = 'gb ' + (isGithub ? 'gb-silver' : 'gb-gold');
+      const frame = document.createElement('span');
+      frame.className = 'gb-frame';
+      const inner = document.createElement('span');
+      inner.className = 'gb-inner';
+      const i = document.createElement('i');
+      i.className = icon;
+      inner.appendChild(i);
+      inner.appendChild(document.createTextNode(text));
+      frame.appendChild(inner);
+      link.appendChild(frame);
+      return link;
+    }
+
+    function initializeAboutView() {
+      if (typeof aboutMeConfig === 'undefined') return;
+      const view = document.getElementById('view-about');
+      const mainColumn = document.createElement('div');
+      mainColumn.className = 'about-main';
+      const sidebar = document.createElement('div');
+      sidebar.className = 'about-sidebar';
+
+      aboutMeConfig.sections.forEach(section => {
+        const clip = document.createElement('div');
+        clip.className = 'clip';
+        clip.style.setProperty('--tear', nextClip());
+
+        const title = document.createElement('h3');
+        title.textContent = section.title;
+        clip.appendChild(title);
+
+        if (section.content) {
+          const p = document.createElement('p');
+          p.textContent = section.content;
+          clip.appendChild(p);
+        } else if (section.items) {
+          section.items.forEach(item => {
+            const block = document.createElement('div');
+            block.className = 'item-block';
+            const t = document.createElement('p');
+            t.className = 'item-title';
+            t.innerHTML = `<strong>${item.title}</strong>`;
+            block.appendChild(t);
+            if (item.date) {
+              const d = document.createElement('p');
+              d.className = 'item-date';
+              d.innerHTML = `<em>${item.date}</em>`;
+              block.appendChild(d);
+            }
+            item.descriptions.forEach(desc => {
+              const p = document.createElement('p');
+              p.className = 'item-desc';
+              p.textContent = desc;
+              block.appendChild(p);
+            });
+            clip.appendChild(block);
+          });
+        }
+        mainColumn.appendChild(clip);
+      });
+
+      const sidebarDefs = [
+        ['Contact', clip => {
+          const list = document.createElement('div');
+          list.className = 'contact-list';
+          aboutMeConfig.sidebar.contact.forEach(c =>
+            list.appendChild(gildedLink(c.link, c.icon, c.text, c.target)));
+          clip.appendChild(list);
+        }],
+        ['Education', clip => {
+          aboutMeConfig.sidebar.education.forEach(edu => {
+            const block = document.createElement('div');
+            block.className = 'item-block';
+            const t = document.createElement('p');
+            t.className = 'item-title';
+            t.innerHTML = `<strong>${edu.school}</strong>`;
+            const d = document.createElement('p');
+            d.className = 'item-date';
+            d.innerHTML = `<em>${edu.years}</em>`;
+            block.appendChild(t);
+            block.appendChild(d);
+            clip.appendChild(block);
+          });
+        }],
+        ['Skills', clip => {
+          aboutMeConfig.sidebar.skills.forEach(skill => {
+            const block = document.createElement('div');
+            block.className = 'item-block';
+            const t = document.createElement('p');
+            t.className = 'item-title';
+            t.innerHTML = `<strong>${skill.category}</strong>`;
+            const d = document.createElement('p');
+            d.className = 'item-desc';
+            d.textContent = skill.items.join(', ');
+            block.appendChild(t);
+            block.appendChild(d);
+            clip.appendChild(block);
+          });
+        }],
+      ];
+      sidebarDefs.forEach(([title, fill]) => {
+        const clip = document.createElement('div');
+        clip.className = 'clip';
+        clip.style.setProperty('--tear', nextClip());
+        const h = document.createElement('h3');
+        h.textContent = title;
+        clip.appendChild(h);
+        fill(clip);
+        sidebar.appendChild(clip);
+      });
+
+      view.appendChild(mainColumn);
+      view.appendChild(sidebar);
+    }
+
+    // --- View swapping: the desk stays put, only the sheet's page changes ---
+    const VIEW_TITLES = { projects: 'Project Showcase', about: 'About Me' };
+
+    function showView(view, animate = true) {
+      const projectsView = document.getElementById('view-projects');
+      const aboutView = document.getElementById('view-about');
+      const showAbout = view === 'about';
+      if (!(showAbout ? aboutView : projectsView).hidden) return; // already there
+      history.replaceState(null, '', '#' + view);
+
+      const swap = () => {
+        projectsView.hidden = showAbout;
+        aboutView.hidden = !showAbout;
+        document.querySelectorAll('.ftab').forEach(t =>
+          t.classList.toggle('active', t.dataset.view === view));
+        document.querySelector('.header-sub').textContent = VIEW_TITLES[view];
+        document.title = showAbout ? aboutMeConfig.title : siteConfig.site.title;
+        // Projects need a fresh row measurement once they're visible again
+        if (!showAbout) layoutSections();
+      };
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!animate || reduced || !document.startViewTransition) {
+        swap();
+        return;
+      }
+
+      // Morph the sheet's height around the crossfade
+      const sheet = document.getElementById('sheet');
+      const oldH = sheet.offsetHeight;
+      sheet.style.height = oldH + 'px';
+      sheet.classList.add('morphing');
+      const release = () => { sheet.style.height = ''; sheet.classList.remove('morphing'); };
+
+      document.startViewTransition(swap);
+      requestAnimationFrame(() => {
+        const newH = sheet.scrollHeight;
+        if (newH !== oldH) {
+          sheet.style.height = newH + 'px';
+          sheet.addEventListener('transitionend', function te(e) {
+            if (e.propertyName === 'height') {
+              sheet.removeEventListener('transitionend', te);
+              release();
+            }
+          });
+          setTimeout(release, 800);
+        } else {
+          release();
+        }
+      });
+    }
+
+    window.addEventListener('hashchange', () => {
+      const view = location.hash === '#about' ? 'about' : 'projects';
+      showView(view);
+    });
 
     // --- Torn paper edges: deterministic jagged clip-paths ---
     // Mostly shallow nicks with occasional deeper tears, like real ripped
@@ -1484,6 +1797,8 @@
 
     // Initialize the site immediately so View Transition can see it
     initializeSite();
+    initializeAboutView();
+    if (location.hash === '#about') showView('about', false);
 
     // Tear the big sheet — gentler on top where the folder tabs attach
     const sheet = document.getElementById('sheet');
