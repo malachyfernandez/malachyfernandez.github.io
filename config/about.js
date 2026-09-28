@@ -92,6 +92,12 @@ const aboutMeConfig = {
         text: "linkedin.com/in/malachyf",
         link: "https://linkedin.com/in/malachyf",
         target: "_blank"
+      },
+      {
+        icon: "fab fa-github",
+        text: "github.com/malachyfernandez",
+        link: "https://github.com/malachyfernandez",
+        target: "_blank"
       }
     ],
     education: [
