@@ -1811,14 +1811,27 @@
     initializeAboutView();
     if (location.hash === '#about') showView('about', false);
 
-    // Tear the big sheet — gentler on top where the folder tabs attach
+    // Tear the big sheet — gentler on top where the folder tabs attach.
+    // The polygon's edge points are % positions, so a frozen clip-path
+    // stretches gracefully when the sheet's height changes (view swaps,
+    // show-more expansion). Only regenerate when the WIDTH meaningfully
+    // changes, debounced — otherwise the tear reshuffles every frame and
+    // the edges jitter.
     const sheet = document.getElementById('sheet');
-    const setSheetTear = () => {
-      sheet.style.setProperty('--tear', buildTornClipPath(sheet.offsetWidth, sheet.offsetHeight, 7, 0.25));
+    let lastTearWidth = 0;
+    let tearTimer;
+    const setSheetTear = (force) => {
+      const w = Math.round(sheet.offsetWidth / 24) * 24;
+      if (!force && w === lastTearWidth) return;
+      lastTearWidth = w;
+      sheet.style.setProperty('--tear', buildTornClipPath(w, sheet.offsetHeight, 7, 0.25));
     };
-    setSheetTear();
+    setSheetTear(true);
     if (window.ResizeObserver) {
-      new ResizeObserver(setSheetTear).observe(sheet);
+      new ResizeObserver(() => {
+        clearTimeout(tearTimer);
+        tearTimer = setTimeout(() => setSheetTear(), 150);
+      }).observe(sheet);
     }
 
     layoutSections();
