@@ -470,10 +470,230 @@
       font-size: 0.8rem;
       opacity: 0.7;
     }
+
+    /* --- FEATURED HIGHLIGHT CARDS --- */
+    .projects {
+      grid-auto-flow: dense;
+    }
+    .projects-wrap[data-cols]:not([data-cols="1"]) .project-card.highlight {
+      grid-column: span 2;
+    }
+    .project-card.highlight {
+      padding: 0;
+      display: flex;
+      align-items: stretch;
+    }
+    .highlight-media {
+      position: relative;
+      flex: 0 0 44%;
+      min-height: 200px;
+      overflow: hidden;
+      background: linear-gradient(120deg, var(--header-start), var(--header-end));
+    }
+    .highlight-media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow: inset -14px 0 20px -14px rgba(0,0,0,0.35);
+      pointer-events: none;
+    }
+    .highlight-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1);
+    }
+    .highlight-media > i {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: rgba(255,255,255,0.9);
+    }
+    .highlight-body {
+      flex: 1;
+      min-width: 0;
+      padding: 1.6rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .highlight-top {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+    .highlight-top > i {
+      font-size: 1.9rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .highlight-body h3 {
+      font-size: 1.45rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1.15;
+    }
+    .highlight-body .type-label {
+      font-size: 0.78rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+    }
+    .highlight-body p.desc {
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .highlight-body .award {
+      font-size: 0.8rem;
+      color: #fff;
+      margin-top: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      padding: 0.4rem 0.8rem;
+      border-radius: 50px;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      align-self: flex-start;
+      display: inline-block;
+    }
+    .highlight-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.1rem;
+    }
+    .highlight-actions .btn {
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .highlight-actions .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+    }
+    @media (hover: hover) {
+      .project-card.highlight:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 14px 26px rgba(0,0,0,0.16);
+      }
+      .project-card.highlight:hover .highlight-img {
+        transform: scale(1.07);
+      }
+    }
+    /* Single-column layout: highlight becomes a taller stacked card */
+    .projects-wrap[data-cols="1"] .project-card.highlight {
+      flex-direction: column;
+    }
+    .projects-wrap[data-cols="1"] .highlight-media {
+      flex: none;
+      aspect-ratio: 16 / 8.5;
+      min-height: 170px;
+    }
+    .projects-wrap[data-cols="1"] .highlight-media::after {
+      box-shadow: inset 0 -14px 20px -14px rgba(0,0,0,0.35);
+    }
+
+    /* --- COLLAPSIBLE SECTIONS (fade + show more) --- */
+    .projects-wrap {
+      position: relative;
+      clip-path: inset(-40px);
+      transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .projects-wrap.collapsed {
+      clip-path: inset(-40px -40px 0px -40px);
+    }
+    .show-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 170px;
+      z-index: 6;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(250,252,254,0.8) 45%, #ffffff 100%);
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .projects-wrap.collapsed .show-fade {
+      opacity: 1;
+    }
+    .projects-wrap.collapsed .beyond-fold {
+      pointer-events: none;
+    }
+    .projects-wrap.just-expanded .beyond-fold {
+      animation: card-in 0.5s cubic-bezier(0, 0, 0.2, 1) backwards;
+      animation-delay: var(--d, 0ms);
+    }
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(16px); }
+    }
+    .section-toggle {
+      position: relative;
+      z-index: 7;
+      display: none;
+      text-align: center;
+      margin-top: 0.9rem;
+    }
+    .projects-wrap.collapsible + .section-toggle {
+      display: block;
+    }
+    .projects-wrap.collapsed + .section-toggle {
+      margin-top: -38px;
+    }
+    .show-more-btn {
+      font-family: var(--font-family), sans-serif;
+      background: #fff;
+      color: var(--primary);
+      border: 1px solid rgba(52,152,219,0.35);
+      padding: 0.65rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+    .show-more-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+      background: var(--accent-light);
+    }
+    .show-more-btn i {
+      font-size: 0.75rem;
+      transition: transform var(--transition);
+    }
+    .projects-wrap.expanded + .section-toggle .show-more-btn i {
+      transform: rotate(180deg);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .projects-wrap,
+      .show-fade,
+      .show-more-btn,
+      .show-more-btn i,
+      .highlight-img {
+        transition: none;
+      }
+      .projects-wrap.just-expanded .beyond-fold {
+        animation: none;
+      }
+    }
     </style>
 </head>
 <body>
-  <div class="version-number" id="version">v1.3</div>
+  <div class="version-number" id="version">v1.4</div>
   
   <header>
     <h1 id="site-title">
@@ -551,84 +771,144 @@
         const projectsGrid = document.createElement('div');
         projectsGrid.className = 'projects';
 
-        section.projects.forEach(project => {
-          const card = document.createElement('div');
-          card.className = 'project-card';
-
-          // Apply background image if specified
-          if (project.backgroundImage) {
-            card.classList.add('has-background-image');
-            
-            const bgDiv = document.createElement('div');
-            bgDiv.className = 'card-bg';
-            bgDiv.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${project.backgroundImage}')`;
-            card.appendChild(bgDiv);
-          }
-
-          // Card content
-          const cardContent = document.createElement('div');
-          cardContent.className = 'card-content';
-
-          // Icon
-          const icon = document.createElement('i');
-          icon.className = project.icon;
-          cardContent.appendChild(icon);
-
-          // Project name
-          const name = document.createElement('h3');
-          name.textContent = project.name;
-          cardContent.appendChild(name);
-
-          // Type label
-          const typeLabel = document.createElement('div');
-          typeLabel.className = 'type-label';
-          typeLabel.textContent = project.type;
-          cardContent.appendChild(typeLabel);
-
-          // Description
-          const desc = document.createElement('p');
-          desc.className = 'desc';
-          desc.textContent = project.description;
-          cardContent.appendChild(desc);
-
-          // Award (if exists)
-          if (project.award) {
-            const award = document.createElement('div');
-            award.className = 'award';
-            award.textContent = project.award;
-            cardContent.appendChild(award);
-          }
-
-          card.appendChild(cardContent);
-
-          // Card actions
-          const cardActions = document.createElement('div');
-          cardActions.className = 'card-actions';
-
+        const buildButtons = (project, container) => {
           project.buttons.forEach(button => {
             const link = document.createElement('a');
             link.href = button.link;
             link.target = button.target || '_blank';
-            
+
             const btn = document.createElement('button');
             btn.className = 'btn';
-            
+
             const icon = document.createElement('i');
             icon.className = button.icon;
             btn.appendChild(icon);
-            
+
             btn.appendChild(document.createTextNode(' ' + button.text));
             link.appendChild(btn);
-            cardActions.appendChild(link);
+            container.appendChild(link);
           });
+        };
 
-          card.appendChild(cardActions);
+        section.projects.forEach(project => {
+          const card = document.createElement('div');
+          card.className = 'project-card' + (project.highlight ? ' highlight' : '');
+
+          if (project.highlight) {
+            // Media pane — crisp cover image, not blurred
+            const media = document.createElement('div');
+            media.className = 'highlight-media';
+            if (project.backgroundImage) {
+              const img = document.createElement('div');
+              img.className = 'highlight-img';
+              img.style.backgroundImage = `url('${project.backgroundImage}')`;
+              media.appendChild(img);
+            } else {
+              const mediaIcon = document.createElement('i');
+              mediaIcon.className = project.icon;
+              media.appendChild(mediaIcon);
+            }
+            card.appendChild(media);
+
+            // Body — content with always-visible actions
+            const body = document.createElement('div');
+            body.className = 'highlight-body';
+
+            const top = document.createElement('div');
+            top.className = 'highlight-top';
+            const topIcon = document.createElement('i');
+            topIcon.className = project.icon;
+            top.appendChild(topIcon);
+            const titleWrap = document.createElement('div');
+            const name = document.createElement('h3');
+            name.textContent = project.name;
+            const typeLabel = document.createElement('div');
+            typeLabel.className = 'type-label';
+            typeLabel.textContent = project.type;
+            titleWrap.appendChild(name);
+            titleWrap.appendChild(typeLabel);
+            top.appendChild(titleWrap);
+            body.appendChild(top);
+
+            const desc = document.createElement('p');
+            desc.className = 'desc';
+            desc.textContent = project.description;
+            body.appendChild(desc);
+
+            if (project.award) {
+              const award = document.createElement('div');
+              award.className = 'award';
+              award.textContent = project.award;
+              body.appendChild(award);
+            }
+
+            const actions = document.createElement('div');
+            actions.className = 'highlight-actions';
+            buildButtons(project, actions);
+            body.appendChild(actions);
+            card.appendChild(body);
+          } else {
+            // Apply background image if specified
+            if (project.backgroundImage) {
+              card.classList.add('has-background-image');
+
+              const bgDiv = document.createElement('div');
+              bgDiv.className = 'card-bg';
+              bgDiv.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${project.backgroundImage}')`;
+              card.appendChild(bgDiv);
+            }
+
+            // Card content
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+
+            // Icon
+            const icon = document.createElement('i');
+            icon.className = project.icon;
+            cardContent.appendChild(icon);
+
+            // Project name
+            const name = document.createElement('h3');
+            name.textContent = project.name;
+            cardContent.appendChild(name);
+
+            // Type label
+            const typeLabel = document.createElement('div');
+            typeLabel.className = 'type-label';
+            typeLabel.textContent = project.type;
+            cardContent.appendChild(typeLabel);
+
+            // Description
+            const desc = document.createElement('p');
+            desc.className = 'desc';
+            desc.textContent = project.description;
+            cardContent.appendChild(desc);
+
+            // Award (if exists)
+            if (project.award) {
+              const award = document.createElement('div');
+              award.className = 'award';
+              award.textContent = project.award;
+              cardContent.appendChild(award);
+            }
+
+            card.appendChild(cardContent);
+
+            // Card actions
+            const cardActions = document.createElement('div');
+            cardActions.className = 'card-actions';
+            buildButtons(project, cardActions);
+            card.appendChild(cardActions);
+          }
+
           projectsGrid.appendChild(card);
-          
+
           // Add click listener for mobile toggle
           card.addEventListener('click', function(e) {
             // Don't toggle if clicking on a button link
             if (e.target.closest('a')) return;
+            // Highlight cards always show their buttons — nothing to toggle
+            if (this.classList.contains('highlight')) return;
             this.classList.toggle('touch-active');
             document.querySelectorAll('.project-card').forEach(c => {
               if (c !== this) c.classList.remove('touch-active');
@@ -636,9 +916,129 @@
           });
         });
 
-        sectionElement.appendChild(projectsGrid);
+        // Wrap the grid so extra rows can fade out behind a "show more" toggle
+        const wrap = document.createElement('div');
+        wrap.className = 'projects-wrap';
+        wrap.appendChild(projectsGrid);
+        const fade = document.createElement('div');
+        fade.className = 'show-fade';
+        wrap.appendChild(fade);
+        sectionElement.appendChild(wrap);
+
+        const toggle = document.createElement('div');
+        toggle.className = 'section-toggle';
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'show-more-btn';
+        const toggleLabel = document.createElement('span');
+        toggleLabel.className = 'label';
+        toggleLabel.textContent = 'Show more';
+        const toggleChevron = document.createElement('i');
+        toggleChevron.className = 'fas fa-chevron-down';
+        toggleBtn.appendChild(toggleLabel);
+        toggleBtn.appendChild(toggleChevron);
+        toggle.appendChild(toggleBtn);
+        toggleBtn.addEventListener('click', () => toggleSection(wrap, sectionElement));
+        sectionElement.appendChild(toggle);
+
         contentContainer.appendChild(sectionElement);
       });
+    }
+
+    // --- Collapsible sections: show 2 rows, fade out the rest ---
+    const PEEK_PX = 92;
+    const CARD_MIN = 360; // must match minmax() in the .projects grid CSS
+
+    function layoutSections() {
+      document.querySelectorAll('.projects-wrap').forEach(wrap => {
+        const grid = wrap.querySelector('.projects');
+        const cards = Array.from(grid.querySelectorAll('.project-card'));
+        if (!cards.length) return;
+
+        // How many columns does the grid have room for? Derived from width
+        // rather than computed tracks, since span-2 highlights can create
+        // implicit tracks and skew the count.
+        const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+        const cols = Math.max(1, Math.floor((grid.clientWidth + gap) / (CARD_MIN + gap)));
+        wrap.dataset.cols = cols;
+
+        // Order cards: on 3-col screens stagger highlights left/right so a
+        // single card sits beside each one; on narrower screens stack the
+        // highlights first so they own the first two rows.
+        const highs = cards.filter(c => c.classList.contains('highlight'));
+        const rest = cards.filter(c => !c.classList.contains('highlight'));
+        let seq;
+        if (cols >= 3 && highs.length) {
+          seq = [];
+          let ri = 0;
+          const fill = cols - 2; // singles that share a row with a highlight
+          highs.forEach((h, i) => {
+            if (i % 2 === 1) { seq.push(...rest.slice(ri, ri + fill)); ri += fill; }
+            seq.push(h);
+            if (i % 2 === 0) { seq.push(...rest.slice(ri, ri + fill)); ri += fill; }
+          });
+          seq.push(...rest.slice(ri));
+        } else {
+          seq = highs.concat(rest);
+        }
+        seq.forEach((c, i) => { c.style.order = i; });
+
+        // Measure the visual rows the cards landed on
+        const tops = [...new Set(cards.map(c => c.offsetTop))].sort((a, b) => a - b);
+        const collapsible = tops.length > 2;
+        wrap.classList.toggle('collapsible', collapsible);
+        cards.forEach(c => c.classList.remove('beyond-fold'));
+        if (!collapsible) {
+          wrap.classList.remove('collapsed', 'expanded');
+          wrap.style.maxHeight = 'none';
+          return;
+        }
+
+        const foldTop = tops[2];
+        const beyond = cards.filter(c => c.offsetTop >= foldTop - 1);
+        beyond.forEach((c, i) => {
+          c.classList.add('beyond-fold');
+          c.style.setProperty('--d', Math.min(i * 70, 350) + 'ms');
+        });
+        wrap.dataset.fold = foldTop;
+        wrap.dataset.hiddenCount = beyond.length;
+
+        // Fade covers just the gap + peeked row, never the visible cards
+        const fadeEl = wrap.querySelector('.show-fade');
+        if (fadeEl) fadeEl.style.height = (PEEK_PX + gap + 8) + 'px';
+
+        const expanded = wrap.classList.contains('expanded');
+        wrap.classList.toggle('collapsed', !expanded);
+        wrap.style.maxHeight = expanded
+          ? grid.offsetHeight + 'px'
+          : (foldTop + PEEK_PX) + 'px';
+        updateToggleLabel(wrap);
+      });
+    }
+
+    function updateToggleLabel(wrap) {
+      const label = wrap.parentElement.querySelector('.section-toggle .label');
+      if (!label) return;
+      label.textContent = wrap.classList.contains('expanded')
+        ? 'Show less'
+        : 'Show ' + (wrap.dataset.hiddenCount || '') + ' more';
+    }
+
+    function toggleSection(wrap, sectionEl) {
+      const grid = wrap.querySelector('.projects');
+      const expanded = wrap.classList.toggle('expanded');
+      wrap.classList.toggle('collapsed', !expanded);
+      if (expanded) {
+        wrap.style.maxHeight = grid.offsetHeight + 'px';
+        wrap.classList.add('just-expanded');
+        setTimeout(() => wrap.classList.remove('just-expanded'), 900);
+      } else {
+        wrap.style.maxHeight = (parseFloat(wrap.dataset.fold) + PEEK_PX) + 'px';
+        // If the fold is above the viewport, bring the section back into view
+        if (wrap.getBoundingClientRect().top < -20) {
+          sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      updateToggleLabel(wrap);
     }
 
     // Build a single archive tree node (folder if it has children, else a link)
@@ -763,7 +1163,18 @@
 
     // Initialize the site immediately so View Transition can see it
     initializeSite();
+    layoutSections();
     renderArchive();
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(layoutSections, 120);
+    });
+    window.addEventListener('load', layoutSections);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(layoutSections);
+    }
   </script>
 </body>
 </html>
