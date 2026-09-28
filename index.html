@@ -261,14 +261,19 @@
     .card-shadow {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.5);
-      clip-path: var(--tear);
       filter: blur(11px);
       transform: translateY(9px);
       opacity: 0.6;
       pointer-events: none;
       transition: transform var(--transition), filter var(--transition);
-      z-index: 0;
+      z-index: -1;
+    }
+    .card-shadow::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      clip-path: var(--tear);
     }
     .project-card::before {
       content: '';
@@ -902,11 +907,11 @@
     /* --- COLLAPSIBLE SECTIONS (fade + show more) --- */
     .projects-wrap {
       position: relative;
-      clip-path: inset(-40px);
+      clip-path: inset(-70px);
       transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .projects-wrap.collapsed {
-      clip-path: inset(-40px -40px 0px -40px);
+      clip-path: inset(-70px -70px 0px -70px);
       /* Scroll-shadow fade (WolffsPoint-style): the peeked content itself
          dissolves to transparent instead of being covered by an overlay */
       -webkit-mask-image: linear-gradient(to bottom,
