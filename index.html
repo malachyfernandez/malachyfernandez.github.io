@@ -6,7 +6,7 @@
   <title id="page-title">Loading...</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Playfair+Display:wght@700;900&family=Special+Elite&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
@@ -15,163 +15,343 @@
       navigation: auto;
     }
     :root {
-      --primary: #3498db;
-      --text: #333;
-      --bg-start: #f0f4f8;
-      --bg-end: #ffffff;
-      --card: #fff;
-      --header-start: #3498db;
-      --header-end: #8e44ad;
-      --radius: 12px;
+      --desk: #1e1e1e;
+      --paper: #a59f96;
+      --paper-light: #c9c1b2;
+      --ink: #1a1a1a;
+      --ink-soft: #38332c;
+      --muted: #6b655c;
+      --gold: #9a7a33;
+      --gold-light: #d9b458;
+      --cream: #f0e7d3;
+      --gold-od: #bf6c18;
+      --gold-ol: #ecd9ab;
+      --gold-mid: #d9b458;
+      --gold-il: #c79a2e;
+      --gold-id: #ba681e;
+      --sil-od: #595f66;
+      --sil-ol: #dde3e8;
+      --sil-mid: #aeb5bd;
+      --sil-il: #818a93;
+      --sil-id: #6f7780;
       --transition: 0.3s ease;
-      --font-family: 'Poppins';
+      --font-script: 'La Belle Aurore', cursive;
+      --font-head: 'Special Elite', 'Courier New', monospace;
+      --font-body: 'Crimson Text', Georgia, serif;
     }
     * { box-sizing: border-box; margin:0; padding:0; }
     body {
-      font-family: var(--font-family), sans-serif;
-      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
-      color: var(--text);
+      font-family: var(--font-body);
+      background-color: var(--desk);
+      /* Warm lamp glow from above + vignette — reads as a physical desk */
+      background-image:
+        radial-gradient(ellipse 90% 45% at 50% -5%, rgba(217,180,88,0.09), transparent 70%),
+        radial-gradient(ellipse 130% 100% at 50% 45%, transparent 55%, rgba(0,0,0,0.4) 100%);
+      background-attachment: fixed;
+      color: var(--ink);
       min-height: 100vh;
     }
+
+    /* --- HEADER: dark desk, blood moon, script nameplate --- */
     header {
+      position: relative;
       text-align: center;
-      padding: 3rem 1rem;
-      background: linear-gradient(120deg, var(--header-start), var(--header-end));
-      color: #fff;
+      padding: 3.4rem 1rem 2.4rem;
+      overflow: hidden;
+    }
+    .moon {
+      position: absolute;
+      top: -46px;
+      right: 12%;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 30%, #ff6a5c 0%, #b31212 52%, #6d0a0a 100%);
+      box-shadow: 0 0 90px 14px rgba(255, 70, 50, 0.22);
+      opacity: 0.85;
+      pointer-events: none;
     }
     header h1 {
-      font-size: 2.75rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      white-space: normal;
-      overflow-wrap: break-word;
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      view-transition-name: header-title;
+      gap: 1.3rem;
       width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
+      view-transition-name: header-title;
     }
     .profile-photo {
-      width: 80px;
-      height: 80px;
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid rgba(255,255,255,0.3);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      box-shadow:
+        0 0 0 2px var(--gold-id),
+        0 0 0 5px var(--gold-mid),
+        0 0 0 6px #6d4a14,
+        0 5px 14px rgba(0,0,0,0.55);
     }
-    header .nav {
-      font-size: 1rem;
+    .name-script {
+      font-family: var(--font-script);
+      font-size: 3.7rem;
+      color: var(--cream);
+      line-height: 1.05;
+      text-shadow: 0 3px 14px rgba(0,0,0,0.65), 0 0 34px rgba(217,180,88,0.18);
+    }
+    .header-sub {
+      position: relative;
+      z-index: 1;
+      margin-top: 1rem;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 5px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      color: rgba(240,231,211,0.55);
       view-transition-name: header-nav;
     }
-    header .nav a,
-    header .nav span {
-      margin: 0 0.5rem;
-      color: rgba(255,255,255,0.85);
-      text-decoration: none;
-      font-weight: 600;
+
+    /* --- THE SHEET: one long torn manila page on the desk --- */
+    .container {
+      position: relative;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 1.1rem;
     }
-    header .nav .active {
-      color: #fff;
+    .sheet-wrap {
+      position: relative;
     }
-    header .nav .dot {
-      color: rgba(255,255,255,0.5);
-      cursor: default;
+    .sheet-shadow {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.55), 0 5px 14px rgba(0,0,0,0.45);
+      pointer-events: none;
+    }
+    .sheet {
+      position: relative;
+      background-color: var(--paper);
+      clip-path: var(--tear);
+      padding: 2.8rem 2.4rem 4.2rem;
+    }
+    .sheet::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/paper-texture.jpg');
+      background-repeat: repeat;
+      background-size: 642px 642px;
+      mix-blend-mode: multiply;
+      opacity: 0.45;
+      box-shadow: inset 0 0 130px rgba(54,41,22,0.30), inset 0 0 22px rgba(54,41,22,0.16);
+      pointer-events: none;
+    }
+    .sheet > * {
+      position: relative;
+      z-index: 1;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 2rem 1rem;
+    /* --- FOLDER TABS --- */
+    .tab-row {
+      position: relative;
+      z-index: 6;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0.6rem;
+      padding: 0 1rem;
+      margin-bottom: -11px;
     }
+    .ftab {
+      display: inline-block;
+      padding: 5px 5px 0;
+      border-radius: 13px 13px 0 0;
+      background: linear-gradient(to bottom, var(--sil-ol) 20%, var(--sil-od) 80%);
+      filter: drop-shadow(0 -3px 4px rgba(0,0,0,0.35));
+      transform: translateY(5px);
+      transition: transform var(--transition), filter var(--transition);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .ftab::before {
+      content: '';
+      position: absolute;
+      top: 1px; left: 1px; right: 1px; bottom: 0;
+      border-radius: 12px 12px 0 0;
+      background: var(--sil-mid);
+    }
+    .ftab-in {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.15rem 0.7rem;
+      border-radius: 9px 9px 0 0;
+      background: #7a7368;
+      color: #ddd5c3;
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
+      transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+    }
+    .ftab-in i { font-size: 0.85rem; }
+    .ftab:hover { transform: translateY(2px); }
+    .ftab.active {
+      transform: translateY(0);
+      z-index: 7;
+    }
+    .ftab.active .ftab-in {
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: inset 0 2px 5px -3px rgba(255,255,255,0.5);
+    }
+
+    /* --- SECTION HEADINGS: typewriter title + ruled line --- */
     .projects-section {
-      margin-bottom: 3rem;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 3.4rem;
     }
+    .projects-section:last-child { margin-bottom: 0; }
     .projects-section h2 {
-      font-size: 1.5rem;
-      color: var(--primary-dark);
+      font-family: var(--font-head);
+      font-size: 1.35rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--ink);
       margin-bottom: 0.25rem;
-      font-weight: 600;
     }
     .projects-section .section-subtext {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 1rem;
+      font-style: italic;
+      font-size: 1.02rem;
+      color: var(--muted);
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.7rem;
+      border-bottom: 4px double rgba(26,26,26,0.45);
     }
+    /* --- PROJECT CLIPPINGS: torn scraps of lighter paper on the sheet --- */
     .projects {
       display: grid;
-      gap: 2rem;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      grid-auto-flow: dense;
       justify-content: center;
     }
     .project-card {
       position: relative;
-      background: var(--card);
-      padding: 2rem 1.5rem;
-      border-radius: var(--radius);
-      border-left: 5px solid var(--primary);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      overflow: hidden;
+      padding: 1.3rem 1.2rem 1.6rem;
       transition: transform var(--transition), box-shadow var(--transition);
-    }
-    /* ADD THIS: New dedicated background layer */
-    .card-bg {
-      position: absolute;
-      top: -10px; left: -10px; right: -10px; bottom: -10px; /* Negative inset prevents blurry white edges */
-      z-index: 1;
-      background-size: cover;
-      background-position: center;
-      filter: blur(3px); /* Adjust for more/less blur */
-    }
-
-    /* UPDATE THIS: Remove background properties here, we moved them to .card-bg */
-    .project-card.has-background-image .card-content {
-      color: #fff;
-      position: relative;
-      z-index: 4; /* Puts text above the ::before circle and .card-bg */
-      text-align: center;
-      transition: opacity var(--transition);
-    }
-    .project-card.has-background-image .card-content i {
-      color: var(--primary);
-    }
-    .project-card.has-background-image .card-content .type-label {
-      color: var(--primary);
-    }
-    .project-card.has-background-image .card-content p.desc {
-      color: rgba(255, 255, 255, 0.8);
-    }
-    .project-card.has-background-image .card-content .award {
-      color: #fff;
-      background: linear-gradient(135deg, #d4af37, #b8941f);
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    .project-card.has-background-image .btn {
-      background: var(--primary);
-      color: #fff;
-    }
-    .project-card.has-background-image .btn:hover {
-      background: var(--primary-dark);
+      box-shadow: 0 7px 15px rgba(30,25,15,0.32);
     }
     .project-card::before {
       content: '';
       position: absolute;
-      top: -40px; right: -40px;
-      width: 100px; height: 100px;
-      background: var(--accent-light);
-      border-radius: 50%;
-      transition: top var(--transition), right var(--transition);
-      z-index: 3;
+      inset: 0;
+      background-color: var(--paper-light);
+      clip-path: var(--tear);
+      box-shadow: inset 0 0 20px rgba(74,55,30,0.30), inset 0 0 4px rgba(74,55,30,0.28);
+      z-index: 0;
     }
-    
+    .project-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/paper-texture.jpg');
+      background-repeat: repeat;
+      background-size: 642px 642px;
+      mix-blend-mode: multiply;
+      opacity: 0.33;
+      clip-path: var(--tear);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .card-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      transition: opacity var(--transition);
+    }
+    .card-photo {
+      position: relative;
+      padding: 5px;
+      margin: 0 auto 0.95rem;
+      background: #ece4d2;
+      box-shadow: 0 2px 7px rgba(30,25,15,0.32);
+      transform: rotate(-0.6deg);
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .project-card:nth-child(even) .card-photo { transform: rotate(0.6deg); }
+    .card-photo-img {
+      height: 118px;
+      background-size: cover;
+      background-position: center;
+      filter: sepia(0.42) contrast(0.93) brightness(0.96);
+    }
+    .card-content i.card-icon {
+      font-size: 1.9rem;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+      display: inline-block;
+    }
+    .card-content h3 {
+      font-family: var(--font-head);
+      font-size: 1.16rem;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .card-content .type-label {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.55rem;
+    }
+    .card-content p.desc {
+      font-size: 1.03rem;
+      color: var(--ink-soft);
+      line-height: 1.38;
+    }
+    .card-content .award {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      color: #fff;
+      letter-spacing: 0.6px;
+      margin-top: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 50px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      box-shadow: 0 2px 7px rgba(154,122,51,0.5), inset 0 1px 1px rgba(255,255,255,0.45);
+      display: inline-block;
+    }
+    .card-actions {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      gap: 0.7rem;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity var(--transition);
+      pointer-events: none;
+      z-index: 4;
+    }
+    a { text-decoration: none; }
+
     /* --- Touch / Mobile Click Styles --- */
     .project-card.touch-active .card-content {
-      opacity: 0.2;
+      opacity: 0.18;
     }
     .project-card.touch-active .card-actions {
       opacity: 1;
@@ -181,111 +361,241 @@
     /* --- Mouse Hover Styles (Only applies to devices with a mouse) --- */
     @media (hover: hover) {
       .project-card:hover {
-        transform: translateY(-6px) rotate(1deg) scale(1.02);
-        box-shadow: 0 12px 20px rgba(0,0,0,0.15);
-      }
-      .project-card:hover::before {
-        top: -20px; right: -20px;
+        transform: translateY(-5px) rotate(-0.4deg);
+        box-shadow: 0 14px 26px rgba(30,25,15,0.42);
       }
       .project-card:hover .card-content {
-        opacity: 0.2;
-      }
-      .project-card:hover .card-content i {
-        color: #fff;
-      }
-      .project-card.has-background-image:hover .card-content i {
-        color: var(--primary);
+        opacity: 0.18;
       }
       .project-card:hover .card-actions {
         opacity: 1;
         pointer-events: auto;
       }
+      .project-card.highlight:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 34px rgba(0,0,0,0.5);
+      }
+      .project-card.highlight:hover .card-content { opacity: 1; }
+      .project-card.highlight:hover .highlight-img { transform: scale(1.06); }
     }
-    .card-content {
-      text-align: center;
-      transition: opacity var(--transition);
-    }
-    .card-content i {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: var(--primary);
-      transition: color var(--transition);
-    }
-    .card-content h3 {
-      font-size: 1.4rem;
-      margin-bottom: 0.25rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .card-content .type-label {
-      font-size: 0.8rem;
-      color: var(--primary);
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-    .card-content p.desc {
-      font-size: 0.95rem;
-      color: #555;
-    }
-    .card-content .award {
-      font-size: 0.8rem;
-      color: #fff;
-      margin-top: 0.75rem;
-      font-weight: 600;
-      white-space: nowrap;
-      background: linear-gradient(135deg, #d4af37, #b8941f);
-      padding: 0.4rem 0.8rem;
-      border-radius: 50px;
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      transition: transform var(--transition), box-shadow var(--transition);
+
+    /* --- GILDED BUTTONS: machined three-ring metal plates --- */
+    .gb {
       display: inline-block;
-    }
-    .card-content .award:hover {
-      transform: none;
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-    }
-    .card-actions {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: max-content;
-      gap: 0.5rem;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity var(--transition);
-      pointer-events: none;
-      z-index: 4; /* Keep buttons clickable and on top */
-    }
-    .btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
       cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      filter: drop-shadow(0 3px 3px rgba(0,0,0,0.4));
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .gb:hover { transform: translateY(2px); filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4)); }
+    .gb:active { transform: translateY(3px); filter: drop-shadow(0 0 1px rgba(0,0,0,0.35)); }
+    .gb-frame {
+      position: relative;
+      display: block;
+      padding: 5px;
+      border-radius: 9px;
+      background: linear-gradient(to top right, var(--rod) 45%, var(--rol) 55%);
+    }
+    .gb-frame::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 8px;
+      background: var(--rmid);
+    }
+    .gb-frame::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 6px;
+      background: linear-gradient(to top right, var(--ril) 45%, var(--rid) 55%);
+    }
+    .gb-inner {
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background var(--transition);
+      gap: 0.45rem;
+      padding: 0.48rem 0.95rem;
+      border-radius: 5px;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+      background: #26251f;
+      color: #ece4cf;
+      box-shadow: inset 0 2px 7px rgba(0,0,0,0.55), inset 0 -1px 2px rgba(255,255,255,0.07);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
     }
-    .btn:hover {
-      background: var(--primary-dark);
+    .gb-inner i { font-size: 0.85em; }
+    .gb-silver { --rod: var(--sil-od); --rol: var(--sil-ol); --rmid: var(--sil-mid); --ril: var(--sil-il); --rid: var(--sil-id); }
+    .gb-gold   { --rod: var(--gold-od); --rol: var(--gold-ol); --rmid: var(--gold-mid); --ril: var(--gold-il); --rid: var(--gold-id); }
+
+    /* --- FEATURED FRAMES: gilded picture frames, 2 columns wide --- */
+    .projects-wrap[data-cols]:not([data-cols="1"]) .project-card.highlight {
+      grid-column: span 2;
     }
-    a { text-decoration: none; }
+    .project-card.highlight {
+      padding: 6px;
+      border-radius: 12px;
+      background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+    }
+    .project-card.highlight::before {
+      inset: 1px;
+      border-radius: 11px;
+      background: var(--gold-mid);
+      background-image: none;
+      clip-path: none;
+      box-shadow: none;
+      opacity: 1;
+      mix-blend-mode: normal;
+    }
+    .project-card.highlight::after {
+      inset: 5px;
+      border-radius: 8px;
+      background: linear-gradient(to top right, var(--gold-il) 45%, var(--gold-id) 55%);
+      clip-path: none;
+      box-shadow: none;
+      opacity: 1;
+      mix-blend-mode: normal;
+    }
+    .highlight-surface {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: stretch;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--paper-light);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.28);
+      min-height: 100%;
+    }
+    .highlight-media {
+      position: relative;
+      flex: 0 0 44%;
+      min-height: 210px;
+      overflow: hidden;
+      background: linear-gradient(120deg, #3a352c, #57503f);
+    }
+    .highlight-media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow: inset -14px 0 20px -14px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+    .highlight-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1);
+    }
+    .highlight-media > i {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: rgba(240,231,211,0.85);
+    }
+    .highlight-body {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      padding: 1.6rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .highlight-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/paper-texture.jpg');
+      background-size: 642px 642px;
+      mix-blend-mode: multiply;
+      opacity: 0.33;
+      box-shadow: inset 0 0 60px rgba(54,41,22,0.22);
+      pointer-events: none;
+    }
+    .highlight-body > * { position: relative; z-index: 1; }
+    .highlight-top {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 0.55rem;
+    }
+    .highlight-top > i {
+      font-size: 1.8rem;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+    .highlight-body h3 {
+      font-family: var(--font-head);
+      font-size: 1.42rem;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1.15;
+    }
+    .highlight-body .type-label {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.2rem;
+    }
+    .highlight-body p.desc {
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .highlight-body .award {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      color: #fff;
+      letter-spacing: 0.6px;
+      margin-top: 0.9rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 50px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      box-shadow: 0 2px 7px rgba(154,122,51,0.5), inset 0 1px 1px rgba(255,255,255,0.45);
+      align-self: flex-start;
+      display: inline-block;
+    }
+    .highlight-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.1rem;
+    }
+    .projects-wrap[data-cols="1"] .project-card.highlight .highlight-surface {
+      flex-direction: column;
+    }
+    .projects-wrap[data-cols="1"] .highlight-media {
+      flex: none;
+      aspect-ratio: 16 / 8.5;
+      min-height: 170px;
+    }
+    .projects-wrap[data-cols="1"] .highlight-media::after {
+      box-shadow: inset 0 -14px 20px -14px rgba(0,0,0,0.5);
+    }
     
     .version-number {
       position: fixed;
       top: 10px;
-      right: 10px;
+      right: 12px;
       font-size: 10px;
-      color: rgba(255,255,255,0.5);
+      font-family: var(--font-head);
+      color: rgba(240,231,211,0.4);
       z-index: 1000;
     }
 
@@ -322,34 +632,12 @@
     /* --- ARCHIVE --- */
     .archive-footer {
       text-align: center;
-      padding: 1rem 1rem 4rem;
-    }
-    .archive-btn {
-      background: linear-gradient(120deg, var(--header-start), var(--header-end));
-      color: #fff;
-      border: none;
-      padding: 0.9rem 1.8rem;
-      border-radius: 50px;
-      font-family: var(--font-family), sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-      transition: transform var(--transition), box-shadow var(--transition);
-    }
-    .archive-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+      padding: 2.4rem 1rem 4rem;
     }
     .archive-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.55);
+      background: rgba(15,13,10,0.62);
       -webkit-backdrop-filter: blur(3px);
       backdrop-filter: blur(3px);
       display: flex;
@@ -366,48 +654,89 @@
       pointer-events: auto;
     }
     .archive-modal {
-      background: var(--card);
+      position: relative;
       width: 100%;
-      max-width: 560px;
+      max-width: 580px;
       max-height: 85vh;
-      border-radius: var(--radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      padding: 6px;
+      border-radius: 12px;
+      background: linear-gradient(to top right, var(--sil-od) 45%, var(--sil-ol) 55%);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
       transform: translateY(20px) scale(0.98);
       transition: transform var(--transition);
+    }
+    .archive-modal::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 11px;
+      background: var(--sil-mid);
+    }
+    .archive-modal::after {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border-radius: 8px;
+      background: linear-gradient(to top right, var(--sil-il) 45%, var(--sil-id) 55%);
     }
     .archive-overlay.open .archive-modal {
       transform: translateY(0) scale(1);
     }
+    .archive-surface {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(85vh - 12px);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.28);
+    }
     .archive-modal-header {
-      background: linear-gradient(120deg, var(--header-start), var(--header-end));
-      color: #fff;
-      padding: 1.25rem 1.5rem;
+      position: relative;
+      background: #575043;
+      color: var(--cream);
+      padding: 1.15rem 1.4rem;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
+      box-shadow: inset 0 -3px 8px rgba(0,0,0,0.3);
+    }
+    .archive-modal-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/paper-texture.jpg');
+      background-size: 642px 642px;
+      mix-blend-mode: multiply;
+      opacity: 0.35;
+      pointer-events: none;
     }
     .archive-modal-header h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+      position: relative;
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      letter-spacing: 2px;
       text-transform: uppercase;
     }
     .archive-modal-header .archive-sub {
-      font-size: 0.8rem;
-      font-weight: 400;
-      opacity: 0.85;
-      margin-top: 0.25rem;
+      position: relative;
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      opacity: 0.75;
+      margin-top: 0.3rem;
     }
     .archive-close {
-      background: rgba(255,255,255,0.15);
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.12);
       border: none;
-      color: #fff;
-      width: 36px;
-      height: 36px;
+      color: var(--cream);
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       font-size: 1.2rem;
       line-height: 1;
@@ -415,12 +744,25 @@
       flex-shrink: 0;
       transition: background var(--transition);
     }
-    .archive-close:hover { background: rgba(255,255,255,0.3); }
+    .archive-close:hover { background: rgba(255,255,255,0.28); }
     .archive-body {
-      padding: 0.75rem 1.25rem 1.5rem;
+      position: relative;
+      padding: 0.6rem 1.3rem 1.4rem;
       overflow-y: auto;
+      background: var(--paper);
     }
-    .archive-folder { border-bottom: 1px solid #eee; }
+    .archive-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/paper-texture.jpg');
+      background-size: 642px 642px;
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .archive-body > * { position: relative; }
+    .archive-folder { border-bottom: 1px solid rgba(26,26,26,0.18); }
     .archive-folder:last-child { border-bottom: none; }
     .archive-folder > summary {
       list-style: none;
@@ -429,23 +771,26 @@
       align-items: center;
       gap: 0.6rem;
       padding: 0.85rem 0.25rem;
-      font-weight: 600;
-      color: var(--text);
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: var(--ink);
     }
     .archive-folder > summary::-webkit-details-marker { display: none; }
     .archive-folder > summary .folder-icon {
-      color: var(--primary);
+      color: var(--gold);
       width: 1.2rem;
       text-align: center;
     }
     .archive-folder > summary .folder-desc {
-      font-weight: 400;
-      font-size: 0.75rem;
-      color: #888;
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--muted);
     }
     .archive-folder > summary .chevron {
       margin-left: auto;
-      color: var(--primary);
+      color: var(--gold);
       font-size: 0.8rem;
       transition: transform var(--transition);
     }
@@ -456,148 +801,19 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.6rem;
-      border-radius: 8px;
-      color: var(--text);
+      border-radius: 6px;
+      color: var(--ink);
       transition: background var(--transition);
     }
-    .archive-link:hover { background: rgba(52,152,219,0.12); }
+    .archive-link:hover { background: rgba(154,122,51,0.16); }
     .archive-link .link-text { display: flex; flex-direction: column; min-width: 0; }
-    .archive-link .link-name { font-weight: 600; font-size: 0.95rem; }
-    .archive-link .link-desc { font-size: 0.75rem; color: #888; }
+    .archive-link .link-name { font-family: var(--font-head); font-size: 0.9rem; letter-spacing: 0.6px; }
+    .archive-link .link-desc { font-size: 0.85rem; font-style: italic; color: var(--muted); }
     .archive-link .ext-icon {
       margin-left: auto;
-      color: var(--primary);
+      color: var(--gold);
       font-size: 0.8rem;
-      opacity: 0.7;
-    }
-
-    /* --- FEATURED HIGHLIGHT CARDS --- */
-    .projects {
-      grid-auto-flow: dense;
-    }
-    .projects-wrap[data-cols]:not([data-cols="1"]) .project-card.highlight {
-      grid-column: span 2;
-    }
-    .project-card.highlight {
-      padding: 0;
-      display: flex;
-      align-items: stretch;
-    }
-    .highlight-media {
-      position: relative;
-      flex: 0 0 44%;
-      min-height: 200px;
-      overflow: hidden;
-      background: linear-gradient(120deg, var(--header-start), var(--header-end));
-    }
-    .highlight-media::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      box-shadow: inset -14px 0 20px -14px rgba(0,0,0,0.35);
-      pointer-events: none;
-    }
-    .highlight-img {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1);
-    }
-    .highlight-media > i {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: rgba(255,255,255,0.9);
-    }
-    .highlight-body {
-      flex: 1;
-      min-width: 0;
-      padding: 1.6rem 1.75rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .highlight-top {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      margin-bottom: 0.6rem;
-    }
-    .highlight-top > i {
-      font-size: 1.9rem;
-      color: var(--primary);
-      flex-shrink: 0;
-    }
-    .highlight-body h3 {
-      font-size: 1.45rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      line-height: 1.15;
-    }
-    .highlight-body .type-label {
-      font-size: 0.78rem;
-      color: var(--primary);
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-top: 0.15rem;
-    }
-    .highlight-body p.desc {
-      font-size: 0.95rem;
-      color: #555;
-    }
-    .highlight-body .award {
-      font-size: 0.8rem;
-      color: #fff;
-      margin-top: 0.9rem;
-      font-weight: 600;
-      white-space: nowrap;
-      background: linear-gradient(135deg, #d4af37, #b8941f);
-      padding: 0.4rem 0.8rem;
-      border-radius: 50px;
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      align-self: flex-start;
-      display: inline-block;
-    }
-    .highlight-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1.1rem;
-    }
-    .highlight-actions .btn {
-      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-    }
-    .highlight-actions .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-    }
-    @media (hover: hover) {
-      .project-card.highlight:hover {
-        transform: translateY(-5px) scale(1.01);
-        box-shadow: 0 14px 26px rgba(0,0,0,0.16);
-      }
-      .project-card.highlight:hover .highlight-img {
-        transform: scale(1.07);
-      }
-    }
-    /* Single-column layout: highlight becomes a taller stacked card */
-    .projects-wrap[data-cols="1"] .project-card.highlight {
-      flex-direction: column;
-    }
-    .projects-wrap[data-cols="1"] .highlight-media {
-      flex: none;
-      aspect-ratio: 16 / 8.5;
-      min-height: 170px;
-    }
-    .projects-wrap[data-cols="1"] .highlight-media::after {
-      box-shadow: inset 0 -14px 20px -14px rgba(0,0,0,0.35);
+      opacity: 0.75;
     }
 
     /* --- COLLAPSIBLE SECTIONS (fade + show more) --- */
@@ -616,9 +832,9 @@
       bottom: 0;
       height: 170px;
       z-index: 6;
-      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(250,252,254,0.8) 45%, #ffffff 100%);
-      -webkit-backdrop-filter: blur(2px);
-      backdrop-filter: blur(2px);
+      background: linear-gradient(to bottom, rgba(165,159,150,0) 0%, rgba(165,159,150,0.85) 55%, #a09a8d 100%);
+      -webkit-backdrop-filter: blur(1.5px);
+      backdrop-filter: blur(1.5px);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
@@ -647,43 +863,43 @@
       display: block;
     }
     .projects-wrap.collapsed + .section-toggle {
-      margin-top: -38px;
+      margin-top: -40px;
     }
-    .show-more-btn {
-      font-family: var(--font-family), sans-serif;
-      background: #fff;
-      color: var(--primary);
-      border: 1px solid rgba(52,152,219,0.35);
-      padding: 0.65rem 1.5rem;
-      border-radius: 50px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
-    }
-    .show-more-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.14);
-      background: var(--accent-light);
+    .show-more-btn .gb-inner {
+      padding: 0.55rem 1.4rem;
+      font-size: 0.8rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
     }
     .show-more-btn i {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       transition: transform var(--transition);
     }
     .projects-wrap.expanded + .section-toggle .show-more-btn i {
       transform: rotate(180deg);
     }
+
+    /* --- SMALL DESKS --- */
+    @media (max-width: 700px) {
+      header { padding: 2.6rem 1rem 2rem; }
+      .name-script { font-size: 2.7rem; }
+      .profile-photo { width: 62px; height: 62px; }
+      .moon { width: 140px; height: 140px; top: -30px; right: 4%; }
+      .container { padding: 0 0.6rem; }
+      .sheet { padding: 2.2rem 1.1rem 3.4rem; }
+      .ftab-in { padding: 0.5rem 0.8rem 0.65rem; font-size: 0.66rem; letter-spacing: 1px; }
+      .projects-section h2 { font-size: 1.15rem; }
+      .highlight-body { padding: 1.3rem 1.2rem; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .projects-wrap,
       .show-fade,
-      .show-more-btn,
       .show-more-btn i,
-      .highlight-img {
+      .gb,
+      .ftab,
+      .highlight-img,
+      .card-photo {
         transition: none;
       }
       .projects-wrap.just-expanded .beyond-fold {
@@ -693,19 +909,27 @@
     </style>
 </head>
 <body>
-  <div class="version-number" id="version">v1.4</div>
-  
+  <div class="version-number" id="version">v2.0</div>
+
   <header>
+    <div class="moon"></div>
     <h1 id="site-title">
       <img src="goated photo.png" alt="Malachy Fernandez" class="profile-photo">
-      <span>Malachy Fernandez</span>
+      <span class="name-script">Malachy Fernandez</span>
     </h1>
-    <div class="nav" id="navigation">
-      </div>
+    <div class="header-sub">Project Showcase</div>
   </header>
 
-  <div class="container" id="content">
-    <!-- Content will be populated by JavaScript -->
+  <div class="container">
+    <nav class="tab-row" id="navigation"></nav>
+    <div class="sheet-wrap">
+      <div class="sheet-shadow"></div>
+      <div class="sheet" id="sheet">
+        <div id="content">
+          <!-- Content will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="config/site.js"></script>
@@ -714,40 +938,24 @@
   <script>
     // Apply configuration to the page
     function initializeSite() {
-      // Set CSS variables from site config
-      const root = document.documentElement;
-      root.style.setProperty('--primary-color', siteConfig.colors.primary);
-      root.style.setProperty('--primary-dark-color', siteConfig.colors.primaryDark);
-      root.style.setProperty('--accent-light-color', siteConfig.colors.accentLight);
-      root.style.setProperty('--text-color', siteConfig.colors.text);
-      root.style.setProperty('--bg-start-color', siteConfig.colors.bgStart);
-      root.style.setProperty('--bg-end-color', siteConfig.colors.bgEnd);
-      root.style.setProperty('--card-color', siteConfig.colors.card);
-      root.style.setProperty('--award-color', siteConfig.colors.awardColor);
-      root.style.setProperty('--header-start', siteConfig.headerGradient.start);
-      root.style.setProperty('--header-end', siteConfig.headerGradient.end);
-      root.style.setProperty('--font-family', siteConfig.site.font);
-
       // Set page title and site title
       document.getElementById('page-title').textContent = siteConfig.site.title;
 
-      // Build navigation
+      // Build navigation — manila folder tabs that hang off the sheet's top edge
       const navContainer = document.getElementById('navigation');
-      siteConfig.navigation.forEach((item, index) => {
-        if (index > 0) {
-          const dot = document.createElement('span');
-          dot.className = 'dot';
-          dot.textContent = '·';
-          navContainer.appendChild(dot);
-        }
+      siteConfig.navigation.forEach(item => {
+        const tab = document.createElement('a');
+        tab.className = 'ftab' + (item.active ? ' active' : '');
+        if (item.link) tab.href = item.link;
 
-        const element = document.createElement(item.link ? 'a' : 'span');
-        if (item.active) element.className = 'active';
-        if (item.link) {
-          element.href = item.link;
-        }
-        element.textContent = item.text;
-        navContainer.appendChild(element);
+        const inner = document.createElement('span');
+        inner.className = 'ftab-in';
+        const icon = document.createElement('i');
+        icon.className = item.icon || 'fas fa-folder';
+        inner.appendChild(icon);
+        inner.appendChild(document.createTextNode(item.text));
+        tab.appendChild(inner);
+        navContainer.appendChild(tab);
       });
 
       // Build project sections from project config
@@ -773,29 +981,37 @@
 
         const buildButtons = (project, container) => {
           project.buttons.forEach(button => {
+            // GitHub gets a silver plate; everything else gets gold
+            const isGithub = /github/i.test(button.link + ' ' + button.text);
             const link = document.createElement('a');
             link.href = button.link;
             link.target = button.target || '_blank';
+            link.className = 'gb ' + (isGithub ? 'gb-silver' : 'gb-gold');
 
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-
+            const frame = document.createElement('span');
+            frame.className = 'gb-frame';
+            const inner = document.createElement('span');
+            inner.className = 'gb-inner';
             const icon = document.createElement('i');
             icon.className = button.icon;
-            btn.appendChild(icon);
-
-            btn.appendChild(document.createTextNode(' ' + button.text));
-            link.appendChild(btn);
+            inner.appendChild(icon);
+            inner.appendChild(document.createTextNode(button.text));
+            frame.appendChild(inner);
+            link.appendChild(frame);
             container.appendChild(link);
           });
         };
 
+        let clipIndex = 0;
         section.projects.forEach(project => {
           const card = document.createElement('div');
           card.className = 'project-card' + (project.highlight ? ' highlight' : '');
 
           if (project.highlight) {
-            // Media pane — crisp cover image, not blurred
+            // Gilded picture frame — crisp cover photo + always-visible actions
+            const surface = document.createElement('div');
+            surface.className = 'highlight-surface';
+
             const media = document.createElement('div');
             media.className = 'highlight-media';
             if (project.backgroundImage) {
@@ -808,9 +1024,8 @@
               mediaIcon.className = project.icon;
               media.appendChild(mediaIcon);
             }
-            card.appendChild(media);
+            surface.appendChild(media);
 
-            // Body — content with always-visible actions
             const body = document.createElement('div');
             body.className = 'highlight-body';
 
@@ -846,26 +1061,28 @@
             actions.className = 'highlight-actions';
             buildButtons(project, actions);
             body.appendChild(actions);
-            card.appendChild(body);
+            surface.appendChild(body);
+            card.appendChild(surface);
           } else {
-            // Apply background image if specified
-            if (project.backgroundImage) {
-              card.classList.add('has-background-image');
+            // Torn newspaper clipping — sepia photo + typewriter text
+            card.style.setProperty('--tear', CLIP_VARIANTS[clipIndex++ % CLIP_VARIANTS.length]);
 
-              const bgDiv = document.createElement('div');
-              bgDiv.className = 'card-bg';
-              bgDiv.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${project.backgroundImage}')`;
-              card.appendChild(bgDiv);
-            }
-
-            // Card content
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
 
-            // Icon
-            const icon = document.createElement('i');
-            icon.className = project.icon;
-            cardContent.appendChild(icon);
+            if (project.backgroundImage) {
+              const photo = document.createElement('div');
+              photo.className = 'card-photo';
+              const photoImg = document.createElement('div');
+              photoImg.className = 'card-photo-img';
+              photoImg.style.backgroundImage = `url('${project.backgroundImage}')`;
+              photo.appendChild(photoImg);
+              cardContent.appendChild(photo);
+            } else {
+              const icon = document.createElement('i');
+              icon.className = project.icon + ' card-icon';
+              cardContent.appendChild(icon);
+            }
 
             // Project name
             const name = document.createElement('h3');
@@ -928,14 +1145,20 @@
         const toggle = document.createElement('div');
         toggle.className = 'section-toggle';
         const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'show-more-btn';
+        toggleBtn.className = 'gb gb-silver show-more-btn';
+        const toggleFrame = document.createElement('span');
+        toggleFrame.className = 'gb-frame';
+        const toggleInner = document.createElement('span');
+        toggleInner.className = 'gb-inner';
         const toggleLabel = document.createElement('span');
         toggleLabel.className = 'label';
         toggleLabel.textContent = 'Show more';
         const toggleChevron = document.createElement('i');
         toggleChevron.className = 'fas fa-chevron-down';
-        toggleBtn.appendChild(toggleLabel);
-        toggleBtn.appendChild(toggleChevron);
+        toggleInner.appendChild(toggleLabel);
+        toggleInner.appendChild(toggleChevron);
+        toggleFrame.appendChild(toggleInner);
+        toggleBtn.appendChild(toggleFrame);
         toggle.appendChild(toggleBtn);
         toggleBtn.addEventListener('click', () => toggleSection(wrap, sectionElement));
         sectionElement.appendChild(toggle);
@@ -944,9 +1167,45 @@
       });
     }
 
+    // --- Torn paper edges: deterministic jagged clip-paths ---
+    // Mostly shallow nicks with occasional deeper tears, like real ripped
+    // paper. Points along edges are %, jag depth is px, so a clip generated
+    // for one size scales cleanly to any size.
+    function buildTornClipPath(width, height, seedStart, topDepthScale = 1) {
+      let seed = seedStart;
+      const rand = () => {
+        seed = (seed * 48271) % 2147483647;
+        return seed / 2147483647;
+      };
+      const depth = () => (rand() < 0.15 ? 4 + rand() * 5 : rand() * 4.5);
+      const jag = () => `${(depth()).toFixed(1)}px`;
+      const jagTop = () => `${(depth() * topDepthScale).toFixed(1)}px`;
+      const jagFromFar = () => `calc(100% - ${depth().toFixed(1)}px)`;
+      const PX_PER_POINT = 7;
+      const edgePoints = (length) => {
+        const count = Math.max(4, Math.round(length / PX_PER_POINT));
+        const points = [];
+        for (let i = 0; i <= count; i++) {
+          const jitter = i === 0 || i === count ? 0 : (rand() - 0.5) * (0.8 / count);
+          points.push(Math.min(1, Math.max(0, i / count + jitter)));
+        }
+        return points;
+      };
+      const xs = edgePoints(width);
+      const ys = edgePoints(height);
+      const pct = (f) => `${(f * 100).toFixed(2)}%`;
+      const pts = [];
+      xs.forEach((x) => pts.push(`${pct(x)} ${jagTop()}`));
+      ys.slice(1).forEach((y) => pts.push(`${jagFromFar()} ${pct(y)}`));
+      [...xs].reverse().slice(1).forEach((x) => pts.push(`${pct(x)} ${jagFromFar()}`));
+      [...ys].reverse().slice(1, -1).forEach((y) => pts.push(`${jag()} ${pct(y)}`));
+      return `polygon(${pts.join(', ')})`;
+    }
+    const CLIP_VARIANTS = [11, 37, 53, 71, 89, 103].map(s => buildTornClipPath(420, 260, s));
+
     // --- Collapsible sections: show 2 rows, fade out the rest ---
     const PEEK_PX = 92;
-    const CARD_MIN = 360; // must match minmax() in the .projects grid CSS
+    const CARD_MIN = 340; // must match minmax() in the .projects grid CSS
 
     function layoutSections() {
       document.querySelectorAll('.projects-wrap').forEach(wrap => {
@@ -1106,11 +1365,20 @@
       const footer = document.createElement('div');
       footer.className = 'archive-footer';
       const openBtn = document.createElement('button');
-      openBtn.className = 'archive-btn';
+      openBtn.className = 'gb gb-gold archive-btn';
+      const openFrame = document.createElement('span');
+      openFrame.className = 'gb-frame';
+      const openInner = document.createElement('span');
+      openInner.className = 'gb-inner';
+      openInner.style.padding = '0.7rem 1.6rem';
+      openInner.style.fontSize = '0.85rem';
+      openInner.style.letterSpacing = '1.5px';
       const btnIcon = document.createElement('i');
       btnIcon.className = 'fas fa-archive';
-      openBtn.appendChild(btnIcon);
-      openBtn.appendChild(document.createTextNode(' ' + archiveConfig.title));
+      openInner.appendChild(btnIcon);
+      openInner.appendChild(document.createTextNode(archiveConfig.title.toUpperCase()));
+      openFrame.appendChild(openInner);
+      openBtn.appendChild(openFrame);
       footer.appendChild(openBtn);
       document.body.appendChild(footer);
 
@@ -1141,12 +1409,16 @@
       closeBtn.setAttribute('aria-label', 'Close');
       closeBtn.innerHTML = '&times;';
       modalHeader.appendChild(closeBtn);
-      modal.appendChild(modalHeader);
+
+      const surface = document.createElement('div');
+      surface.className = 'archive-surface';
+      surface.appendChild(modalHeader);
 
       const body = document.createElement('div');
       body.className = 'archive-body';
       archiveConfig.tree.forEach(node => body.appendChild(buildArchiveNode(node)));
-      modal.appendChild(body);
+      surface.appendChild(body);
+      modal.appendChild(surface);
 
       overlay.appendChild(modal);
       document.body.appendChild(overlay);
@@ -1163,6 +1435,17 @@
 
     // Initialize the site immediately so View Transition can see it
     initializeSite();
+
+    // Tear the big sheet — gentler on top where the folder tabs attach
+    const sheet = document.getElementById('sheet');
+    const setSheetTear = () => {
+      sheet.style.setProperty('--tear', buildTornClipPath(sheet.offsetWidth, sheet.offsetHeight, 7, 0.25));
+    };
+    setSheetTear();
+    if (window.ResizeObserver) {
+      new ResizeObserver(setSheetTear).observe(sheet);
+    }
+
     layoutSections();
     renderArchive();
 

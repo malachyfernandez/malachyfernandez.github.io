@@ -9,8 +9,8 @@ const siteConfig = {
 
   // Navigation
   navigation: [
-    { text: "Project Showcase", active: true, link: "index.html" },
-    { text: "About Me", active: false, link: "AboutMe/index.html" }
+    { text: "Project Showcase", active: true, link: "index.html", icon: "fas fa-newspaper" },
+    { text: "About Me", active: false, link: "AboutMe/index.html", icon: "fas fa-user" }
   ],
 
   // Color scheme and styling
