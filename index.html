@@ -254,10 +254,21 @@
     .project-card {
       position: relative;
       padding: 1.3rem 1.2rem 1.6rem;
-      transition: transform var(--transition), box-shadow var(--transition);
-      /* soft blurred square behind the torn clipping — the paper edge
-         stays crisp while the shadow blobs loosely around it */
-      box-shadow: 0 10px 26px rgba(30,25,15,0.42);
+      transition: transform var(--transition);
+    }
+    /* Fake shadow: a plain black layer sharing the torn clip-path,
+       blurred + offset so it traces the jagged shape loosely */
+    .card-shadow {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      clip-path: var(--tear);
+      filter: blur(11px);
+      transform: translateY(9px);
+      opacity: 0.6;
+      pointer-events: none;
+      transition: transform var(--transition), filter var(--transition);
+      z-index: 0;
     }
     .project-card::before {
       content: '';
@@ -372,7 +383,10 @@
     @media (hover: hover) {
       .project-card:hover {
         transform: translateY(-5px) rotate(-0.4deg);
-        box-shadow: 0 16px 34px rgba(30,25,15,0.5);
+      }
+      .project-card:hover .card-shadow {
+        transform: translateY(16px);
+        filter: blur(17px);
       }
       .project-card:hover .card-content {
         opacity: 0.18;
@@ -493,8 +507,7 @@
       --sr: var(--r);
       padding: 5px;
       background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
-      box-shadow: none; /* masked away anyway — shadow comes from drop-shadow below */
-      /* drop-shadow follows the scooped silhouette */
+      /* drop-shadow follows the scooped silhouette (box-shadow would be masked away) */
       filter: drop-shadow(0 12px 24px rgba(0,0,0,0.42));
       transition: transform var(--transition), filter var(--transition);
     }
@@ -984,8 +997,6 @@
     .clip {
       position: relative;
       padding: 1.5rem 1.5rem 1.7rem;
-      /* soft blurred square behind the torn clipping */
-      box-shadow: 0 10px 26px rgba(30,25,15,0.42);
     }
     .clip::before {
       content: '';
@@ -1010,7 +1021,7 @@
       pointer-events: none;
       z-index: 0;
     }
-    .clip > * {
+    .clip > *:not(.card-shadow) {
       position: relative;
       z-index: 1;
     }
@@ -1293,6 +1304,11 @@
             // Torn newspaper clipping — sepia photo + typewriter text
             card.style.setProperty('--tear', CLIP_VARIANTS[clipIndex++ % CLIP_VARIANTS.length]);
 
+            // Blurred black shape tracing the tear — the fake cast shadow
+            const shadow = document.createElement('div');
+            shadow.className = 'card-shadow';
+            card.appendChild(shadow);
+
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
 
@@ -1413,6 +1429,9 @@
         const clip = document.createElement('div');
         clip.className = 'clip';
         clip.style.setProperty('--tear', nextClip());
+        const clipShadow = document.createElement('div');
+        clipShadow.className = 'card-shadow';
+        clip.appendChild(clipShadow);
 
         const title = document.createElement('h3');
         title.textContent = section.title;
@@ -1491,6 +1510,9 @@
         const clip = document.createElement('div');
         clip.className = 'clip';
         clip.style.setProperty('--tear', nextClip());
+        const clipShadow = document.createElement('div');
+        clipShadow.className = 'card-shadow';
+        clip.appendChild(clipShadow);
         const h = document.createElement('h3');
         h.textContent = title;
         clip.appendChild(h);
