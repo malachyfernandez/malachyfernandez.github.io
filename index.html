@@ -115,12 +115,13 @@
     /* --- THE SHEET: one long torn manila page on the desk --- */
     .container {
       position: relative;
-      max-width: 1140px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 0 1.1rem;
     }
     .sheet-wrap {
       position: relative;
+      z-index: 2;
     }
     .sheet-shadow {
       position: absolute;
@@ -135,18 +136,19 @@
       position: relative;
       background-color: var(--paper);
       clip-path: var(--tear);
-      padding: 2.8rem 2.4rem 4.2rem;
+      padding: 2.8rem 2.2rem 4.2rem;
     }
     .sheet::before {
       content: '';
       position: absolute;
       inset: 0;
-      background-image: url('assets/paper-texture.jpg');
-      background-repeat: repeat;
-      background-size: 642px 642px;
+      background-image:
+        url('assets/paper-texture.jpg'),
+        radial-gradient(ellipse 115% 90% at 50% 42%, transparent 55%, rgba(54,41,22,0.6) 100%);
+      background-repeat: repeat, no-repeat;
+      background-size: 642px 642px, 100% 100%;
       mix-blend-mode: multiply;
       opacity: 0.45;
-      box-shadow: inset 0 0 130px rgba(54,41,22,0.30), inset 0 0 22px rgba(54,41,22,0.16);
       pointer-events: none;
     }
     .sheet > * {
@@ -157,13 +159,13 @@
     /* --- FOLDER TABS --- */
     .tab-row {
       position: relative;
-      z-index: 6;
+      z-index: 1;
       display: flex;
       justify-content: center;
       align-items: flex-end;
       gap: 0.6rem;
       padding: 0 1rem;
-      margin-bottom: -11px;
+      margin-bottom: -14px;
     }
     .ftab {
       display: inline-block;
@@ -171,7 +173,7 @@
       border-radius: 13px 13px 0 0;
       background: linear-gradient(to bottom, var(--sil-ol) 20%, var(--sil-od) 80%);
       filter: drop-shadow(0 -3px 4px rgba(0,0,0,0.35));
-      transform: translateY(5px);
+      transform: translateY(6px);
       transition: transform var(--transition), filter var(--transition);
       text-decoration: none;
       cursor: pointer;
@@ -205,7 +207,6 @@
     .ftab:hover { transform: translateY(2px); }
     .ftab.active {
       transform: translateY(0);
-      z-index: 7;
     }
     .ftab.active .ftab-in {
       background: var(--paper);
@@ -247,8 +248,7 @@
     .project-card {
       position: relative;
       padding: 1.3rem 1.2rem 1.6rem;
-      transition: transform var(--transition), box-shadow var(--transition);
-      box-shadow: 0 7px 15px rgba(30,25,15,0.32);
+      transition: transform var(--transition);
     }
     .project-card::before {
       content: '';
@@ -256,18 +256,22 @@
       inset: 0;
       background-color: var(--paper-light);
       clip-path: var(--tear);
-      box-shadow: inset 0 0 20px rgba(74,55,30,0.30), inset 0 0 4px rgba(74,55,30,0.28);
+      /* drop-shadow follows the torn silhouette, unlike box-shadow */
+      filter: drop-shadow(0 7px 15px rgba(30,25,15,0.32));
+      transition: filter var(--transition);
       z-index: 0;
     }
     .project-card::after {
       content: '';
       position: absolute;
       inset: 0;
-      background-image: url('assets/paper-texture.jpg');
-      background-repeat: repeat;
-      background-size: 642px 642px;
+      background-image:
+        url('assets/paper-texture.jpg'),
+        radial-gradient(ellipse 150% 130% at 50% 50%, transparent 58%, rgba(74,55,30,0.42) 100%);
+      background-repeat: repeat, no-repeat;
+      background-size: 642px 642px, 100% 100%;
       mix-blend-mode: multiply;
-      opacity: 0.33;
+      opacity: 0.38;
       clip-path: var(--tear);
       pointer-events: none;
       z-index: 0;
@@ -362,7 +366,9 @@
     @media (hover: hover) {
       .project-card:hover {
         transform: translateY(-5px) rotate(-0.4deg);
-        box-shadow: 0 14px 26px rgba(30,25,15,0.42);
+      }
+      .project-card:hover::before {
+        filter: drop-shadow(0 14px 26px rgba(30,25,15,0.42));
       }
       .project-card:hover .card-content {
         opacity: 0.18;
@@ -379,8 +385,34 @@
       .project-card.highlight:hover .highlight-img { transform: scale(1.06); }
     }
 
-    /* --- GILDED BUTTONS: machined three-ring metal plates --- */
+    /* --- GILDED CHROME: scooped-corner machined plates & frames --- */
+    /* Scoop mask: a quarter-disc carved from each corner. Each nested
+       ring layer re-centers the discs on its own outer corner and grows
+       the radius by the ring thickness, so the rings nest cleanly. */
+    .gb-frame, .gb-frame::before, .gb-frame::after, .gb-inner,
+    .project-card.highlight, .project-card.highlight::before,
+    .project-card.highlight::after, .highlight-surface,
+    .archive-modal, .archive-modal::before, .archive-modal::after,
+    .archive-surface {
+      -webkit-mask:
+        radial-gradient(circle at var(--so, 0px) var(--so, 0px), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) top left / 51% 51%,
+        radial-gradient(circle at var(--sor, 100%) var(--so, 0px), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) top right / 51% 51%,
+        radial-gradient(circle at var(--so, 0px) var(--sor, 100%), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) bottom left / 51% 51%,
+        radial-gradient(circle at var(--sor, 100%) var(--sor, 100%), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) bottom right / 51% 51%;
+      -webkit-mask-repeat: no-repeat;
+      mask:
+        radial-gradient(circle at var(--so, 0px) var(--so, 0px), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) top left / 51% 51%,
+        radial-gradient(circle at var(--sor, 100%) var(--so, 0px), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) top right / 51% 51%,
+        radial-gradient(circle at var(--so, 0px) var(--sor, 100%), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) bottom left / 51% 51%,
+        radial-gradient(circle at var(--sor, 100%) var(--sor, 100%), transparent var(--sr, 0px), black calc(var(--sr, 0px) + 0.5px)) bottom right / 51% 51%;
+      mask-repeat: no-repeat;
+    }
+
     .gb {
+      --r: 13px;
+      --t-out: 2px;
+      --t-mid: 4px;
+      --t-in: 2px;
       display: inline-block;
       cursor: pointer;
       border: none;
@@ -395,23 +427,27 @@
     .gb-frame {
       position: relative;
       display: block;
-      padding: 5px;
-      border-radius: 9px;
+      padding: calc(var(--t-out) + var(--t-mid) + var(--t-in));
       background: linear-gradient(to top right, var(--rod) 45%, var(--rol) 55%);
+      --sr: var(--r);
     }
     .gb-frame::before {
       content: '';
       position: absolute;
-      inset: 1px;
-      border-radius: 8px;
+      inset: var(--t-out);
       background: var(--rmid);
+      --so: calc(-1 * var(--t-out));
+      --sor: calc(100% + var(--t-out));
+      --sr: calc(var(--r) + var(--t-out));
     }
     .gb-frame::after {
       content: '';
       position: absolute;
-      inset: 4px;
-      border-radius: 6px;
+      inset: calc(var(--t-out) + var(--t-mid));
       background: linear-gradient(to top right, var(--ril) 45%, var(--rid) 55%);
+      --so: calc(-1 * (var(--t-out) + var(--t-mid)));
+      --sor: calc(100% + var(--t-out) + var(--t-mid));
+      --sr: calc(var(--r) + var(--t-out) + var(--t-mid));
     }
     .gb-inner {
       position: relative;
@@ -420,8 +456,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.45rem;
-      padding: 0.48rem 0.95rem;
-      border-radius: 5px;
+      padding: 0.5rem 1.15rem;
       font-family: var(--font-head);
       font-size: 0.78rem;
       letter-spacing: 0.8px;
@@ -430,50 +465,66 @@
       color: #ece4cf;
       box-shadow: inset 0 2px 7px rgba(0,0,0,0.55), inset 0 -1px 2px rgba(255,255,255,0.07);
       text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+      --so: calc(-1 * (var(--t-out) + var(--t-mid) + var(--t-in)));
+      --sor: calc(100% + var(--t-out) + var(--t-mid) + var(--t-in));
+      --sr: calc(var(--r) + var(--t-out) + var(--t-mid) + var(--t-in));
     }
     .gb-inner i { font-size: 0.85em; }
     .gb-silver { --rod: var(--sil-od); --rol: var(--sil-ol); --rmid: var(--sil-mid); --ril: var(--sil-il); --rid: var(--sil-id); }
     .gb-gold   { --rod: var(--gold-od); --rol: var(--gold-ol); --rmid: var(--gold-mid); --ril: var(--gold-il); --rid: var(--gold-id); }
+    /* Buttons living inside a gold frame are all gold */
+    .highlight .gb { --rod: var(--gold-od); --rol: var(--gold-ol); --rmid: var(--gold-mid); --ril: var(--gold-il); --rid: var(--gold-id); }
 
-    /* --- FEATURED FRAMES: gilded picture frames, 2 columns wide --- */
+    /* --- FEATURED FRAMES: scooped gilded picture frames --- */
     .projects-wrap[data-cols]:not([data-cols="1"]) .project-card.highlight {
       grid-column: span 2;
     }
     .project-card.highlight {
-      padding: 6px;
-      border-radius: 12px;
+      --r: 9px;
+      --t-out: 1px;
+      --t-mid: 3px;
+      --t-in: 1px;
+      --sr: var(--r);
+      padding: 5px;
       background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
       box-shadow: 0 12px 28px rgba(0,0,0,0.45);
     }
     .project-card.highlight::before {
-      inset: 1px;
-      border-radius: 11px;
+      inset: var(--t-out);
       background: var(--gold-mid);
       background-image: none;
       clip-path: none;
+      filter: none;
       box-shadow: none;
       opacity: 1;
       mix-blend-mode: normal;
+      --so: calc(-1 * var(--t-out));
+      --sor: calc(100% + var(--t-out));
+      --sr: calc(var(--r) + var(--t-out));
     }
     .project-card.highlight::after {
-      inset: 5px;
-      border-radius: 8px;
+      inset: calc(var(--t-out) + var(--t-mid));
       background: linear-gradient(to top right, var(--gold-il) 45%, var(--gold-id) 55%);
       clip-path: none;
       box-shadow: none;
       opacity: 1;
       mix-blend-mode: normal;
+      --so: calc(-1 * (var(--t-out) + var(--t-mid)));
+      --sor: calc(100% + var(--t-out) + var(--t-mid));
+      --sr: calc(var(--r) + var(--t-out) + var(--t-mid));
     }
     .highlight-surface {
       position: relative;
       z-index: 1;
       display: flex;
       align-items: stretch;
-      border-radius: 6px;
       overflow: hidden;
       background: var(--paper-light);
       box-shadow: inset 0 2px 10px rgba(0,0,0,0.28);
       min-height: 100%;
+      --so: calc(-1 * (var(--t-out) + var(--t-mid) + var(--t-in)));
+      --sor: calc(100% + var(--t-out) + var(--t-mid) + var(--t-in));
+      --sr: calc(var(--r) + var(--t-out) + var(--t-mid) + var(--t-in));
     }
     .highlight-media {
       position: relative;
@@ -654,12 +705,16 @@
       pointer-events: auto;
     }
     .archive-modal {
+      --r: 9px;
+      --t-out: 1px;
+      --t-mid: 3px;
+      --t-in: 1px;
+      --sr: var(--r);
       position: relative;
       width: 100%;
       max-width: 580px;
       max-height: 85vh;
-      padding: 6px;
-      border-radius: 12px;
+      padding: 5px;
       background: linear-gradient(to top right, var(--sil-od) 45%, var(--sil-ol) 55%);
       box-shadow: 0 24px 60px rgba(0,0,0,0.6);
       transform: translateY(20px) scale(0.98);
@@ -668,16 +723,20 @@
     .archive-modal::before {
       content: '';
       position: absolute;
-      inset: 1px;
-      border-radius: 11px;
+      inset: var(--t-out);
       background: var(--sil-mid);
+      --so: calc(-1 * var(--t-out));
+      --sor: calc(100% + var(--t-out));
+      --sr: calc(var(--r) + var(--t-out));
     }
     .archive-modal::after {
       content: '';
       position: absolute;
-      inset: 5px;
-      border-radius: 8px;
+      inset: calc(var(--t-out) + var(--t-mid));
       background: linear-gradient(to top right, var(--sil-il) 45%, var(--sil-id) 55%);
+      --so: calc(-1 * (var(--t-out) + var(--t-mid)));
+      --sor: calc(100% + var(--t-out) + var(--t-mid));
+      --sr: calc(var(--r) + var(--t-out) + var(--t-mid));
     }
     .archive-overlay.open .archive-modal {
       transform: translateY(0) scale(1);
@@ -687,11 +746,13 @@
       z-index: 1;
       display: flex;
       flex-direction: column;
-      max-height: calc(85vh - 12px);
-      border-radius: 6px;
+      max-height: calc(85vh - 10px);
       overflow: hidden;
       background: var(--paper);
       box-shadow: inset 0 2px 10px rgba(0,0,0,0.28);
+      --so: calc(-1 * (var(--t-out) + var(--t-mid) + var(--t-in)));
+      --sor: calc(100% + var(--t-out) + var(--t-mid) + var(--t-in));
+      --sr: calc(var(--r) + var(--t-out) + var(--t-mid) + var(--t-in));
     }
     .archive-modal-header {
       position: relative;
@@ -909,7 +970,7 @@
     </style>
 </head>
 <body>
-  <div class="version-number" id="version">v2.0</div>
+  <div class="version-number" id="version">v2.1</div>
 
   <header>
     <div class="moon"></div>
