@@ -927,11 +927,27 @@
     .projects-wrap.collapsed + .section-toggle {
       margin-top: -40px;
     }
-    .show-more-btn .gb-inner {
-      padding: 0.55rem 1.4rem;
+    .show-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.45rem 1rem;
+      border: none;
+      border-bottom: 2px solid rgba(26,26,26,0.45);
+      border-radius: 4px;
+      background: rgba(165,159,150,0.82);
+      cursor: pointer;
+      font-family: var(--font-head);
       font-size: 0.8rem;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.6px;
       text-transform: uppercase;
+      color: var(--ink);
+      transition: color var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .show-more-btn:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      transform: translateY(1px);
     }
     .show-more-btn i {
       font-size: 0.7rem;
@@ -1040,18 +1056,32 @@
     .contact-list {
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
-      align-items: stretch;
     }
-    .contact-list .gb { display: block; }
-    .contact-list .gb-inner {
-      justify-content: flex-start;
-      font-size: 0.72rem;
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.35rem;
+      color: var(--ink);
+      font-family: var(--font-head);
+      font-size: 0.82rem;
       letter-spacing: 0.5px;
-      white-space: normal;
+      border-bottom: 1px solid rgba(26,26,26,0.15);
+      text-decoration: none;
+      transition: color var(--transition), background var(--transition);
       word-break: break-word;
     }
-    .contact-list .gb-inner i { flex-shrink: 0; }
+    .contact-link:last-child { border-bottom: none; }
+    .contact-link i {
+      color: var(--gold);
+      width: 1.1rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .contact-link:hover {
+      color: var(--gold);
+      background: rgba(154,122,51,0.12);
+    }
 
     /* --- SMALL DESKS --- */
     @media (max-width: 700px) {
@@ -1336,20 +1366,14 @@
         const toggle = document.createElement('div');
         toggle.className = 'section-toggle';
         const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'gb gb-silver show-more-btn';
-        const toggleFrame = document.createElement('span');
-        toggleFrame.className = 'gb-frame';
-        const toggleInner = document.createElement('span');
-        toggleInner.className = 'gb-inner';
+        toggleBtn.className = 'show-more-btn';
         const toggleLabel = document.createElement('span');
         toggleLabel.className = 'label';
         toggleLabel.textContent = 'Show more';
         const toggleChevron = document.createElement('i');
         toggleChevron.className = 'fas fa-chevron-down';
-        toggleInner.appendChild(toggleLabel);
-        toggleInner.appendChild(toggleChevron);
-        toggleFrame.appendChild(toggleInner);
-        toggleBtn.appendChild(toggleFrame);
+        toggleBtn.appendChild(toggleLabel);
+        toggleBtn.appendChild(toggleChevron);
         toggle.appendChild(toggleBtn);
         toggleBtn.addEventListener('click', () => toggleSection(wrap, sectionElement));
         sectionElement.appendChild(toggle);
@@ -1362,25 +1386,16 @@
     let clipIndexAbout = 0;
     const nextClip = () => CLIP_VARIANTS[clipIndexAbout++ % CLIP_VARIANTS.length];
 
-    // One gilded plate — silver for GitHub, gold otherwise
-    function gildedLink(href, icon, text, target) {
-      let isGithub = /fa-github/.test(icon || '');
-      try { isGithub = isGithub || /(^|\.)github\.com$/.test(new URL(href).hostname); }
-      catch { /* relative link — not github */ }
+    // One quiet link row — gold icon, typewriter text
+    function contactLink(href, icon, text, target) {
       const link = document.createElement('a');
       link.href = href;
       if (target) link.target = target;
-      link.className = 'gb ' + (isGithub ? 'gb-silver' : 'gb-gold');
-      const frame = document.createElement('span');
-      frame.className = 'gb-frame';
-      const inner = document.createElement('span');
-      inner.className = 'gb-inner';
+      link.className = 'contact-link';
       const i = document.createElement('i');
       i.className = icon;
-      inner.appendChild(i);
-      inner.appendChild(document.createTextNode(text));
-      frame.appendChild(inner);
-      link.appendChild(frame);
+      link.appendChild(i);
+      link.appendChild(document.createTextNode(text));
       return link;
     }
 
@@ -1436,7 +1451,7 @@
           const list = document.createElement('div');
           list.className = 'contact-list';
           aboutMeConfig.sidebar.contact.forEach(c =>
-            list.appendChild(gildedLink(c.link, c.icon, c.text, c.target)));
+            list.appendChild(contactLink(c.link, c.icon, c.text, c.target)));
           clip.appendChild(list);
         }],
         ['Education', clip => {
