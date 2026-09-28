@@ -171,7 +171,7 @@
       align-items: flex-end;
       gap: 0.6rem;
       padding: 0 1rem;
-      margin-bottom: -14px;
+      margin-bottom: -4px;
     }
     .ftab {
       display: inline-block;
@@ -402,7 +402,10 @@
       }
       .project-card.highlight:hover {
         transform: translateY(-4px);
-        filter: drop-shadow(0 18px 34px rgba(0,0,0,0.5));
+      }
+      .project-card.highlight:hover .card-shadow {
+        transform: translateY(16px);
+        filter: blur(17px);
       }
       .project-card.highlight:hover .card-content { opacity: 1; }
       .project-card.highlight:hover .highlight-img { transform: scale(1.06); }
@@ -413,6 +416,7 @@
        ring layer re-centers the discs on its own outer corner and grows
        the radius by the ring thickness, so the rings nest cleanly. */
     .gb-frame, .gb-frame::before, .gb-frame::after, .gb-inner,
+    .highlight-shadow::before,
     .project-card.highlight, .project-card.highlight::before,
     .project-card.highlight::after, .highlight-surface,
     .archive-modal, .archive-modal::before, .archive-modal::after,
@@ -512,9 +516,10 @@
       --sr: var(--r);
       padding: 5px;
       background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
-      /* drop-shadow follows the scooped silhouette (box-shadow would be masked away) */
-      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.42));
-      transition: transform var(--transition), filter var(--transition);
+      transition: transform var(--transition);
+    }
+    .highlight-shadow::before {
+      clip-path: none;
     }
     .project-card.highlight::before {
       inset: var(--t-out);
@@ -907,24 +912,29 @@
     /* --- COLLAPSIBLE SECTIONS (fade + show more) --- */
     .projects-wrap {
       position: relative;
-      clip-path: inset(-70px);
       transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .projects-wrap.collapsed {
       clip-path: inset(-70px -70px 0px -70px);
-      /* Scroll-shadow fade (WolffsPoint-style): the peeked content itself
-         dissolves to transparent instead of being covered by an overlay */
-      -webkit-mask-image: linear-gradient(to bottom,
-        black calc(100% - var(--peek, 92px)),
-        rgba(0,0,0,0.45) calc(100% - var(--peek, 92px) / 2),
-        transparent 100%);
-      mask-image: linear-gradient(to bottom,
-        black calc(100% - var(--peek, 92px)),
-        rgba(0,0,0,0.45) calc(100% - var(--peek, 92px) / 2),
-        transparent 100%);
     }
     .projects-wrap.collapsed .beyond-fold {
       pointer-events: none;
+      /* Scroll-shadow fade (WolffsPoint-style): the peeked content itself
+         dissolves to transparent instead of being covered by an overlay */
+      -webkit-mask-image: linear-gradient(to bottom,
+        black 0px,
+        rgba(0,0,0,0.45) calc(var(--peek, 92px) / 2),
+        transparent var(--peek, 92px));
+      mask-image: linear-gradient(to bottom,
+        black 0px,
+        rgba(0,0,0,0.45) calc(var(--peek, 92px) / 2),
+        transparent var(--peek, 92px));
+    }
+    .projects-wrap.collapsed .beyond-fold .card-shadow {
+      display: none;
+    }
+    .projects-wrap.collapsed .beyond-fold.highlight {
+      filter: none;
     }
     .projects-wrap.just-expanded .beyond-fold {
       animation: card-in 0.5s cubic-bezier(0, 0, 0.2, 1) backwards;
@@ -1251,6 +1261,10 @@
 
           if (project.highlight) {
             // Gilded picture frame — crisp cover photo + always-visible actions
+            const shadow = document.createElement('div');
+            shadow.className = 'card-shadow highlight-shadow';
+            card.appendChild(shadow);
+
             const surface = document.createElement('div');
             surface.className = 'highlight-surface';
 

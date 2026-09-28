@@ -1,0 +1,147 @@
+# Context Handoff — malachyf.com portfolio redesign ("WolffsPoint" aesthetic)
+
+## Project
+
+- Repo: `/Users/malachyfernandez/Documents/1-programing/malachyf-com`
+- Remote: `https://github.com/malachyfernandez/malachyfernandez.github.io.git` — it IS the live GitHub Pages site. Push to `main` deploys.
+- Plain HTML/CSS/JS. No build system, no framework, no package.json.
+- Local preview server: `python3 -m http.server 8931` (or similar) has been kept running in the repo dir → `http://localhost:8931/`. Browser preview proxy: `http://127.0.0.1:57696`.
+- Main file: `index.html` (~1868 lines) — ALL CSS is inline in `<style>`, ALL JS inline in `<script>`. Site data lives in `config/projects.js`, `config/site.js`, `config/about.js`, `config/archive.js`.
+- `AboutMe/index.html` is now just a redirect to `../index.html#about`.
+- `AboutMe/index ABOUT ME NEW.html` is a stale draft — not served, ignore it.
+- `cover-images/NEW ONE.png` is untracked on purpose (only `paper.jpg` is referenced).
+
+## The overall task (background)
+
+The user wanted the portfolio redesigned to emulate their other project **WolffsPoint**
+(`~/Documents/1-programing/1-apps-and-sites/wolfspoint`, a React Native web app — only its
+`.web.tsx` files matter). The aesthetic: dark desk + lamp glow + blood moon, a torn manila
+"sheet" page, folder-tab nav, project cards as torn paper clippings with sepia photos,
+featured projects as gilded scooped-corner frames, machined 3-ring metal buttons
+(silver/gold), typewriter (`--font-head`) + serif body fonts.
+
+## CURRENT TASK — the one to pick up
+
+User's request (verbatim-ish): *"a dropshadow behind all these paper ones… the way it was
+handled on wolfspoint was a literal square with a super blurred bg that just followed the
+shape and sat behind it, lowered opacity and blurred. then u don't have to worry about it
+not working with the jagged edges. And for hover — same thing, no box-shadow, only our fake
+shadow."*
+
+**STATUS: the fix is ALREADY COMMITTED and pushed** — commit `540a424` ("Cast shadows as
+blurred black layers behind torn clippings") implements exactly this via a dedicated
+`.card-shadow` div:
+
+```css
+.card-shadow {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.5);
+  clip-path: var(--tear);          /* traces the torn shape loosely */
+  filter: blur(11px);
+  transform: translateY(9px);
+  opacity: 0.6; pointer-events: none;
+  transition: transform var(--transition), filter var(--transition);
+  z-index: 0;
+}
+/* hover pushes it down + softer: */
+.project-card:hover .card-shadow { transform: translateY(16px); filter: blur(17px); }
+```
+
+The JS appends `<div class="card-shadow">` as the FIRST child inside each `.project-card`
+and each About `.clip` (three insertion sites: card builder ~line 1300, about section clips
+~line 1429, about sidebar clips ~line 1510 — line numbers in the COMMITTED version).
+
+**⚠️ GOTCHA — the working tree is dirty.** `git status` shows `M index.html`: the file on
+disk has been REVERTED back to the older `box-shadow: 0 10px 26px rgba(30,25,15,0.42);`
+approach (probably a stale editor buffer saved over it — that's what the user saw in
+devtools and why they said "that doesn't work"). `git diff index.html` shows the revert.
+Almost certainly the right move is `git restore index.html` (discard the working-tree
+revert so the committed `.card-shadow` version is what's on disk), then verify visually and
+tell the user it's already live. Do NOT re-add box-shadow — user explicitly rejected it.
+box-shadow on a clipped element paints a sharp rectangle and does NOT follow `clip-path`,
+which is exactly the problem being avoided. Also note `.clip > *:not(.card-shadow)` must
+stay (keeps the shadow under the content).
+
+If the user wants tuning after seeing the real version: knobs are `blur(11px)`,
+`opacity: 0.6`, `translateY(9px)`, and the hover values `translateY(16px)/blur(17px)`.
+
+## Key architecture in index.html (line numbers ≈ committed 540a424 version)
+
+- **CSS vars** (top of `<style>`): `--desk #1e1e1e`, `--paper #a59f96`, `--paper-light #c9c1b2`,
+  `--ink #1a1a1a`, `--muted #59534a`, `--gold #9a7a33`, `--gold-light #d9b458`, `--cream #f0e7d3`,
+  metal ring palettes `--gold-ol/-od/-mid/-il/-id` and `--sil-*` equivalents, `--font-head` (typewriter), `--transition`.
+- **Sheet**: `.sheet` is the torn manila page (`clip-path: var(--tear)`, set in JS).
+  `.sheet-wrap` has `pointer-events:none` so clicks fall through to tabs; `.sheet` re-enables
+  them (clip-path makes hit-testing follow the paper). `.sheet-shadow` is a plain inset rect
+  div behind the sheet with `box-shadow` — the SAME trick the user wants for cards.
+- **Tabs**: `.tab-row` (margin-bottom −14px, z-index below sheet) → `.ftab` (silver rim) →
+  `.ftab-in` (face; inactive `#3b362f` dark, active `var(--paper)` merging into sheet).
+- **Cards**: `.project-card` children = `.card-shadow` (new), `.card-content` (photo+text,
+  fades to opacity .18 on hover), `.card-actions` (revealed on hover). `--tear` set per card
+  from `CLIP_VARIANTS` (6 seeded polygons). `.card-photo` sepia photo w/ white border.
+- **Highlight cards**: `.project-card.highlight` — gilded frame, `filter: drop-shadow(...)`
+  (correct choice — it's corner-MASKED so box-shadow would be clipped away anyway; the
+  drop-shadow follows the scooped silhouette). Interior: `.highlight-surface` +
+  `.highlight-media` (img) + `.highlight-body` + `.highlight-actions`. Spans 2 cols via
+  `.projects-wrap[data-cols] .project-card.highlight { grid-column: span 2 }` (gated on
+  data-cols — needed because span-2 creates implicit tracks that corrupt column detection).
+- **Gilded buttons** `.gb`: `.gb-frame` (outer ring, scoop vars `--sr/--so/--sor` MUST be
+  explicitly reset here — else it inherits scoop vars from `.highlight-surface` and corner
+  radii break; this was a real bug, commit `806502e`), `::before`/`::after` middle/inner
+  rings, `.gb-inner` face. Scoop = 4 radial-gradient corner masks per layer, `--r: 10px`.
+  Variants: `.gb-silver` (GitHub links), `.gb-gold` (everything else).
+- **Scoop-mask group rule** (~line 396): `.gb-frame, .gb-frame::before/after, .gb-inner,
+  .project-card.highlight(::before/::after), .highlight-surface, ...` share a mask-image.
+- **Archive modal**: same gilded frame treatment (dark header `#2e2a23`).
+- **Collapse**: `.projects-wrap.collapsed` uses a `mask-image` linear-gradient "scroll
+  shadow" (WolffsPoint ShadowScrollView technique — content dissolves, NOT a covering
+  overlay; `--peek` px set from JS `PEEK_PX` const ~92). `.section-toggle` +
+  `.show-more-btn` — DELIBERATELY DE-CHROMED (plain typewriter underline, no gilding).
+  `.beyond-fold` cards get staggered `card-in` animation on expand.
+- **About `.clip`**: torn clippings for About sections/sidebar; `.clip > *:not(.card-shadow)`
+  keeps content above layers. Contact rows are plain hairline rows w/ gold icons (also
+  de-chromed on purpose).
+- **JS**: card building loop in `initializeSite` (~line 1230-1350). Button classifier:
+  silver iff `new URL(href).hostname` ends with `github.com` OR has `fa-github` icon — do
+  NOT substring-match "github" (github.io Pages URLs were falsely silvered — fixed `e20174d`).
+  View swap ~line 1527: `startViewTransition` + JS height morph on `.sheet`; hash routing
+  `#about`/`#projects`. `buildTornClipPath(w,h,seed,topDepthScale)` ~line 1566;
+  `CLIP_VARIANTS` seeds [11,37,53,71,89,103]. Sheet tear is FROZEN across height changes —
+  regenerates only on width change, quantized to 24px buckets, 150ms debounce (fixes edge
+  jitter during height morph, commit `acdc464`). Column counting derives from grid width
+  math, writes `data-cols` on `.projects-wrap`.
+
+## Decisions the user made / do NOT regress
+
+- Show-more and contact links stay un-gilded (user: "remove visual noise").
+- Inactive tab face `#3b362f`, archive header `#2e2a23`, `--muted #59534a` (contrast fixes).
+- `--r: 10px` scoop radius on buttons (user hand-picked).
+- Button padding identical everywhere — extra padding on highlight buttons broke scoop
+  geometry (commit `40797e0`).
+- Tabs sit BEHIND the sheet (`z-index` on `.tab-row` < `.sheet-wrap`, −14px margin overlap)
+  but tall enough that labels clear the torn edge (padding `1.45rem 1.8rem 1rem` on `.ftab-in`).
+- Container ~1200px wide so the sheet interior is *barely* over the 3×340px column threshold.
+- Hover on clippings: `translateY(-5px) rotate(-0.4deg)`, content fades, actions slide in.
+- Profile photo is `goated-photo.jpg` (progressive JPEG); original PNG kept as source.
+
+## Verification workflow (used throughout)
+
+- Playwright installed globally; scripts written to `/tmp/sitecheck/*.js`, run as:
+  `cd /tmp/sitecheck && NODE_PATH=$(npm root -g) node script.js`
+- Screenshot at widths 1400 (3-col), ~900 (2-col), 390 (1-col), plus `#about` route.
+- Check both tab directions (click interception bugs happened twice), expand/collapse,
+  hover, console errors.
+
+## Git conventions
+
+- Commit then `git push origin main` — user expects live deploys every change.
+- Commit trailer used so far:
+  `Generated with [Devin](https://devin.ai)` + `Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>`
+- Recent history: `540a424` (HEAD, pushed — the card-shadow fix), `4f3f651`, `0e4a72c`,
+  `806502e`, `40797e0`, `995c7fd`, `bc70ad1`, `acdc464`, `e20174d`, `6a164dd`, `b62dc8d`, `598fe22`.
+
+## User communication style
+
+Direct, informal, technical. Screenshots everything. Hand-edits CSS in devtools/files
+sometimes — always `git status`/`git diff` before assuming file state (the working tree
+revert above is an example). Likes layered realistic materials; iterates visually.
