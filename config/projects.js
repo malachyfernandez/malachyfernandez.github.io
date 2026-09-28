@@ -314,6 +314,26 @@ const projectShowcaseConfig = {
               target: "_blank"
             }
           ]
+        },
+        {
+          name: "Gmail Peek",
+          type: "Zen Browser Mod",
+          description: "Arc-style inbox preview when hovering a pinned Gmail tab. Uses Gmail's Atom feed — no API key needed.",
+          icon: "fas fa-inbox",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/gmail-peek",
+              target: "_blank"
+            },
+            {
+              text: "Sine Store",
+              icon: "fas fa-store",
+              link: "https://sineorg.github.io/store/",
+              target: "_blank"
+            }
+          ]
         }
       ]
     }
