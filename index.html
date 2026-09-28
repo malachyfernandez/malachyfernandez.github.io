@@ -435,6 +435,10 @@
       display: block;
       padding: calc(var(--t-out) + var(--t-mid) + var(--t-in));
       background: linear-gradient(to top right, var(--rod) 45%, var(--rol) 55%);
+      /* reset all scoop vars — ancestors like .highlight-surface set them
+         and they'd leak in via inheritance otherwise */
+      --so: 0px;
+      --sor: 100%;
       --sr: var(--r);
     }
     .gb-frame::before {
