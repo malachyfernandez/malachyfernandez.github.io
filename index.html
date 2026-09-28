@@ -196,20 +196,20 @@
       z-index: 1;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.85rem 1.15rem 0.95rem;
-      border-radius: 9px 9px 0 0;
+      gap: 0.65rem;
+      padding: 0.95rem 1.8rem 1.05rem;
+      border-radius: 10px 10px 0 0;
       background: #7a7368;
       color: #ddd5c3;
       font-family: var(--font-head);
-      font-size: 0.75rem;
-      letter-spacing: 1.6px;
+      font-size: 0.88rem;
+      letter-spacing: 2px;
       text-transform: uppercase;
       white-space: nowrap;
       box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
       transition: background var(--transition), color var(--transition), box-shadow var(--transition);
     }
-    .ftab-in i { font-size: 0.85rem; }
+    .ftab-in i { font-size: 1rem; }
     .ftab:hover { transform: translateY(2px); }
     .ftab.active {
       transform: translateY(0);
@@ -263,7 +263,7 @@
       background-color: var(--paper-light);
       clip-path: var(--tear);
       /* drop-shadow follows the torn silhouette, unlike box-shadow */
-      filter: drop-shadow(0 7px 15px rgba(30,25,15,0.32));
+      filter: drop-shadow(0 8px 17px rgba(30,25,15,0.36));
       transition: filter var(--transition);
       z-index: 0;
     }
@@ -385,7 +385,7 @@
       }
       .project-card.highlight:hover {
         transform: translateY(-4px);
-        box-shadow: 0 16px 34px rgba(0,0,0,0.5);
+        filter: drop-shadow(0 18px 34px rgba(0,0,0,0.5));
       }
       .project-card.highlight:hover .card-content { opacity: 1; }
       .project-card.highlight:hover .highlight-img { transform: scale(1.06); }
@@ -416,9 +416,9 @@
 
     .gb {
       --r: 13px;
-      --t-out: 2px;
-      --t-mid: 4px;
-      --t-in: 2px;
+      --t-out: 1px;
+      --t-mid: 3px;
+      --t-in: 1px;
       display: inline-block;
       cursor: pointer;
       border: none;
@@ -478,22 +478,24 @@
     .gb-inner i { font-size: 0.85em; }
     .gb-silver { --rod: var(--sil-od); --rol: var(--sil-ol); --rmid: var(--sil-mid); --ril: var(--sil-il); --rid: var(--sil-id); }
     .gb-gold   { --rod: var(--gold-od); --rol: var(--gold-ol); --rmid: var(--gold-mid); --ril: var(--gold-il); --rid: var(--gold-id); }
-    /* Buttons living inside a gold frame are all gold */
-    .highlight .gb { --rod: var(--gold-od); --rol: var(--gold-ol); --rmid: var(--gold-mid); --ril: var(--gold-il); --rid: var(--gold-id); }
+    /* Highlight frames get slightly roomier plates */
+    .highlight-actions .gb-inner { padding: 0.6rem 1.5rem; font-size: 0.82rem; }
 
     /* --- FEATURED FRAMES: scooped gilded picture frames --- */
     .projects-wrap[data-cols]:not([data-cols="1"]) .project-card.highlight {
       grid-column: span 2;
     }
     .project-card.highlight {
-      --r: 9px;
+      --r: 16px;
       --t-out: 1px;
       --t-mid: 3px;
       --t-in: 1px;
       --sr: var(--r);
       padding: 5px;
       background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+      /* drop-shadow follows the scooped silhouette (box-shadow would be masked away) */
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.42));
+      transition: transform var(--transition), filter var(--transition);
     }
     .project-card.highlight::before {
       inset: var(--t-out);
@@ -711,7 +713,7 @@
       pointer-events: auto;
     }
     .archive-modal {
-      --r: 9px;
+      --r: 16px;
       --t-out: 1px;
       --t-mid: 3px;
       --t-in: 1px;
@@ -722,7 +724,7 @@
       max-height: 85vh;
       padding: 5px;
       background: linear-gradient(to top right, var(--sil-od) 45%, var(--sil-ol) 55%);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      filter: drop-shadow(0 24px 50px rgba(0,0,0,0.55));
       transform: translateY(20px) scale(0.98);
       transition: transform var(--transition);
     }
@@ -1059,7 +1061,7 @@
       .moon { width: 140px; height: 140px; top: -30px; right: 4%; }
       .container { padding: 0 0.6rem; }
       .sheet { padding: 2.2rem 1.1rem 3.4rem; }
-      .ftab-in { padding: 0.75rem 0.8rem 0.85rem; font-size: 0.66rem; letter-spacing: 1px; }
+      .ftab-in { padding: 0.7rem 1rem 0.8rem; font-size: 0.68rem; letter-spacing: 1.2px; }
       .projects-section h2 { font-size: 1.15rem; }
       .highlight-body { padding: 1.3rem 1.2rem; }
     }
@@ -1164,10 +1166,17 @@
         const projectsGrid = document.createElement('div');
         projectsGrid.className = 'projects';
 
+        // GitHub gets a silver plate; live/demo/store links get gold.
+        // Match the github.com host or the fa-github icon — live links on
+        // *.github.io must NOT count as GitHub.
+        const isGithubLink = (link, icon) => {
+          if (/fa-github/.test(icon || '')) return true;
+          try { return /(^|\.)github\.com$/.test(new URL(link).hostname); }
+          catch { return false; }
+        };
         const buildButtons = (project, container) => {
           project.buttons.forEach(button => {
-            // GitHub gets a silver plate; everything else gets gold
-            const isGithub = /github/i.test(button.link + ' ' + button.text);
+            const isGithub = isGithubLink(button.link, button.icon);
             const link = document.createElement('a');
             link.href = button.link;
             link.target = button.target || '_blank';
@@ -1355,7 +1364,9 @@
 
     // One gilded plate — silver for GitHub, gold otherwise
     function gildedLink(href, icon, text, target) {
-      const isGithub = /github/i.test((href || '') + ' ' + text);
+      let isGithub = /fa-github/.test(icon || '');
+      try { isGithub = isGithub || /(^|\.)github\.com$/.test(new URL(href).hostname); }
+      catch { /* relative link — not github */ }
       const link = document.createElement('a');
       link.href = href;
       if (target) link.target = target;
