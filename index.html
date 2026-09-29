@@ -77,14 +77,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1.3rem;
+      flex-wrap: wrap;
+      gap: 0.7rem 1.3rem;
       width: fit-content;
+      max-width: 100%;
       margin: 0 auto;
       view-transition-name: header-title;
     }
     .profile-photo {
       width: 76px;
-      height: 76px;
+      height: auto;
+      aspect-ratio: 1;
+      flex: 0 1 auto;
+      min-width: 52px;
       border-radius: 50%;
       object-fit: cover;
       box-shadow:
@@ -98,6 +103,7 @@
       font-size: 3.7rem;
       color: var(--cream);
       line-height: 1.05;
+      text-align: center;
       text-shadow: 0 3px 14px rgba(0,0,0,0.65), 0 0 34px rgba(217,180,88,0.18);
     }
     .header-sub {
@@ -923,19 +929,22 @@
     }
     .projects-wrap.collapsed {
       clip-path: inset(-70px -70px 0px -70px);
+      /* Scroll-shadow fade (WolffsPoint-style): the peeked content itself
+         dissolves to transparent instead of being covered by an overlay.
+         The mask hangs off the wrap's bottom edge, so while max-height
+         animates shut the dissolve sweeps upward with the fold instead of
+         snapping every card out in one frame. */
+      -webkit-mask-image: linear-gradient(to bottom,
+        black calc(100% - var(--peek, 92px)),
+        rgba(0,0,0,0.45) calc(100% - var(--peek, 92px) / 2),
+        transparent 100%);
+      mask-image: linear-gradient(to bottom,
+        black calc(100% - var(--peek, 92px)),
+        rgba(0,0,0,0.45) calc(100% - var(--peek, 92px) / 2),
+        transparent 100%);
     }
     .projects-wrap.collapsed .beyond-fold {
       pointer-events: none;
-      /* Scroll-shadow fade (WolffsPoint-style): the peeked content itself
-         dissolves to transparent instead of being covered by an overlay */
-      -webkit-mask-image: linear-gradient(to bottom,
-        black 0px,
-        rgba(0,0,0,0.45) calc(var(--peek, 92px) / 2),
-        transparent var(--peek, 92px));
-      mask-image: linear-gradient(to bottom,
-        black 0px,
-        rgba(0,0,0,0.45) calc(var(--peek, 92px) / 2),
-        transparent var(--peek, 92px));
     }
     .projects-wrap.collapsed .beyond-fold .card-shadow {
       display: none;
@@ -953,6 +962,7 @@
       display: none;
       text-align: center;
       margin-top: 0.9rem;
+      transition: margin-top 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .projects-wrap.collapsible + .section-toggle {
       display: block;
@@ -1163,6 +1173,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .projects-wrap,
+      .section-toggle,
       .show-fade,
       .show-more-btn i,
       .gb,
@@ -1443,6 +1454,9 @@
         // Wrap the grid so extra rows can fade out behind a "show more" toggle
         const wrap = document.createElement('div');
         wrap.className = 'projects-wrap';
+        // Sections can ask for a shallower fold at 2 columns (tall
+        // highlight rows make the usual 2-row peek sprawl)
+        if (section.twoColFoldRows) wrap.dataset.foldRows2 = section.twoColFoldRows;
         wrap.appendChild(projectsGrid);
         // Highlight shadows live at wrap level — inside the frame they'd be
         // clipped by the corner-scoop mask
@@ -1789,7 +1803,10 @@
 
         // Measure the visual rows the cards landed on
         const tops = [...new Set(cards.map(c => c.offsetTop))].sort((a, b) => a - b);
-        const collapsible = tops.length > 2;
+        const foldRows = cols === 2 && wrap.dataset.foldRows2
+          ? +wrap.dataset.foldRows2
+          : 2;
+        const collapsible = tops.length > foldRows;
         wrap.classList.toggle('collapsible', collapsible);
         cards.forEach(c => {
           c.classList.remove('beyond-fold');
@@ -1801,7 +1818,7 @@
           return;
         }
 
-        const foldTop = tops[2];
+        const foldTop = tops[foldRows];
         const beyond = cards.filter(c => c.offsetTop >= foldTop - 1);
         beyond.forEach((c, i) => {
           c.classList.add('beyond-fold');

@@ -5,6 +5,9 @@ const projectShowcaseConfig = {
     {
       title: "Hackathon Projects",
       subtext: "Built in 24 hours or less at various hackathons.",
+      // At 2 columns each highlight owns a full row, so only 1 row shows
+      // before the fold — 3- and 1-column layouts keep the usual 2 rows.
+      twoColFoldRows: 1,
       projects: [
         {
           name: "Biasly",
