@@ -1128,6 +1128,19 @@
       .highlight-body { padding: 1.3rem 1.2rem; }
     }
 
+    /* --- INITIAL LOAD-IN: header, sheet+tabs, archive button arrive
+       together once fonts/images are in — never replays on view swaps --- */
+    @keyframes load-in {
+      from { opacity: 0; transform: translateY(10px); }
+    }
+    body:not(.loaded) .load-in {
+      opacity: 0;
+      visibility: hidden;
+    }
+    body.loaded .load-in {
+      animation: load-in 0.55s cubic-bezier(0.25, 0.6, 0.3, 1) both;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .projects-wrap,
       .show-fade,
@@ -1141,13 +1154,14 @@
       .projects-wrap.just-expanded .beyond-fold {
         animation: none;
       }
+      body.loaded .load-in { animation: none; }
     }
     </style>
 </head>
 <body>
   <div class="version-number" id="version">v2.2</div>
 
-  <header>
+  <header class="load-in">
     <div class="moon"></div>
     <h1 id="site-title">
       <img src="goated-photo.jpg" alt="Malachy Fernandez" class="profile-photo">
@@ -1156,7 +1170,7 @@
     <div class="header-sub">Project Showcase</div>
   </header>
 
-  <div class="container">
+  <div class="container load-in">
     <nav class="tab-row" id="navigation"></nav>
     <div class="sheet-wrap">
       <div class="sheet-shadow"></div>
@@ -1819,7 +1833,7 @@
       if (typeof archiveConfig === 'undefined') return;
 
       const footer = document.createElement('div');
-      footer.className = 'archive-footer';
+      footer.className = 'archive-footer load-in';
       const openBtn = document.createElement('button');
       openBtn.className = 'gb gb-gold archive-btn';
       const openFrame = document.createElement('span');
@@ -1928,6 +1942,33 @@
     window.addEventListener('load', layoutSections);
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(layoutSections);
+    }
+
+    // Initial load-in — the page stays hidden until fonts and every image
+    // (including JS-set backgrounds) are in, then everything fades up once.
+    // .loaded is only ever added here, so tab swaps never replay it.
+    {
+      const settle = new Promise(res => setTimeout(res, 120));
+      const timeout = new Promise(res => setTimeout(res, 2500));
+      const fontsReady = (document.fonts && document.fonts.ready) || Promise.resolve();
+      const imgsReady = [...document.images].map(img =>
+        img.complete ? Promise.resolve() : img.decode().catch(() => {}));
+      const bgUrls = new Set();
+      document.querySelectorAll('*').forEach(el => {
+        [null, '::before', '::after'].forEach(pseudo => {
+          const bg = getComputedStyle(el, pseudo).backgroundImage;
+          for (const m of bg.matchAll(/url\(["']?([^"')]+)["']?\)/g)) bgUrls.add(m[1]);
+        });
+      });
+      const bgsReady = [...bgUrls].map(url => new Promise(res => {
+        const img = new Image();
+        img.onload = img.onerror = res;
+        img.src = url;
+      }));
+      Promise.race([
+        Promise.all([fontsReady, ...imgsReady, ...bgsReady, settle]),
+        timeout
+      ]).then(() => document.body.classList.add('loaded'));
     }
   </script>
 </body>
