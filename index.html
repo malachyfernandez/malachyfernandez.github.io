@@ -403,7 +403,7 @@
       .project-card.highlight:hover {
         transform: translateY(-4px);
       }
-      .project-card.highlight:hover .card-shadow {
+      .highlight-shadow.is-hover {
         transform: translateY(16px);
         filter: blur(17px);
       }
@@ -517,6 +517,13 @@
       padding: 5px;
       background: linear-gradient(to top right, var(--gold-od) 45%, var(--gold-ol) 55%);
       transition: transform var(--transition);
+    }
+    /* Sibling shadow parked over the frame by JS — same blurred black layer
+       as the clippings, but masked with the frame's corner scoops */
+    .highlight-shadow {
+      inset: auto;
+      --r: 16px;
+      --sr: var(--r);
     }
     .highlight-shadow::before {
       clip-path: none;
@@ -933,9 +940,6 @@
     .projects-wrap.collapsed .beyond-fold .card-shadow {
       display: none;
     }
-    .projects-wrap.collapsed .beyond-fold.highlight {
-      filter: none;
-    }
     .projects-wrap.just-expanded .beyond-fold {
       animation: card-in 0.5s cubic-bezier(0, 0, 0.2, 1) backwards;
       animation-delay: var(--d, 0ms);
@@ -1261,9 +1265,14 @@
 
           if (project.highlight) {
             // Gilded picture frame — crisp cover photo + always-visible actions
+            // The frame is corner-masked, which would clip a child shadow —
+            // so the blurred layer is a sibling in .projects-wrap, positioned
+            // over this card by layoutSections()
             const shadow = document.createElement('div');
             shadow.className = 'card-shadow highlight-shadow';
-            card.appendChild(shadow);
+            card._shadow = shadow;
+            card.addEventListener('mouseenter', () => shadow.classList.add('is-hover'));
+            card.addEventListener('mouseleave', () => shadow.classList.remove('is-hover'));
 
             const surface = document.createElement('div');
             surface.className = 'highlight-surface';
@@ -1398,6 +1407,9 @@
         const wrap = document.createElement('div');
         wrap.className = 'projects-wrap';
         wrap.appendChild(projectsGrid);
+        // Highlight shadows live at wrap level — inside the frame they'd be
+        // clipped by the corner-scoop mask
+        projectsGrid.querySelectorAll('.project-card.highlight').forEach(c => wrap.appendChild(c._shadow));
         sectionElement.appendChild(wrap);
 
         const toggle = document.createElement('div');
@@ -1674,11 +1686,23 @@
         }
         seq.forEach((c, i) => { c.style.order = i; });
 
+        // Park each highlight's shadow over its card (wrap is the offsetParent)
+        cards.forEach(c => {
+          if (!c._shadow) return;
+          c._shadow.style.left = c.offsetLeft + 'px';
+          c._shadow.style.top = c.offsetTop + 'px';
+          c._shadow.style.width = c.offsetWidth + 'px';
+          c._shadow.style.height = c.offsetHeight + 'px';
+        });
+
         // Measure the visual rows the cards landed on
         const tops = [...new Set(cards.map(c => c.offsetTop))].sort((a, b) => a - b);
         const collapsible = tops.length > 2;
         wrap.classList.toggle('collapsible', collapsible);
-        cards.forEach(c => c.classList.remove('beyond-fold'));
+        cards.forEach(c => {
+          c.classList.remove('beyond-fold');
+          if (c._shadow) c._shadow.classList.remove('beyond-fold');
+        });
         if (!collapsible) {
           wrap.classList.remove('collapsed', 'expanded');
           wrap.style.maxHeight = 'none';
@@ -1689,6 +1713,7 @@
         const beyond = cards.filter(c => c.offsetTop >= foldTop - 1);
         beyond.forEach((c, i) => {
           c.classList.add('beyond-fold');
+          if (c._shadow) c._shadow.classList.add('beyond-fold');
           c.style.setProperty('--d', Math.min(i * 70, 350) + 'ms');
         });
         wrap.dataset.fold = foldTop;
