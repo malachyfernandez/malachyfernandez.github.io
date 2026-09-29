@@ -991,11 +991,31 @@
     }
 
     /* --- VIEW SWAPPING: only the sheet's contents change --- */
-    #view-projects[hidden], #view-about[hidden] { display: none; }
+    #view-projects[hidden], #view-about[hidden], #view-loading[hidden] { display: none; }
     .sheet.morphing {
       overflow: hidden;
       transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Blank page shown while the next view's images warm up */
+    #view-loading {
+      min-height: 38vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .view-spinner {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 3px solid rgba(26,26,26,0.16);
+      border-top-color: var(--gold);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      animation: view-spin 0.8s linear infinite;
+    }
+    #view-loading.show-spinner .view-spinner { opacity: 1; }
+    @keyframes view-spin { to { transform: rotate(360deg); } }
 
     /* --- ABOUT VIEW: resume clippings pinned to the sheet --- */
     #view-about {
@@ -1181,6 +1201,9 @@
           </div>
           <div id="view-about" hidden>
             <!-- About Me content will be populated by JavaScript -->
+          </div>
+          <div id="view-loading" hidden>
+            <div class="view-spinner" role="status" aria-label="Loading"></div>
           </div>
         </div>
       </div>
@@ -1571,53 +1594,108 @@
 
     // --- View swapping: the desk stays put, only the sheet's page changes ---
     const VIEW_TITLES = { projects: 'Project Showcase', about: 'About Me' };
+    const SPINNER_DELAY = 2000;
+    let viewSwapSeq = 0;   // stale swaps check this before touching the DOM
+    let pendingView = null;
+    let spinnerTimer;
+
+    // Resolves once a view's <img>s and CSS background images are fetched
+    // and decoded, so revealing it paints complete on the first frame.
+    function viewReady(view) {
+      const jobs = [...view.querySelectorAll('img')].map(img =>
+        img.complete ? Promise.resolve() : img.decode().catch(() => {}));
+      const urls = new Set();
+      view.querySelectorAll('*').forEach(el => {
+        [null, '::before', '::after'].forEach(pseudo => {
+          const bg = getComputedStyle(el, pseudo).backgroundImage;
+          for (const m of bg.matchAll(/url\(["']?([^"')]+)["']?\)/g)) urls.add(m[1]);
+        });
+      });
+      urls.forEach(url => jobs.push(new Promise(res => {
+        const im = new Image();
+        im.onload = () => im.decode().then(res, res);
+        im.onerror = res;
+        im.src = url;
+      })));
+      return Promise.all(jobs);
+    }
 
     function showView(view, animate = true) {
       const projectsView = document.getElementById('view-projects');
       const aboutView = document.getElementById('view-about');
+      const loadingView = document.getElementById('view-loading');
       const showAbout = view === 'about';
-      if (!(showAbout ? aboutView : projectsView).hidden) return; // already there
+      const targetView = showAbout ? aboutView : projectsView;
+      if (pendingView === view || !targetView.hidden) return; // already there
+      pendingView = view;
       history.replaceState(null, '', '#' + view);
+      const seq = ++viewSwapSeq;
 
-      const swap = () => {
-        projectsView.hidden = showAbout;
-        aboutView.hidden = !showAbout;
+      const applyMeta = () => {
         document.querySelectorAll('.ftab').forEach(t =>
           t.classList.toggle('active', t.dataset.view === view));
         document.querySelector('.header-sub').textContent = VIEW_TITLES[view];
         document.title = showAbout ? aboutMeConfig.title : siteConfig.site.title;
+      };
+      const showTarget = () => {
+        projectsView.hidden = showAbout;
+        aboutView.hidden = !showAbout;
+        loadingView.hidden = true;
+        applyMeta();
         // Projects need a fresh row measurement once they're visible again
         if (!showAbout) layoutSections();
       };
 
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!animate || reduced || !document.startViewTransition) {
-        swap();
+        showTarget();
         return;
       }
 
-      // Morph the sheet's height around the crossfade
+      // Phase 1 — wipe to a blank page immediately instead of letting the
+      // transition stall on the new view's images. The sheet's height stays
+      // frozen at its current size until the new page lands.
       const sheet = document.getElementById('sheet');
       const oldH = sheet.offsetHeight;
       sheet.style.height = oldH + 'px';
       sheet.classList.add('morphing');
-      const release = () => { sheet.style.height = ''; sheet.classList.remove('morphing'); };
+      const release = () => {
+        if (seq !== viewSwapSeq) return; // a newer swap owns the sheet now
+        sheet.style.height = '';
+        sheet.classList.remove('morphing');
+      };
+      loadingView.classList.remove('show-spinner');
+      document.startViewTransition(() => {
+        projectsView.hidden = true;
+        aboutView.hidden = true;
+        loadingView.hidden = false;
+        applyMeta();
+      });
 
-      document.startViewTransition(swap);
-      requestAnimationFrame(() => {
-        const newH = sheet.scrollHeight;
-        if (newH !== oldH) {
-          sheet.style.height = newH + 'px';
-          sheet.addEventListener('transitionend', function te(e) {
-            if (e.propertyName === 'height') {
-              sheet.removeEventListener('transitionend', te);
-              release();
-            }
-          });
-          setTimeout(release, 800);
-        } else {
-          release();
-        }
+      // If the next page is still warming up after 2s, fade the spinner in
+      clearTimeout(spinnerTimer);
+      spinnerTimer = setTimeout(() => {
+        if (seq === viewSwapSeq) loadingView.classList.add('show-spinner');
+      }, SPINNER_DELAY);
+
+      // Phase 2 — reveal once the target view can actually paint
+      viewReady(targetView).then(() => {
+        if (seq !== viewSwapSeq) return;
+        clearTimeout(spinnerTimer);
+        document.startViewTransition(showTarget).updateCallbackDone
+          .then(() => requestAnimationFrame(() => {
+            const newH = sheet.scrollHeight;
+            if (newH === oldH) return release();
+            sheet.style.height = newH + 'px';
+            sheet.addEventListener('transitionend', function te(e) {
+              if (e.propertyName === 'height') {
+                sheet.removeEventListener('transitionend', te);
+                release();
+              }
+            });
+            setTimeout(release, 800);
+          }))
+          .catch(() => {});
       });
     }
 
