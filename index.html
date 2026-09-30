@@ -1029,19 +1029,42 @@
 
     /* --- ABOUT VIEW: resume clippings pinned to the sheet --- */
     #view-about {
+      display: flex;
+      flex-direction: column;
+      gap: 1.9rem;
+    }
+    .about-top {
       display: grid;
       grid-template-columns: 1.85fr 1fr;
       gap: 1.9rem;
-      align-items: start;
     }
-    @media (max-width: 860px) {
-      #view-about { grid-template-columns: 1fr; }
+    .about-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.9rem;
     }
     .about-main, .about-sidebar {
       display: flex;
       flex-direction: column;
       gap: 1.9rem;
       min-width: 0;
+    }
+    /* The three sidebar clippings always split the main column's height
+       into exact thirds, whatever the width */
+    @media (min-width: 861px) {
+      .about-sidebar .clip { flex: 1; }
+    }
+    /* One column: the paper unrolls top to bottom — contact and education
+       surface just under Why Teach, ahead of everything else */
+    @media (max-width: 860px) {
+      .about-top, .about-main, .about-sidebar, .about-bottom { display: contents; }
+      .clip-why-teach { order: 1; }
+      .clip-contact { order: 2; }
+      .clip-education { order: 3; }
+      .clip-work-experience { order: 4; }
+      .clip-awards { order: 5; }
+      .clip-activities { order: 6; }
+      .clip-skills { order: 7; }
     }
     .clip {
       position: relative;
@@ -1502,14 +1525,20 @@
     function initializeAboutView() {
       if (typeof aboutMeConfig === 'undefined') return;
       const view = document.getElementById('view-about');
+      const top = document.createElement('div');
+      top.className = 'about-top';
       const mainColumn = document.createElement('div');
       mainColumn.className = 'about-main';
       const sidebar = document.createElement('div');
       sidebar.className = 'about-sidebar';
+      const bottom = document.createElement('div');
+      bottom.className = 'about-bottom';
 
-      aboutMeConfig.sections.forEach(section => {
+      const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+      aboutMeConfig.sections.forEach((section, i) => {
         const clip = document.createElement('div');
-        clip.className = 'clip';
+        clip.className = 'clip clip-' + slug(section.title);
         clip.style.setProperty('--tear', nextClip());
         const clipShadow = document.createElement('div');
         clipShadow.className = 'card-shadow';
@@ -1546,7 +1575,9 @@
             clip.appendChild(block);
           });
         }
-        mainColumn.appendChild(clip);
+        // The first two sections pin beside the sidebar in a perfect
+        // rectangle; the rest split evenly across the bottom row
+        (i < 2 ? mainColumn : bottom).appendChild(clip);
       });
 
       const sidebarDefs = [
@@ -1590,7 +1621,7 @@
       ];
       sidebarDefs.forEach(([title, fill]) => {
         const clip = document.createElement('div');
-        clip.className = 'clip';
+        clip.className = 'clip clip-' + slug(title);
         clip.style.setProperty('--tear', nextClip());
         const clipShadow = document.createElement('div');
         clipShadow.className = 'card-shadow';
@@ -1602,8 +1633,10 @@
         sidebar.appendChild(clip);
       });
 
-      view.appendChild(mainColumn);
-      view.appendChild(sidebar);
+      top.appendChild(mainColumn);
+      top.appendChild(sidebar);
+      view.appendChild(top);
+      view.appendChild(bottom);
     }
 
     // --- View swapping: the desk stays put, only the sheet's page changes ---
