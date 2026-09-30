@@ -10,11 +10,11 @@ const aboutMeConfig = {
       title: "Work Experience",
       items: [
         {
-          title: "Gluten‑Free & Vegan Bakery — Owner",
-          date: "Summer 2021",
+          title: "Betsy‑Jeff Penn 4‑H Camp — Summer Camp Counselor",
+          date: "Summer 2025",
           descriptions: [
-            "Launched an at‑home bakery. Led marketing, business development, and day‑to‑day operations.",
-            "Baked & delivered 9–12 orders weekly, generating $1,500 in revenue."
+            "Lived on‑site at NC State's 220‑acre overnight camp in Reidsville, NC, supervising a cabin of campers ages 8–12 around the clock.",
+            "Led campers through daily programming — archery, canoeing, swimming, climbing wall, and challenge course."
           ]
         },
         {
@@ -24,23 +24,13 @@ const aboutMeConfig = {
             "American Red Cross Certified Lifeguard. Certified in CPR and first aid.",
             "Experience swimming and communicating; ensuring patrons' safety."
           ]
-        }
-      ]
-    },
-    {
-      title: "Activities",
-      items: [
-        {
-          title: "Programming — Personal Projects — Interactive Portfolio: malachyf.com",
-          descriptions: [
-            "Started with a Christmas game at the height of lockdown, released on the Google Play Store. Building projects to solve unique day-to-day micro problems brings me joy. Check out my interactive portfolio!"
-          ]
         },
         {
-          title: "Chamber Choir — W G Enloe Choir",
+          title: "Gluten‑Free & Vegan Bakery — Owner",
+          date: "Summer 2021",
           descriptions: [
-            "The esteemed Enloe Chamber Choir was 1 of 3 choirs invited to sing at Duke Chapel (2022) and 1 of 4 choirs invited to the Athena Project in Nashville, TN (2023).",
-            "Mentored 2 beginning students to master solfège. Organized auditions & collaborated on new arrangements for the Singing Valentines fundraiser."
+            "Launched an at‑home bakery. Led marketing, business development, and day‑to‑day operations.",
+            "Baked & delivered 9–12 orders weekly, generating $1,500 in revenue."
           ]
         }
       ]
@@ -67,6 +57,24 @@ const aboutMeConfig = {
           ]
         }
       ]
+    },
+    {
+      title: "Activities",
+      items: [
+        {
+          title: "Programming — Personal Projects — Interactive Portfolio: malachyf.com",
+          descriptions: [
+            "Started with a Christmas game at the height of lockdown, released on the Google Play Store. Building projects to solve unique day-to-day micro problems brings me joy. Check out my interactive portfolio!"
+          ]
+        },
+        {
+          title: "Chamber Choir — W G Enloe Choir",
+          descriptions: [
+            "The esteemed Enloe Chamber Choir was 1 of 3 choirs invited to sing at Duke Chapel (2022) and 1 of 4 choirs invited to the Athena Project in Nashville, TN (2023).",
+            "Mentored 2 beginning students to master solfège. Organized auditions & collaborated on new arrangements for the Singing Valentines fundraiser."
+          ]
+        }
+      ]
     }
   ],
   sidebar: {
@@ -75,11 +83,6 @@ const aboutMeConfig = {
         icon: "fas fa-envelope",
         text: "malachyfernandez@gmail.com",
         link: "mailto:malachyfernandez@gmail.com"
-      },
-      {
-        icon: "fas fa-phone",
-        text: "(919) 896-4052",
-        link: "tel:+19198964052"
       },
       {
         icon: "fas fa-globe",
