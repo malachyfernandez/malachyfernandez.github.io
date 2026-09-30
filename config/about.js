@@ -62,16 +62,16 @@ const aboutMeConfig = {
       title: "Activities",
       items: [
         {
-          title: "Programming — Personal Projects — Interactive Portfolio: malachyf.com",
-          descriptions: [
-            "Started with a Christmas game at the height of lockdown, released on the Google Play Store. Building projects to solve unique day-to-day micro problems brings me joy. Check out my interactive portfolio!"
-          ]
-        },
-        {
           title: "Chamber Choir — W G Enloe Choir",
           descriptions: [
             "The esteemed Enloe Chamber Choir was 1 of 3 choirs invited to sing at Duke Chapel (2022) and 1 of 4 choirs invited to the Athena Project in Nashville, TN (2023).",
             "Mentored 2 beginning students to master solfège. Organized auditions & collaborated on new arrangements for the Singing Valentines fundraiser."
+          ]
+        },
+        {
+          title: "Programming — Personal Projects — Interactive Portfolio: malachyf.com",
+          descriptions: [
+            "Started with a Christmas game at the height of lockdown, released on the Google Play Store. Building projects to solve unique day-to-day micro problems brings me joy. Check out my interactive portfolio!"
           ]
         }
       ]
