@@ -92,15 +92,15 @@ const projectShowcaseConfig = {
           highlight: true,
           buttons: [
             {
-              text: "Download",
-              icon: "fas fa-download",
-              link: "KeyRemapper/",
-              target: "_blank"
-            },
-            {
               text: "GitHub",
               icon: "fab fa-github",
               link: "https://github.com/malachyfernandez/KeyRemapper",
+              target: "_blank"
+            },
+            {
+              text: "Download",
+              icon: "fas fa-download",
+              link: "KeyRemapper/",
               target: "_blank"
             }
           ]
