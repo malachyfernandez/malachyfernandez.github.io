@@ -279,6 +279,9 @@ const projectShowcaseConfig = {
     {
       title: "Browser Extensions",
       subtext: "Browser extensions I've built to solve everyday problems and enhance productivity.",
+      // One highlight + a single non-priority row fill the 3-column fold;
+      // 2- and 1-column layouts keep the usual 2 rows.
+      threeColFoldRows: 1,
       projects: [
         {
           name: "SkipScroll",
@@ -308,7 +311,6 @@ const projectShowcaseConfig = {
           description: "Arc-style inbox preview when hovering a pinned Gmail tab. Uses Gmail's Atom feed — no API key needed.",
           icon: "fas fa-inbox",
           backgroundImage: "cover-images/Gmail-Peak.jpg",
-          highlight: true,
           buttons: [
             {
               text: "GitHub",
