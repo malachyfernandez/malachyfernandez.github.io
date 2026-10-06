@@ -52,21 +52,20 @@
     .card {
       background: var(--cream);
       border-radius: 6px;
-      padding: 40px 46px;
+      padding: 38px 46px;
       box-shadow: 0 24px 60px -18px rgba(0,0,0,0.55), inset 0 0 60px rgba(154,122,51,0.06);
+    }
+    .why {
+      font-family: var(--font-head);
+      font-size: 17px;
+      line-height: 1.55;
+      margin-bottom: 24px;
     }
     .steps ol { margin-left: 22px; display: flex; flex-direction: column; gap: 14px; }
     .steps li { font-size: 18px; line-height: 1.5; }
     .steps b { font-weight: 600; }
-    .apple-note {
-      margin-top: 24px;
-      font-size: 15.5px;
-      font-style: italic;
-      color: var(--muted);
-      line-height: 1.45;
-    }
     .dl-note {
-      margin-top: 22px;
+      margin-top: 24px;
       padding-top: 18px;
       border-top: 1px solid rgba(26,26,26,0.14);
       font-size: 14.5px;
@@ -75,13 +74,15 @@
     .dl-note a { color: var(--gold); }
     .src { margin-top: 12px; font-size: 14.5px; color: var(--muted); }
     .src a { color: var(--ink); }
-    @media (max-width: 560px) { .card { padding: 30px 24px; } }
+    @media (max-width: 560px) { .card { padding: 28px 24px; } }
   </style>
 </head>
 <body>
   <div class="wrap">
     <a class="back" href="../">← back to the desk</a>
     <div class="card">
+      <p class="why">Apple wants $99/yr for a developer license to stamp apps "verified" 💔 so you have to do this:</p>
+
       <div class="steps">
         <ol>
           <li>Open the downloaded DMG, drag <b>KeyRemapper</b> to Applications.</li>
@@ -89,8 +90,6 @@
           <li>It needs <b>Hammerspoon</b>. Don't have it? The app walks you through it.</li>
         </ol>
       </div>
-
-      <p class="apple-note">About that block: Apple wants $99/yr for a developer license to stamp apps "verified." The toll hasn't been paid yet, so macOS gives it the side-eye once. Open Anyway works exactly the same.</p>
 
       <p class="dl-note">Your download should have started automatically. If it didn't, <a href="https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg">grab the DMG here</a>.</p>
       <p class="src"><a href="https://github.com/malachyfernandez/KeyRemapper" target="_blank"><i class="fab fa-github"></i> Source on GitHub</a></p>
