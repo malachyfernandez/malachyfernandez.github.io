@@ -929,11 +929,13 @@
     }
     .projects-wrap.collapsed {
       clip-path: inset(-70px -70px 0px -70px);
-      /* Scroll-shadow fade (WolffsPoint-style): the peeked content itself
-         dissolves to transparent instead of being covered by an overlay.
-         The mask hangs off the wrap's bottom edge, so while max-height
-         animates shut the dissolve sweeps upward with the fold instead of
-         snapping every card out in one frame. */
+    }
+    /* Only while max-height is animating shut does the wrap carry a
+       bottom-anchored mask, so the dissolve sweeps upward with the fold.
+       At rest the mask lives on the beyond-fold cards themselves — a
+       wrap-wide mask clips to the border box and would cut shadow bleed
+       spilling past the section's top/side edges. */
+    .projects-wrap.collapsed.closing {
       -webkit-mask-image: linear-gradient(to bottom,
         black calc(100% - var(--peek, 92px)),
         rgba(0,0,0,0.45) calc(100% - var(--peek, 92px) / 2),
@@ -945,6 +947,19 @@
     }
     .projects-wrap.collapsed .beyond-fold {
       pointer-events: none;
+    }
+    /* Scroll-shadow fade (WolffsPoint-style): only the peeked content
+       dissolves. Wrap-level highlight shadows carry .beyond-fold
+       themselves, so they fade with their card. */
+    .projects-wrap.collapsed:not(.closing) .beyond-fold {
+      -webkit-mask-image: linear-gradient(to bottom,
+        black 0px,
+        rgba(0,0,0,0.45) calc(var(--peek, 92px) / 2),
+        transparent var(--peek, 92px));
+      mask-image: linear-gradient(to bottom,
+        black 0px,
+        rgba(0,0,0,0.45) calc(var(--peek, 92px) / 2),
+        transparent var(--peek, 92px));
     }
     .projects-wrap.collapsed .beyond-fold .card-shadow {
       display: none;
@@ -1890,11 +1905,18 @@
       const expanded = wrap.classList.toggle('expanded');
       wrap.classList.toggle('collapsed', !expanded);
       if (expanded) {
+        clearTimeout(wrap._closeTimer);
+        wrap.classList.remove('closing');
         wrap.style.maxHeight = grid.offsetHeight + 'px';
         wrap.classList.add('just-expanded');
         setTimeout(() => wrap.classList.remove('just-expanded'), 900);
       } else {
         wrap.style.maxHeight = (parseFloat(wrap.dataset.fold) + PEEK_PX) + 'px';
+        // Wrap carries the sweep-up dissolve only for the duration of the
+        // collapse; once it lands, per-card .beyond-fold masks take over
+        wrap.classList.add('closing');
+        clearTimeout(wrap._closeTimer);
+        wrap._closeTimer = setTimeout(() => wrap.classList.remove('closing'), 600);
         // If the fold is above the viewport, bring the section back into view
         if (wrap.getBoundingClientRect().top < -20) {
           sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
