@@ -66,15 +66,39 @@
       border-top: 4px double rgba(26,26,26,0.4);
       margin: 0 0 22px;
     }
-    .steps ol { margin-left: 22px; display: flex; flex-direction: column; gap: 14px; }
-    .steps li { font-size: 18px; line-height: 1.5; }
-    .steps b { font-weight: 600; }
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: rgba(26,26,26,0.045);
+      border: 1px solid rgba(26,26,26,0.12);
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-size: 17.5px;
+      line-height: 1.5;
+    }
+    .step + .step { margin-top: 12px; }
+    .step b { font-weight: 600; }
+    .num {
+      font-family: var(--font-head);
+      flex: 0 0 auto;
+      width: 26px; height: 26px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-top: 1px;
+    }
+    .step-body { flex: 1; }
     .clip {
       width: 100%;
       border-radius: 6px;
       border: 1px solid rgba(26,26,26,0.18);
       display: block;
-      margin-top: 24px;
+      margin-top: 12px;
     }
     .dl-note {
       margin-top: 24px;
@@ -96,15 +120,14 @@
       <p class="why">Apple wants $99/yr for a developer license to stamp apps "verified" 💔 so you have to do this:</p>
       <hr class="dbl">
 
-      <div class="steps">
-        <ol>
-          <li>Open the downloaded DMG, drag <b>KeyRemapper</b> to Applications.</li>
-          <li>macOS may block it once. Fix: <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
-          <li>It needs <b>Hammerspoon</b>. Don't have it? The app walks you through it.</li>
-        </ol>
-      </div>
+      <div class="step"><span class="num">1</span><p>Open the downloaded DMG, drag <b>KeyRemapper</b> to Applications.</p></div>
 
-      <img class="clip" src="install.webp" alt="Walkthrough: drag KeyRemapper to Applications, then allow it in Privacy & Security" />
+      <div class="step"><span class="num">2</span><div class="step-body">
+        <p>macOS may block it once. Fix: <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</p>
+        <img class="clip" src="install.webp" alt="Walkthrough: macOS blocks KeyRemapper, then Privacy & Security → Open Anyway" />
+      </div></div>
+
+      <div class="step"><span class="num">3</span><p>It needs <b>Hammerspoon</b>. Don't have it? The app walks you through it.</p></div>
 
       <p class="dl-note">Your download should have started automatically. If it didn't, <a href="https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg">grab the DMG here</a>.</p>
       <p class="src"><a href="https://github.com/malachyfernandez/KeyRemapper" target="_blank"><i class="fab fa-github"></i> Source on GitHub</a></p>
