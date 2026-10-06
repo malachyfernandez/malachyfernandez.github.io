@@ -212,27 +212,6 @@ const projectShowcaseConfig = {
           ]
         },
         {
-          name: "THE HUNT: An Educator's Amygdala",
-          type: "Game for ED204",
-          description: "A text-based game created for ED204 that explores implicit bias in education through a metaphorical hunting experience.",
-          icon: "fas fa-graduation-cap",
-          backgroundImage: "cover-images/the-hunt.jpg",
-          buttons: [
-            {
-              text: "GitHub",
-              icon: "fab fa-github",
-              link: "https://github.com/malachyfernandez/ED204-game",
-              target: "_blank"
-            },
-            {
-              text: "Play Game",
-              icon: "fas fa-gamepad",
-              link: "https://ed204.malachyf.com/",
-              target: "_blank"
-            }
-          ]
-        },
-        {
           name: "AI Photo Editor",
           type: "Web App",
           description: "A powerful, browser-based photo editor with layer-based editing and AI-powered transformations using Google Gemini.",
@@ -249,6 +228,27 @@ const projectShowcaseConfig = {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
               link: "https://image-editor-five-beta.vercel.app/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
+          name: "THE HUNT: An Educator's Amygdala",
+          type: "Game for ED204",
+          description: "A text-based game created for ED204 that explores implicit bias in education through a metaphorical hunting experience.",
+          icon: "fas fa-graduation-cap",
+          backgroundImage: "cover-images/the-hunt.jpg",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/ED204-game",
+              target: "_blank"
+            },
+            {
+              text: "Play Game",
+              icon: "fas fa-gamepad",
+              link: "https://ed204.malachyf.com/",
               target: "_blank"
             }
           ]
