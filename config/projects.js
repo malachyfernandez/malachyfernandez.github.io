@@ -278,7 +278,7 @@ const projectShowcaseConfig = {
       ]
     },
     {
-      title: "Chrome Extensions",
+      title: "Browser Extensions",
       subtext: "Browser extensions I've built to solve everyday problems and enhance productivity.",
       projects: [
         {
