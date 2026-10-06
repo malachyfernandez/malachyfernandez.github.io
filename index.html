@@ -1477,8 +1477,9 @@
         // Wrap the grid so extra rows can fade out behind a "show more" toggle
         const wrap = document.createElement('div');
         wrap.className = 'projects-wrap';
-        // Sections can ask for a shallower fold at 2 columns (tall
-        // highlight rows make the usual 2-row peek sprawl)
+        // Sections can ask for a deeper/shallower fold — foldRows at any
+        // column count, twoColFoldRows as a 2-column-specific override
+        if (section.foldRows) wrap.dataset.foldRows = section.foldRows;
         if (section.twoColFoldRows) wrap.dataset.foldRows2 = section.twoColFoldRows;
         wrap.appendChild(projectsGrid);
         // Highlight shadows live at wrap level — inside the frame they'd be
@@ -1838,7 +1839,7 @@
         const tops = [...new Set(cards.map(c => c.offsetTop))].sort((a, b) => a - b);
         const foldRows = cols === 2 && wrap.dataset.foldRows2
           ? +wrap.dataset.foldRows2
-          : 2;
+          : (wrap.dataset.foldRows ? +wrap.dataset.foldRows : 2);
         const collapsible = tops.length > foldRows;
         wrap.classList.toggle('collapsible', collapsible);
         cards.forEach(c => {

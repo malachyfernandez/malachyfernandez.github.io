@@ -3,34 +3,6 @@ const projectShowcaseConfig = {
   // Project sections with their titles and descriptions
   sections: [
     {
-      title: "Mac Apps",
-      subtext: "Native macOS applications you can download and install.",
-      projects: [
-        {
-          name: "KeyRemapper",
-          type: "macOS App",
-          description: "A native-feeling GUI for Hammerspoon key remaps. Click a key, type what it should type, done.",
-          icon: "fas fa-keyboard",
-          backgroundImage: "cover-images/keyremapper.jpg",
-          highlight: true,
-          buttons: [
-            {
-              text: "Download",
-              icon: "fas fa-download",
-              link: "KeyRemapper/",
-              target: "_blank"
-            },
-            {
-              text: "GitHub",
-              icon: "fab fa-github",
-              link: "https://github.com/malachyfernandez/KeyRemapper",
-              target: "_blank"
-            }
-          ]
-        }
-      ]
-    },
-    {
       title: "Hackathon Projects",
       subtext: "Built in 24 hours or less at various hackathons.",
       // At 2 columns each highlight owns a full row, so only 1 row shows
@@ -106,9 +78,33 @@ const projectShowcaseConfig = {
       ]
     },
     {
-      title: "Web Apps & Games",
-      subtext: "Interactive web applications and games I've built for various purposes.",
+      title: "Apps & Games",
+      subtext: "Interactive applications and games I've built for various purposes.",
+      // 3 highlights each own a full row — show all 3 before the fold
+      foldRows: 3,
       projects: [
+        {
+          name: "KeyRemapper",
+          type: "macOS App",
+          description: "A native-feeling GUI for Hammerspoon key remaps. Click a key, type what it should type, done.",
+          icon: "fas fa-keyboard",
+          backgroundImage: "cover-images/keyremapper.jpg",
+          highlight: true,
+          buttons: [
+            {
+              text: "Download",
+              icon: "fas fa-download",
+              link: "KeyRemapper/",
+              target: "_blank"
+            },
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/KeyRemapper",
+              target: "_blank"
+            }
+          ]
+        },
         {
           name: "Minecraft Gradient",
           type: "Web App",
