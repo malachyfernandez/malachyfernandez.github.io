@@ -80,31 +80,9 @@ const projectShowcaseConfig = {
     {
       title: "Apps & Games",
       subtext: "Interactive applications and games I've built for various purposes.",
-      // 3 highlights each own a full row — show all 3 before the fold
-      foldRows: 3,
+      // 2 highlights each own a full row — show both before the fold
+      foldRows: 2,
       projects: [
-        {
-          name: "KeyRemapper",
-          type: "macOS App",
-          description: "Change what any key on your Mac types. Click a key, type its new output, done.",
-          icon: "fas fa-keyboard",
-          backgroundImage: "cover-images/keyremapper.jpg",
-          highlight: true,
-          buttons: [
-            {
-              text: "GitHub",
-              icon: "fab fa-github",
-              link: "https://github.com/malachyfernandez/KeyRemapper",
-              target: "_blank"
-            },
-            {
-              text: "Download",
-              icon: "fas fa-download",
-              link: "KeyRemapper/",
-              target: "_blank"
-            }
-          ]
-        },
         {
           name: "Minecraft Gradient",
           type: "Web App",
@@ -166,6 +144,27 @@ const projectShowcaseConfig = {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
               link: "https://malachyfernandez.github.io/Bedrock-Schematic-Maker/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
+          name: "KeyRemapper",
+          type: "macOS App",
+          description: "Change what any key on your Mac types. Click a key, type its new output, done.",
+          icon: "fas fa-keyboard",
+          backgroundImage: "cover-images/keyremapper.jpg",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/KeyRemapper",
+              target: "_blank"
+            },
+            {
+              text: "Download",
+              icon: "fas fa-download",
+              link: "KeyRemapper/",
               target: "_blank"
             }
           ]
