@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KeyRemapper — install</title>
+  <title>KeyRemapper | Install</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,7 +17,6 @@
       --muted: #59534a;
       --gold: #9a7a33;
       --gold-light: #d9b458;
-      --font-script: 'La Belle Aurore', cursive;
       --font-head: 'Special Elite', 'Courier New', monospace;
       --font-body: 'Crimson Text', Georgia, serif;
     }
@@ -31,60 +30,71 @@
       background-attachment: fixed;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 48px 20px;
+      padding: 32px 20px;
     }
+    .wrap { max-width: 560px; width: 100%; }
+    .back {
+      display: block;
+      text-align: right;
+      color: var(--paper-light);
+      text-decoration: none;
+      font-family: var(--font-head);
+      font-size: 16px;
+      padding: 14px 6px;
+      margin-bottom: 8px;
+      opacity: .8;
+      transition: opacity .2s;
+    }
+    .back:hover { opacity: 1; text-decoration: underline; }
     .card {
-      max-width: 560px;
-      width: 100%;
       background: var(--cream);
       border-radius: 6px;
-      padding: 42px 46px;
+      padding: 40px 46px;
       box-shadow: 0 24px 60px -18px rgba(0,0,0,0.55), inset 0 0 60px rgba(154,122,51,0.06);
-    }
-    h1 {
-      font-family: var(--font-head);
-      font-size: 30px;
-      letter-spacing: 1px;
-    }
-    .tag {
-      font-family: var(--font-script);
-      color: var(--gold);
-      font-size: 21px;
-      margin: 4px 0 26px;
     }
     .steps ol { margin-left: 22px; display: flex; flex-direction: column; gap: 14px; }
     .steps li { font-size: 18px; line-height: 1.5; }
     .steps b { font-weight: 600; }
+    .apple-note {
+      margin-top: 24px;
+      font-size: 15.5px;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.45;
+    }
     .dl-note {
-      margin-top: 28px;
+      margin-top: 22px;
       padding-top: 18px;
       border-top: 1px solid rgba(26,26,26,0.14);
       font-size: 14.5px;
       color: var(--muted);
     }
     .dl-note a { color: var(--gold); }
-    .src { margin-top: 14px; font-size: 14.5px; color: var(--muted); }
+    .src { margin-top: 12px; font-size: 14.5px; color: var(--muted); }
     .src a { color: var(--ink); }
-    @media (max-width: 560px) { .card { padding: 30px 24px; } h1 { font-size: 25px; } }
+    @media (max-width: 560px) { .card { padding: 30px 24px; } }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>KeyRemapper</h1>
-    <p class="tag">point. click. remapped.</p>
+  <div class="wrap">
+    <a class="back" href="../">← back to the desk</a>
+    <div class="card">
+      <div class="steps">
+        <ol>
+          <li>Open the downloaded DMG, drag <b>KeyRemapper</b> to Applications.</li>
+          <li>macOS may block it once. Fix: <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
+          <li>It needs <b>Hammerspoon</b>. Don't have it? The app walks you through it.</li>
+        </ol>
+      </div>
 
-    <div class="steps">
-      <ol>
-        <li>Open the downloaded DMG, drag <b>KeyRemapper</b> to Applications.</li>
-        <li>macOS may block it once — <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
-        <li>It needs <b>Hammerspoon</b> — don't have it? The app walks you through it.</li>
-      </ol>
+      <p class="apple-note">About that block: Apple wants $99/yr for a developer license to stamp apps "verified." The toll hasn't been paid yet, so macOS gives it the side-eye once. Open Anyway works exactly the same.</p>
+
+      <p class="dl-note">Your download should have started automatically. If it didn't, <a href="https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg">grab the DMG here</a>.</p>
+      <p class="src"><a href="https://github.com/malachyfernandez/KeyRemapper" target="_blank"><i class="fab fa-github"></i> Source on GitHub</a></p>
     </div>
-
-    <p class="dl-note">Your download should have started automatically. If it didn't, <a href="https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg">grab the DMG here</a>.</p>
-    <p class="src"><a href="https://github.com/malachyfernandez/KeyRemapper" target="_blank"><i class="fab fa-github"></i> Source on GitHub</a> &nbsp;·&nbsp; <a href="../">← back to the desk</a></p>
   </div>
 
   <script>
