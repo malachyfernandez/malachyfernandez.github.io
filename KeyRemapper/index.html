@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KeyRemapper — malachyf.com</title>
+  <title>KeyRemapper — install</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -31,125 +31,68 @@
       background-attachment: fixed;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      padding: 48px 20px 64px;
+      justify-content: center;
+      padding: 48px 20px;
     }
-    .wrap { max-width: 640px; width: 100%; }
-    .back {
-      display: inline-block;
-      color: var(--paper-light);
-      text-decoration: none;
-      font-family: var(--font-head);
-      font-size: 14px;
-      margin-bottom: 28px;
-      opacity: .8;
-      transition: opacity .2s;
-    }
-    .back:hover { opacity: 1; }
     .card {
+      max-width: 560px;
+      width: 100%;
       background: var(--cream);
       border-radius: 6px;
-      padding: 40px 44px;
+      padding: 42px 46px;
       box-shadow: 0 24px 60px -18px rgba(0,0,0,0.55), inset 0 0 60px rgba(154,122,51,0.06);
     }
     h1 {
       font-family: var(--font-head);
-      font-size: 34px;
+      font-size: 30px;
       letter-spacing: 1px;
     }
     .tag {
       font-family: var(--font-script);
       color: var(--gold);
-      font-size: 22px;
-      margin: 6px 0 22px;
+      font-size: 21px;
+      margin: 4px 0 26px;
     }
-    .shot {
-      width: 100%;
-      border-radius: 6px;
-      border: 1px solid rgba(26,26,26,0.18);
-      display: block;
-      margin-bottom: 26px;
-    }
-    .video-slot {
-      aspect-ratio: 16 / 9;
-      border: 2px dashed rgba(154,122,51,0.5);
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: var(--muted);
-      margin-bottom: 26px;
-      background: rgba(154,122,51,0.05);
-    }
-    .video-slot i { font-size: 30px; color: var(--gold); }
-    .video-slot span { font-family: var(--font-head); font-size: 14px; }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
-    .btn {
-      font-family: var(--font-head);
-      font-size: 15px;
-      text-decoration: none;
-      padding: 12px 22px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      transition: transform .15s ease, filter .15s ease;
-    }
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
-    .btn-gold { background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: #fff; }
-    .btn-plain { background: transparent; color: var(--ink); border: 1.5px solid rgba(26,26,26,0.4); }
-    .steps { border-top: 1px solid rgba(26,26,26,0.14); padding-top: 22px; }
-    .steps h2 {
-      font-family: var(--font-head);
-      font-size: 16px;
-      letter-spacing: .5px;
-      margin-bottom: 12px;
-      color: var(--ink);
-    }
-    .steps ol { margin-left: 20px; display: flex; flex-direction: column; gap: 8px; }
-    .steps li { font-size: 16.5px; line-height: 1.45; }
+    .steps ol { margin-left: 22px; display: flex; flex-direction: column; gap: 14px; }
+    .steps li { font-size: 18px; line-height: 1.5; }
     .steps b { font-weight: 600; }
-    .fine { margin-top: 18px; font-size: 14px; color: var(--muted); font-style: italic; }
-    @media (max-width: 560px) { .card { padding: 28px 22px; } h1 { font-size: 27px; } }
+    .dl-note {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(26,26,26,0.14);
+      font-size: 14.5px;
+      color: var(--muted);
+    }
+    .dl-note a { color: var(--gold); }
+    .src { margin-top: 14px; font-size: 14.5px; color: var(--muted); }
+    .src a { color: var(--ink); }
+    @media (max-width: 560px) { .card { padding: 30px 24px; } h1 { font-size: 25px; } }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <a class="back" href="../#projects">← back to the desk</a>
-    <div class="card">
-      <h1>KeyRemapper</h1>
-      <p class="tag">point. click. remapped.</p>
+  <div class="card">
+    <h1>KeyRemapper</h1>
+    <p class="tag">point. click. remapped.</p>
 
-      <img class="shot" src="../cover-images/keyremapper.jpg" alt="KeyRemapper — a virtual keyboard with a key selected and its remap output below" />
-
-      <div class="video-slot">
-        <i class="fas fa-play"></i>
-        <span>Demo video coming soon</span>
-      </div>
-
-      <div class="actions">
-        <a class="btn btn-gold" href="https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg">
-          <i class="fas fa-download"></i> Download for macOS
-        </a>
-        <a class="btn btn-plain" href="https://github.com/malachyfernandez/KeyRemapper" target="_blank">
-          <i class="fab fa-github"></i> Source
-        </a>
-      </div>
-
-      <div class="steps">
-        <h2>Install in 3 steps</h2>
-        <ol>
-          <li>Open the DMG, drag <b>KeyRemapper</b> to Applications.</li>
-          <li>macOS may block it once — <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
-          <li>It needs <b>Hammerspoon</b> — don't have it? The app walks you through it.</li>
-        </ol>
-      </div>
-
-      <p class="fine">Click a key on the virtual keyboard — or press it — type what it should output, hit Save. Your remaps land in ~/.hammerspoon/keyremaps.lua and reload instantly.</p>
+    <div class="steps">
+      <ol>
+        <li>Open the downloaded DMG, drag <b>KeyRemapper</b> to Applications.</li>
+        <li>macOS may block it once — <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
+        <li>It needs <b>Hammerspoon</b> — don't have it? The app walks you through it.</li>
+      </ol>
     </div>
+
+    <p class="dl-note">Your download should have started automatically. If it didn't, <a href="https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg">grab the DMG here</a>.</p>
+    <p class="src"><a href="https://github.com/malachyfernandez/KeyRemapper" target="_blank"><i class="fab fa-github"></i> Source on GitHub</a> &nbsp;·&nbsp; <a href="../">← back to the desk</a></p>
   </div>
+
+  <script>
+    // The DMG is served with Content-Disposition: attachment, so pointing
+    // the browser at it starts a download instead of navigating away.
+    setTimeout(function () {
+      window.location.href = "https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg";
+    }, 900);
+  </script>
 </body>
 </html>

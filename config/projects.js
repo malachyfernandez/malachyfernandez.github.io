@@ -17,19 +17,13 @@ const projectShowcaseConfig = {
             {
               text: "Download",
               icon: "fas fa-download",
-              link: "https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg",
+              link: "KeyRemapper/",
               target: "_blank"
             },
             {
               text: "GitHub",
               icon: "fab fa-github",
               link: "https://github.com/malachyfernandez/KeyRemapper",
-              target: "_blank"
-            },
-            {
-              text: "Demo Video",
-              icon: "fas fa-play",
-              link: "KeyRemapper/",
               target: "_blank"
             }
           ]
