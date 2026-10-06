@@ -86,7 +86,7 @@ const projectShowcaseConfig = {
         {
           name: "KeyRemapper",
           type: "macOS App",
-          description: "A native-feeling GUI for Hammerspoon key remaps. Click a key, type what it should type, done.",
+          description: "Change what any key on your Mac types. Click a key, type its new output, done.",
           icon: "fas fa-keyboard",
           backgroundImage: "cover-images/keyremapper.jpg",
           highlight: true,
