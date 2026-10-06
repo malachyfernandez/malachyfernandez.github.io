@@ -3,6 +3,40 @@ const projectShowcaseConfig = {
   // Project sections with their titles and descriptions
   sections: [
     {
+      title: "Mac Apps",
+      subtext: "Native macOS applications you can download and install.",
+      projects: [
+        {
+          name: "KeyRemapper",
+          type: "macOS App",
+          description: "A native-feeling GUI for Hammerspoon key remaps. Click a key, type what it should type, done.",
+          icon: "fas fa-keyboard",
+          backgroundImage: "cover-images/keyremapper.jpg",
+          highlight: true,
+          buttons: [
+            {
+              text: "Download",
+              icon: "fas fa-download",
+              link: "https://github.com/malachyfernandez/KeyRemapper/releases/latest/download/KeyRemapper-1.0.dmg",
+              target: "_blank"
+            },
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/KeyRemapper",
+              target: "_blank"
+            },
+            {
+              text: "Demo Video",
+              icon: "fas fa-play",
+              link: "KeyRemapper/",
+              target: "_blank"
+            }
+          ]
+        }
+      ]
+    },
+    {
       title: "Hackathon Projects",
       subtext: "Built in 24 hours or less at various hackathons.",
       // At 2 columns each highlight owns a full row, so only 1 row shows
