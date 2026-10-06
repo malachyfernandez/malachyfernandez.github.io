@@ -150,6 +150,27 @@ const projectShowcaseConfig = {
           ]
         },
         {
+          name: "Bedrock Schematic Maker",
+          type: "Web App",
+          description: "A powerful web-based tool for creating Minecraft Bedrock Edition schematics with smart shape generation and real-time preview.",
+          icon: "fas fa-cube",
+          backgroundImage: "cover-images/mc-schematic.jpg",
+          buttons: [
+            {
+              text: "GitHub",
+              icon: "fab fa-github",
+              link: "https://github.com/malachyfernandez/Bedrock-Schematic-Maker",
+              target: "_blank"
+            },
+            {
+              text: "Try It Live",
+              icon: "fas fa-external-link-alt",
+              link: "https://malachyfernandez.github.io/Bedrock-Schematic-Maker/",
+              target: "_blank"
+            }
+          ]
+        },
+        {
           name: "Gerrymander The Game",
           type: "Puzzle Game",
           description: "Redraw district lines to win elections with a minority in this puzzle.",
@@ -229,27 +250,6 @@ const projectShowcaseConfig = {
               text: "Try It Live",
               icon: "fas fa-external-link-alt",
               link: "https://image-editor-five-beta.vercel.app/",
-              target: "_blank"
-            }
-          ]
-        },
-        {
-          name: "Bedrock Schematic Maker",
-          type: "Web App",
-          description: "A powerful web-based tool for creating Minecraft Bedrock Edition schematics with smart shape generation and real-time preview.",
-          icon: "fas fa-cube",
-          backgroundImage: "cover-images/mc-schematic.jpg",
-          buttons: [
-            {
-              text: "GitHub",
-              icon: "fab fa-github",
-              link: "https://github.com/malachyfernandez/Bedrock-Schematic-Maker",
-              target: "_blank"
-            },
-            {
-              text: "Try It Live",
-              icon: "fas fa-external-link-alt",
-              link: "https://malachyfernandez.github.io/Bedrock-Schematic-Maker/",
               target: "_blank"
             }
           ]
